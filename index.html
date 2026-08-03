@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rada</title>
+<meta name="description" content="Quattro loop sonori di lunghezza diversa che non tornano mai insieme allo stesso modo. Strumento generativo nel browser.">
+
+<meta property="og:title" content="Rada">
+<meta property="og:description" content="Quattro loop sonori di lunghezza diversa che non tornano mai insieme allo stesso modo.">
+<meta property="og:type" content="website">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="stage">
+ <div class="wrap">
+
+  <div class="head">
+    <h1>Ra<em>d</em>a</h1>
+    <div class="status" id="status">
+      <span class="pulse"></span>
+      <span id="statusText">in attesa</span>
+    </div>
+  </div>
+
+  <div class="loopCard">
+    <div class="cardHead">
+      <span class="t">I quattro loop</span>
+      <span class="realign" id="realign">—</span>
+    </div>
+    <div class="loopHint">trascina: durata · clic: silenzia · ↻ nuova idea</div>
+    <div id="canvas-holder"></div>
+  </div>
+
+  <div class="controls">
+    <div class="ctl">
+      <label for="spread">Ampiezza registro <b id="vSpread">—</b></label>
+      <input type="range" id="spread" min="0" max="100" value="45">
+    </div>
+    <div class="ctl">
+      <label for="warmth">Calore timbrico <b id="vWarmth">—</b></label>
+      <input type="range" id="warmth" min="0" max="100" value="70">
+    </div>
+    <div class="ctl">
+      <label for="rev">Spazio / coda <b id="vRev">—</b></label>
+      <input type="range" id="rev" min="0" max="100" value="72">
+    </div>
+    <div class="ctl">
+      <label for="dens">Densità dell'idea <b id="vDens">—</b></label>
+      <input type="range" id="dens" min="2" max="14" value="5">
+    </div>
+    <div class="ctl">
+      <label for="head">Addensamento <b id="vHead">—</b></label>
+      <input type="range" id="head" min="10" max="70" value="30">
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="moods" id="moods"></div>
+    <button class="power" id="power">
+      <span class="dot"></span><span id="powerLabel">Avvia</span>
+    </button>
+  </div>
+
+ </div>
+</div>
+
+<div class="gate" id="gate">
+  <h2>Ra<em>d</em>a</h2>
+  <p>Quattro frasi sonore di lunghezza diversa, ciascuna col proprio periodo.
+     Non tornano mai insieme allo stesso modo.</p>
+  <div class="enter">Entra</div>
+</div>
+
+<!-- p5.js, versione fissata perché il progetto non cambi comportamento da solo.
+     Per usarla in locale (senza rete): scarica p5.min.js in lib/ e sostituisci
+     questa riga con  <script src="lib/p5.min.js"></script>  -->
+<script src="https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.min.js"></script>
+
+<!-- l'ordine conta: il modello prima, poi il suono, poi il disegno, infine i comandi -->
+<script src="js/model.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sketch.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
