@@ -128,3 +128,7 @@ function realignSeconds() {
   for (let k = 1; k < v.length; k++) l = l * v[k] / gcd(l, v[k]);
   return l;
 }
+
+/* Il modello nasce già popolato: senza questa riga i quattro loop
+   resterebbero vuoti fino al primo mood, e l'app sarebbe muta all'apertura. */
+loops.forEach(regenerate);
