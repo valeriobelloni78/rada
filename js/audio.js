@@ -52,13 +52,20 @@ function makeImpulse(sec) {
   return b;
 }
 
-/* Ripartenza dei cicli con attacchi sfalsati, così i quattro loop non
-   cominciano all'unisono.                                                  */
+/* Ripartenza dei cicli.
+   La zona attiva di ogni loop comincia in un punto qualsiasi della
+   circonferenza, quindi la sua prima goccia potrebbe cadere molto avanti nel
+   giro: all'apertura si resterebbe in silenzio per parecchi secondi. Qui ogni
+   ciclo viene quindi posizionato all'indietro, in modo che la prima goccia
+   arrivi entro un attimo — con ingressi comunque sfalsati, perché i quattro
+   loop non attacchino all'unisono.                                         */
 function restartCycles() {
   if (!ctx) return;
   const now = ctx.currentTime;
-  loops.forEach(L => {
-    L.cycleStart = now + Math.random() * 1.4;
+  loops.forEach((L, i) => {
+    const firstPh = L.plan.length ? L.plan[0].ph : 0;
+    const entrata = 0.2 + i * 0.28 + Math.random() * 0.25;   // 0,2 – 1,3 s
+    L.cycleStart = now + entrata - firstPh * L.period;
     L.idx = 0;
     L.cycles = [{ start: L.cycleStart, period: L.period }];
   });
@@ -175,15 +182,31 @@ function tickParams() {
   dryGain.gain.setTargetAtTime(0.75 - effRev * 0.25, ctx.currentTime, 0.6);
 }
 
-/* --- avvio / arresto ----------------------------------------------------- */
+/* --- avvio / pausa --------------------------------------------------------
+   La pausa non azzera nulla: dopo una breve dissolvenza ferma il clock del
+   motore audio. Fermandolo, tutti i tempi già prenotati restano coerenti, e
+   alla ripresa il collage riparte esattamente da dov'era invece di
+   ricominciare da capo. È ciò che la parola "pausa" promette.             */
+let sospensione = null;
+
 async function togglePower() {
   if (!ctx) buildAudio();
-  if (ctx.state === "suspended") { try { await ctx.resume(); } catch (e) {} }
 
-  running = !running;
-  if (running) restartCycles();
-  master.gain.setTargetAtTime(running ? 0.9 : 0, ctx.currentTime, running ? 1.4 : 0.6);
-  onPowerChange(running);          // definita in ui.js
+  if (running) {
+    running = false;
+    onPowerChange(false);
+    master.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
+    clearTimeout(sospensione);
+    sospensione = setTimeout(() => {
+      if (!running && ctx.state === "running") ctx.suspend();
+    }, 900);
+  } else {
+    clearTimeout(sospensione);
+    if (ctx.state === "suspended") { try { await ctx.resume(); } catch (e) {} }
+    running = true;
+    onPowerChange(true);
+    master.gain.setTargetAtTime(0.9, ctx.currentTime, 0.4);
+  }
 }
 
 /* tempo audio corrente, 0 se il motore non esiste ancora */
