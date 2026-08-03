@@ -41,7 +41,9 @@ function refreshStatus() {
 
   if (!running) {
     st.classList.remove("live");
-    txt.textContent = "in attesa · " + hh + ":" + mm + ", palette " + currentPalette.name;
+    // "in attesa" solo alla prima apertura; dopo un ascolto è una pausa
+    const stato = ctx ? "in pausa" : "in attesa";
+    txt.textContent = stato + " · " + hh + ":" + mm + ", palette " + currentPalette.name;
     return;
   }
   st.classList.add("live");
@@ -53,9 +55,12 @@ setInterval(refreshStatus, 15000);
 
 /* chiamate dal canvas quando cambia lo stato dei loop */
 function onLoopsChange() { refreshStatus(); }
+/* Il pulsante è un COMANDO, non un indicatore: la scritta dice che cosa
+   accadrà premendolo, non che cosa sta accadendo. Lo stato è già raccontato
+   dal punto che pulsa e dalla riga in alto.                                */
 function onPowerChange(on) {
   $("power").classList.toggle("on", on);
-  $("powerLabel").textContent = on ? "In ascolto" : "Avvia";
+  $("powerLabel").textContent = on ? "Pausa" : "Avvia";
   refreshStatus();
 }
 
