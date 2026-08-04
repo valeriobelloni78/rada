@@ -48,12 +48,12 @@ function refreshStatus() {
   }
   st.classList.add("live");
   const attivi = loops.filter(L => !L.muted).length;
-  txt.textContent = "in ascolto · " + attivi + " loop su 4 · "
+  txt.textContent = "in ascolto · " + attivi + " frasi su 4 · "
                   + hh + ":" + mm + ", palette " + currentPalette.name;
 }
 setInterval(refreshStatus, 15000);
 
-/* chiamate dal canvas quando cambia lo stato dei loop */
+/* chiamate dal canvas quando cambia lo stato delle frasi */
 function onLoopsChange() { refreshStatus(); }
 /* Il pulsante è un COMANDO, non un indicatore: la scritta dice che cosa
    accadrà premendolo, non che cosa sta accadendo. Lo stato è già raccontato
@@ -69,7 +69,7 @@ PARAMS.forEach(k => {
   $(k).addEventListener("input", e => { GT[k] = +e.target.value; });
 });
 
-/* --- mood: preset sonori + durate dei loop + nuove idee ------------------- */
+/* --- mood: preset sonori + durate delle frasi + nuove idee ----------------- */
 const moodsEl = $("moods");
 Object.keys(MOODS).forEach((name, i) => {
   const b = document.createElement("button");

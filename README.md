@@ -1,6 +1,6 @@
 # Rada
 
-**Quattro loop sonori di lunghezza diversa che non tornano mai insieme allo stesso modo.**
+**Quattro frasi sonore di lunghezza diversa che non tornano mai insieme allo stesso modo.**
 
 Rada è uno strumento generativo che vive nel browser. Non riproduce un brano
 registrato: costruisce il suono in tempo reale, ora per ora, e non si ripete mai.
@@ -20,7 +20,7 @@ riempitivo: **è il meccanismo**. Sfasando i periodi, le frasi si incontrano ogn
 volta in una combinazione diversa.
 
 Perché funzioni, i quattro periodi devono essere **coprimi a due a due**. Se due
-loop condividessero un divisore — 6 e 9, poniamo — tornerebbero insieme ogni 18
+frasi condividessero un divisore — 6 e 9, poniamo — tornerebbero insieme ogni 18
 secondi e il collage collasserebbe in un motivo riconoscibile. Con 7, 11, 13 e 17
 la combinazione completa si ripete dopo quasi cinque ore. L'interfaccia mostra
 sempre questo tempo di riallineamento: è il numero che dice quanto a lungo lo
@@ -33,9 +33,9 @@ spezzoni di nastro di lunghezze diverse, qui sono oscillatori e uno scheduler.
 
 | Gesto | Effetto |
 |---|---|
-| Trascina un quadrante in verticale | cambia la durata di quel loop (3–30 s) |
-| Clic su un quadrante | silenzia o riattiva quel loop |
-| ↻ sopra un quadrante | genera una nuova idea musicale per quel loop |
+| Trascina un quadrante in verticale | cambia la durata di quella frase (3–30 s) |
+| Clic su un quadrante | silenzia o riattiva quella frase |
+| ↻ sopra un quadrante | genera una nuova idea musicale per quella frase |
 | Barra spaziatrice | avvia e ferma |
 
 I cinque cursori governano il suono d'insieme: ampiezza del registro, calore
@@ -55,7 +55,7 @@ Nessuna dipendenza da installare, nessun passaggio di compilazione: si apre
 ```
 index.html          struttura e collegamenti
 css/style.css       palette, tipografia, impaginazione
-js/model.js         lo stato: loop, idee, piani. Non dipende da nulla
+js/model.js         lo stato: frasi, idee, piani. Non dipende da nulla
 js/audio.js         Web Audio API: sintesi e scheduler
 js/sketch.js        p5.js: disegno dei quadranti e interazione
 js/ui.js            cursori, mood, riga di stato
@@ -64,12 +64,12 @@ js/ui.js            cursori, mood, riga di stato
 **Il suono usa la Web Audio API direttamente, non p5.sound.** Il cuore di Rada è
 uno *scheduler a lookahead*: ogni 25 ms guarda 150 ms avanti e prenota le note sul
 clock del motore audio, preciso al singolo campione. I timer di JavaScript sono
-troppo imprecisi per loop che devono restare in fase per ore, e p5.sound è pensato
+troppo imprecisi per frasi che devono restare in fase per ore, e p5.sound è pensato
 per gesti immediati più che per pianificazione rigorosa. La precisione temporale
 qui è il progetto, non un dettaglio.
 
 **La grafica usa p5.js**, con tutti e quattro i quadranti su un unico canvas.
-Un solo piano di disegno permette, in futuro, effetti che attraversano i loop:
+Un solo piano di disegno permette, in futuro, effetti che attraversano le frasi:
 scie, relazioni, campi che reagiscono all'insieme.
 
 Un dettaglio che chi mette mano al codice apprezzerà: la palette è definita

@@ -1,7 +1,7 @@
 /* =============================================================================
    RADA · model.js — lo stato del collage
    Nessuna dipendenza: non conosce né l'audio né la grafica. Descrive soltanto
-   che cosa sono i quattro loop e come nascono le loro idee musicali.
+   che cosa sono le quattro frasi e come nascono le loro idee musicali.
 ============================================================================= */
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -11,14 +11,18 @@ const G  = { spread: 45, warmth: 70, rev: 72, dens: 5, head: 30 };
 const GT = { ...G };
 const PARAMS = ["spread", "warmth", "rev", "dens", "head"];
 
-/* --- mood: preset sonori + configurazione temporale dei quattro loop -------
-   I periodi di ogni serie sono a due a due coprimi: è ciò che tiene i loop
-   sfasati a lungo. Cambiare mood rigenera anche le quattro idee.            */
+/* --- mood: preset sonori + configurazione temporale delle quattro frasi ----
+   I periodi di ogni serie sono a due a due coprimi: è ciò che tiene le frasi
+   sfasate a lungo. Cambiare mood rigenera anche le quattro idee.            */
 const MOODS = {
-  "Sereno":   { spread: 45, warmth: 70, rev: 72, dens: 5,  head: 30, periods: [7, 11, 13, 17]  },
-  "Pioggia":  { spread: 60, warmth: 55, rev: 58, dens: 11, head: 45, periods: [5, 7, 9, 11]    },
-  "Vespro":   { spread: 35, warmth: 85, rev: 85, dens: 3,  head: 22, periods: [17, 19, 23, 29] },
-  "Carillon": { spread: 70, warmth: 45, rev: 66, dens: 8,  head: 35, periods: [4, 9, 17, 25]   },
+  "Sereno":     { spread: 45, warmth: 70, rev: 72, dens: 5,  head: 30, periods: [7, 11, 13, 17]  },
+  "Pioggia":    { spread: 60, warmth: 55, rev: 58, dens: 11, head: 45, periods: [5, 7, 9, 11]    },
+  "Vespro":     { spread: 35, warmth: 85, rev: 85, dens: 3,  head: 22, periods: [17, 19, 23, 29] },
+  "Carillon":   { spread: 70, warmth: 45, rev: 66, dens: 8,  head: 35, periods: [4, 9, 17, 25]   },
+  "Arcipelago": { spread: 72, warmth: 58, rev: 80, dens: 3,  head: 18, periods: [13, 16, 21, 25] },
+  "Collina":    { spread: 40, warmth: 75, rev: 55, dens: 6,  head: 38, periods: [8, 13, 19, 27]  },
+  "Finestra":   { spread: 55, warmth: 30, rev: 40, dens: 4,  head: 20, periods: [9, 14, 23, 25]  },
+  "Nuvola":     { spread: 63, warmth: 4,  rev: 92, dens: 14, head: 64, periods: [6, 11, 19, 25]  },
 };
 
 /* --- palette oraria -------------------------------------------------------
@@ -48,7 +52,7 @@ const SCALE = (() => {
   return out.sort((a, b) => a - b);
 })();
 
-/* --- i quattro loop ------------------------------------------------------ */
+/* --- le quattro frasi ------------------------------------------------------ */
 const ROMAN = ["I", "II", "III", "IV"];
 const PERIOD_MIN = 3, PERIOD_MAX = 30;
 
@@ -64,10 +68,10 @@ const loops = [7, 11, 13, 17].map((p, i) => ({
   planHead: 0.30,     // addensamento con cui il piano è stato costruito
   offset: Math.random(), // da dove parte la zona attiva sulla circonferenza
   muted: false,
-  pan: (i - 1.5) / 1.5 * 0.65, // ogni loop ha la sua posizione stereo
+  pan: (i - 1.5) / 1.5 * 0.65, // ogni frase ha la sua posizione stereo
 }));
 
-/* Un'idea: N gocce concentrate nella testa del loop.
+/* Un'idea: N gocce concentrate nella testa della frase.
    ev.t  ∈ 0..1  posizione entro la zona attiva
    ev.rel ∈ -1..1 registro relativo, poi dilatato da "ampiezza registro"   */
 function makeIdea() {
@@ -92,7 +96,7 @@ function regenerate(L) {
 }
 
 /* Il "piano" del ciclo: ogni goccia riceve la sua fase assoluta 0..1 entro il
-   giro, partendo dall'offset del loop. Se la zona attiva scavalca la fine del
+   giro, partendo dall'offset della frase. Se la zona attiva scavalca la fine del
    ciclo le fasi rientrano dall'inizio: per questo vanno riordinate, così lo
    scheduler le percorre sempre in sequenza crescente.                      */
 function buildPlan(L) {
@@ -129,6 +133,6 @@ function realignSeconds() {
   return l;
 }
 
-/* Il modello nasce già popolato: senza questa riga i quattro loop
-   resterebbero vuoti fino al primo mood, e l'app sarebbe muta all'apertura. */
+/* Il modello nasce già popolato: senza questa riga le quattro frasi
+   resterebbero vuote fino al primo mood, e l'app sarebbe muta all'apertura. */
 loops.forEach(regenerate);

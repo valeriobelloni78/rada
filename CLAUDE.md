@@ -1,6 +1,6 @@
 # Rada — contesto di progetto
 
-Strumento generativo nel browser. Quattro loop sonori di lunghezza diversa,
+Strumento generativo nel browser. Quattro frasi sonore di lunghezza diversa,
 ciascuno col proprio periodo, che non tornano mai insieme allo stesso modo.
 
 **Rispondi sempre in italiano.** Commenti nel codice, messaggi di commit e
@@ -8,8 +8,8 @@ testi dell'interfaccia sono in italiano.
 
 ## Regole da non violare
 
-**I periodi dei loop devono restare coprimi a due a due.** È il cuore del
-progetto: se due loop condividono un divisore tornano insieme presto e il
+**I periodi delle frasi devono restare coprimi a due a due.** È il cuore del
+progetto: se due frasi condividono un divisore tornano insieme presto e il
 collage collassa in un motivo riconoscibile. Vale per ogni serie in `MOODS`.
 Verificare sempre il minimo comune multiplo prima di proporre nuove serie.
 
@@ -45,14 +45,14 @@ attiva si disegnano da `L.plan` e `L.planHead`, non da `G.head`: il piano è
 ciò che suonerà davvero. Ricalcolare le posizioni dai cursori fa divergere
 ciò che si vede da ciò che si sente.
 
-**La zona attiva può scavalcare la fine del ciclo.** Ogni loop ha un
+**La zona attiva può scavalcare la fine del ciclo.** Ogni frase ha un
 `offset` casuale, quindi le fasi delle gocce rientrano dall'inizio e vanno
 riordinate (lo fa `buildPlan`). In `rebuildPlans` il confronto avviene su
 **tempi assoluti**, non su fasi: `cycleStart` può essere nel futuro, e
 avvolgere la fase fa saltare gocce o interi cicli.
 
 **Il modello si popola da sé.** In fondo a `model.js` c'è
-`loops.forEach(regenerate)`. Senza quella riga i loop nascono vuoti e l'app
+`loops.forEach(regenerate)`. Senza quella riga le frasi nascono vuote e l'app
 è muta all'apertura: è già successo dividendo il file in moduli.
 
 **Un solo set di ascoltatori per il trascinamento.** Non registrarne uno per
@@ -110,8 +110,8 @@ ordine di interesse:
 3. **Rendere visibile il collage.** I quattro quadranti sono isole, ma il
    pezzo è ciò che accade *fra* loro. Ipotesi: una fascia temporale che
    mostri gli ultimi trenta secondi di tutti e quattro insieme (il modo più
-   diretto per vedere lo sfasamento); legami effimeri fra loop che suonano
-   ravvicinati; un campo condiviso dove le gocce lasciano traccia.
+   diretto per vedere lo sfasamento); legami effimeri fra frasi che suonano
+   ravvicinate; un campo condiviso dove le gocce lasciano traccia.
 4. **Rendere visibile il tempo lungo.** Una sedimentazione che accumuli i
    segni della sessione, e magari l'esportazione di un'immagine finale.
 

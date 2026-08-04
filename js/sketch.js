@@ -3,7 +3,7 @@
 
    Tutti e quattro i quadranti vivono su UN SOLO canvas. È una scelta
    deliberata: avere un unico piano di disegno permette, in futuro, effetti
-   che attraversano i loop — scie, linee di relazione, campi che reagiscono
+   che attraversano le frasi — scie, linee di relazione, campi che reagiscono
    all'insieme — cosa impossibile con quattro tele separate.
 
    Le proporzioni sono espresse in frazioni del raggio, così il disegno regge
@@ -111,7 +111,7 @@ function drawDial(cell, now) {
   noStroke();
   fill(COL.dust);
   textSize(clamp(r * 0.10, 7, 10));
-  trackedText("LOOP " + ROMAN[L.i], cx, cy - r * 1.20, r * 0.028);
+  trackedText("FRASE " + ROMAN[L.i], cx, cy - r * 1.20, r * 0.028);
 
   const overRegen = dist(mouseX, mouseY, cx + r * 0.95, cy - r * 1.20) < r * 0.22;
   fill(overRegen ? COL.amber : COL.dust);
@@ -191,7 +191,7 @@ function drawDial(cell, now) {
 }
 
 /* ---------------------------------------------------------------------------
-   Legami effimeri: quando due gocce di loop DIVERSI suonano a meno di
+   Legami effimeri: quando due gocce di frasi DIVERSE suonano a meno di
    LINK_WINDOW secondi l'una dall'altra, un filo sottile le unisce sul
    canvas condiviso e sfuma con loro. È il momento in cui il collage per un
    istante quasi coincide — mai per davvero, perché i periodi sono coprimi.
@@ -218,24 +218,19 @@ function drawLinks(now) {
 }
 
 /* ---------------------------------------------------------------------------
-   Fascia temporale condivisa: gli ultimi TIMELINE_SEC secondi di tutti e
-   quattro i loop, una corsia per loop, sulla stessa riga del tempo. È il modo
-   più diretto per vedere lo sfasamento reale — cosa che i quattro quadranti,
-   isole indipendenti, non possono mostrare da soli.
+   Fascia temporale condivisa: gli ultimi TIMELINE_SEC secondi di tutte e
+   quattro le frasi, una corsia per frase, sulla stessa riga del tempo. È il
+   modo più diretto per vedere lo sfasamento reale — cosa che i quattro
+   quadranti, isole indipendenti, non possono mostrare da soli.
 
    Legge `history`, scritta dallo scheduler in audio.js (stesso principio di
    L.cycles per la lancetta): il disegno non ricalcola nulla, mostra soltanto
    ciò che è stato davvero suonato.                                         */
 function drawTimeline(s, now) {
-  const top = s.rows * s.cell + s.stripH * 0.30;
-  const h = s.stripH * 0.62;
+  const top = s.rows * s.cell + s.stripH * 0.16;
+  const h = s.stripH * 0.76;
   const laneH = h / loops.length;
   const left = s.w * 0.09, right = s.w * 0.97;
-
-  noStroke();
-  fill(COL.dust);
-  textSize(clamp(s.stripH * 0.11, 7, 9));
-  trackedText("ULTIMI 30 SECONDI", s.w / 2, s.rows * s.cell + s.stripH * 0.13, 1.3);
 
   for (let i = 0; i < loops.length; i++) {
     const ly = top + (i + 0.5) * laneH;
@@ -283,7 +278,7 @@ function trackedText(str, x, y, tracking) {
 
 /* ---------------------------------------------------------------------------
    Interazione: trascinamento verticale = durata · clic secco = silenzia
-   Il simbolo ↻ rigenera l'idea di quel loop.
+   Il simbolo ↻ rigenera l'idea di quella frase.
 --------------------------------------------------------------------------- */
 let drag = null, dragY = 0, dragV = 0, dragMoved = 0, dragT0 = 0;
 

@@ -4,7 +4,7 @@
    Usa la Web Audio API direttamente, non p5.sound: il cuore di Rada è uno
    SCHEDULER A LOOKAHEAD che prenota le gocce sul clock del motore audio, con
    precisione al campione. I timer di JavaScript sono troppo imprecisi per
-   loop che devono restare in fase per ore; p5.sound è pensato per gesti
+   frasi che devono restare in fase per ore; p5.sound è pensato per gesti
    immediati, non per pianificazione temporale rigorosa. Qui la precisione
    è il punto, quindi si parla con l'API nativa.
 
@@ -15,7 +15,7 @@ let ctx = null, master, verb, wetGain, dryGain, filt;
 let running = false;
 
 /* Storia delle gocce suonate di recente, per la fascia temporale condivisa
-   del disegno: gli ultimi TIMELINE_SEC secondi di tutti e quattro i loop
+   del disegno: gli ultimi TIMELINE_SEC secondi di tutte e quattro le frasi
    sulla stessa riga del tempo. Scritta qui perché è lo scheduler a sapere
    con esattezza quando una goccia suona davvero; il disegno la legge soltanto,
    come già fa con L.cycles per la lancetta.                                */
@@ -61,12 +61,12 @@ function makeImpulse(sec) {
 }
 
 /* Ripartenza dei cicli.
-   La zona attiva di ogni loop comincia in un punto qualsiasi della
+   La zona attiva di ogni frase comincia in un punto qualsiasi della
    circonferenza, quindi la sua prima goccia potrebbe cadere molto avanti nel
    giro: all'apertura si resterebbe in silenzio per parecchi secondi. Qui ogni
    ciclo viene quindi posizionato all'indietro, in modo che la prima goccia
-   arrivi entro un attimo — con ingressi comunque sfalsati, perché i quattro
-   loop non attacchino all'unisono.                                         */
+   arrivi entro un attimo — con ingressi comunque sfalsati, perché le quattro
+   frasi non attacchino all'unisono.                                        */
 function restartCycles() {
   if (!ctx) return;
   const now = ctx.currentTime;
