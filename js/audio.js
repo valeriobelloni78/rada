@@ -14,6 +14,14 @@
 let ctx = null, master, verb, wetGain, dryGain, filt;
 let running = false;
 
+/* Storia delle gocce suonate di recente, per la fascia temporale condivisa
+   del disegno: gli ultimi TIMELINE_SEC secondi di tutti e quattro i loop
+   sulla stessa riga del tempo. Scritta qui perché è lo scheduler a sapere
+   con esattezza quando una goccia suona davvero; il disegno la legge soltanto,
+   come già fa con L.cycles per la lancetta.                                */
+const TIMELINE_SEC = 30;
+const history = [];
+
 /* --- costruzione del grafo ----------------------------------------------- */
 function buildAudio() {
   ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -77,6 +85,8 @@ function schedule() {
   if (!ctx || !running) return;
   const now = ctx.currentTime, horizon = now + 0.15;
 
+  while (history.length && history[0].t < now - TIMELINE_SEC) history.shift();
+
   loops.forEach(L => {
     let guard = 0;
     while (guard++ < 300) {
@@ -108,6 +118,7 @@ function schedule() {
         const at = Math.max(t, now);
         playDrop(at, p.ev, L);
         p.ev.flash = at;
+        history.push({ t: at, loop: L.i, rel: p.ev.rel });
       }
       L.idx++;
     }
