@@ -60,7 +60,6 @@ const SCALE = (() => {
 })();
 
 /* --- le quattro frasi ------------------------------------------------------ */
-const ROMAN = ["I", "II", "III", "IV"];
 const PERIOD_MIN = 3, PERIOD_MAX = 30;
 
 const loops = [7, 11, 13, 17].map((p, i) => ({

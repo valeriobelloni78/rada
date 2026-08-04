@@ -236,22 +236,23 @@ function drawTimeline(s, now) {
   const top = s.rows * s.cell + s.stripH * 0.16;
   const h = s.stripH * 0.76;
   const laneH = h / loops.length;
-  const left = s.w * 0.09, right = s.w * 0.97;
+  /* Senza i numeri romani non serve più riservare spazio a sinistra: le
+     corsie arrivano ai due estremi, alla stessa distanza dal bordo.       */
+  const left = s.w * 0.03, right = s.w * 0.97;
 
   for (let i = 0; i < loops.length; i++) {
     const ly = top + (i + 0.5) * laneH;
     stroke(COL.hair);
     strokeWeight(1);
     line(left, ly, right, ly);
-    noStroke();
-    fill(COL.dust);
-    textSize(clamp(laneH * 0.4, 6, 8.5));
-    trackedText(ROMAN[i], left - s.w * 0.035, ly, 0.5);
   }
 
+  /* Le due barre che chiudono la fascia, identiche e simmetriche: a destra
+     è "adesso", a sinistra il fondo della memoria, trenta secondi prima. */
   stroke(COL.dust);
   strokeWeight(1);
-  line(right, top - laneH * 0.1, right, top + h + laneH * 0.1);   // "adesso"
+  line(left,  top - laneH * 0.1, left,  top + h + laneH * 0.1);
+  line(right, top - laneH * 0.1, right, top + h + laneH * 0.1);
 
   if (!ctx) return;
   noStroke();
