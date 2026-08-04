@@ -41,7 +41,11 @@ function setup() {
   const c = createCanvas(s.w, s.h);
   c.parent(holder);
   readPalette();
-  textFont('"Helvetica Neue", -apple-system, system-ui, Roboto, Arial, sans-serif');
+  /* La pila include i grotteschi giapponesi di sistema: per il latino non
+     cambia nulla (risolve sui primi), ma evita che il giapponese finisca su
+     un ripiego qualsiasi quando i glifi mancano dai font occidentali.      */
+  textFont('"Helvetica Neue", -apple-system, system-ui, Roboto, Arial, ' +
+           '"Hiragino Sans", "Yu Gothic", "Noto Sans CJK JP", sans-serif');
   textAlign(CENTER, CENTER);
 }
 
@@ -111,7 +115,7 @@ function drawDial(cell, now) {
   noStroke();
   fill(COL.dust);
   textSize(clamp(r * 0.10, 7, 10));
-  trackedText("FRASE " + ROMAN[L.i], cx, cy - r * 1.20, r * 0.028);
+  trackedText(CANVAS.phrase[L.i], cx, cy - r * 1.20, r * 0.028 * CANVAS.trackMul);
 
   const overRegen = dist(mouseX, mouseY, cx + r * 0.95, cy - r * 1.20) < r * 0.22;
   fill(overRegen ? COL.amber : COL.dust);
@@ -177,15 +181,17 @@ function drawDial(cell, now) {
     drawingContext.globalAlpha = 1;
   }
 
-  /* al centro: durata e numero di gocce */
+  /* al centro: durata e numero di gocce. Il separatore decimale segue la
+     lingua (7,0s in italiano, 7.0秒 in giapponese): se ne occupa il
+     formattatore costruito una volta sola in i18n.js — crearne uno qui
+     costerebbe più di tutto il resto del fotogramma.                      */
   noStroke();
   fill(COL.ink);
   textSize(r * 0.30);
-  text(L.target.toFixed(1) + "s", cx, cy - r * 0.04);
+  text(fmtOne(L.target) + CANVAS.seconds, cx, cy - r * 0.04);
   fill(COL.dust);
   textSize(clamp(r * 0.085, 6.5, 8.5));
-  const n = L.idea.length;
-  trackedText((n + (n === 1 ? " GOCCIA" : " GOCCE")), cx, cy + r * 0.26, r * 0.022);
+  trackedText(dropsLabel(L.idea.length), cx, cy + r * 0.26, r * 0.022 * CANVAS.trackMul);
 
   pop();
 }

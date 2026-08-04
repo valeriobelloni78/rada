@@ -80,6 +80,26 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
 }
 .status.live{color:var(--ink)}
 .status.live .pulse{background:var(--amber);animation:pulse 2.6s ease-in-out infinite}
+
+/* ------------------------------------------------- lingua, accanto allo stato
+   Quattro sigle sulla stessa riga della riga di stato: c'è spazio per tutte
+   e quattro le lingue fino a ~665px di finestra, sotto i quali la testata va
+   a capo da sé — come già faceva prima.                                     */
+.headRight{
+  display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;justify-content:flex-end;
+}
+.langs{display:flex;gap:10px}
+.lang{
+  appearance:none;border:0;background:transparent;padding:0;
+  font-family:var(--sans);font-weight:400;
+  font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--hair);cursor:pointer;transition:.2s;
+}
+.lang:hover{color:var(--ink-2)}
+.lang.sel{color:var(--amber)}
+.lang:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px;border-radius:2px}
+.langSep{width:1px;height:10px;background:var(--hair);flex:none}
 @keyframes pulse{
   0%,100%{opacity:.35;transform:scale(.85)}
   50%{opacity:1;transform:scale(1.15)}
@@ -222,6 +242,9 @@ input[type=range]::-moz-range-thumb{
     grid-template-columns:repeat(4,1fr);
     width:100%;
   }
+  /* qui la testata è ormai su due righe e le sigle non confinano più con lo
+     stato: il trattino separatore resterebbe appeso nel vuoto.            */
+  .langSep{display:none}
   .mood{
     padding:7px 4px;
     font-size:8.5px;
@@ -233,6 +256,35 @@ input[type=range]::-moz-range-thumb{
   .controls{grid-template-columns:1fr}
   .bar{justify-content:center}
 }
+
+/* ------------------------------------ trattamento tipografico del giapponese
+   Il giapponese non ha maiuscolo, quindi il dispositivo su cui poggia tutta
+   la gerarchia minuta del progetto — MAIUSCOLO più tracking ampio — qui non
+   esiste. Si ricostruisce con gli unici due strumenti che restano: il corpo
+   e il 字間, la spaziatura fra i glifi, che in giapponese è una scelta
+   tipografica legittima ma vuole valori molto più stretti del latino.
+   I caratteri sono inoltre più fitti di tratti e reggono peggio il corpo
+   piccolo: vanno alzati di circa un punto per restare leggibili.           */
+:lang(ja) .status,
+:lang(ja) .ctl label,
+:lang(ja) .loopHint,
+:lang(ja) .realign,
+:lang(ja) .mood,
+:lang(ja) .lang{
+  text-transform:none;
+  letter-spacing:.08em;
+}
+:lang(ja) .status{font-size:10.5px}
+:lang(ja) .ctl label{font-size:10px}
+:lang(ja) .loopHint{font-size:9px}
+:lang(ja) .realign{font-size:9.5px}
+:lang(ja) .mood{font-size:9px;letter-spacing:.04em}
+:lang(ja) .power{font-size:12.5px;letter-spacing:.04em}
+:lang(ja) .cardHead .t{letter-spacing:.04em}
+/* il giapponese va a capo fra qualunque coppia di caratteri: serve più aria
+   fra le righe, e meno spaziatura di quella pensata per le parole latine  */
+:lang(ja) .gate p{line-height:1.9;letter-spacing:.02em}
+:lang(ja) .gate .enter{letter-spacing:.12em}
 
 /* chi preferisce meno movimento: si fermano le animazioni decorative */
 @media (prefers-reduced-motion:reduce){

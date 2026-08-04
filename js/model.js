@@ -13,32 +13,39 @@ const PARAMS = ["spread", "warmth", "rev", "dens", "head"];
 
 /* --- mood: preset sonori + configurazione temporale delle quattro frasi ----
    I periodi di ogni serie sono a due a due coprimi: è ciò che tiene le frasi
-   sfasate a lungo. Cambiare mood rigenera anche le quattro idee.            */
+   sfasate a lungo. Cambiare mood rigenera anche le quattro idee.
+
+   Le chiavi sono IDENTIFICATORI, non etichette: il nome visibile di ogni mood
+   sta in i18n.js, una voce per lingua. Prima le due cose coincidevano, e un
+   mood non si poteva rinominare senza rinominare anche il preset.          */
 const MOODS = {
-  "Sereno":     { spread: 45, warmth: 70, rev: 72, dens: 5,  head: 30, periods: [7, 11, 13, 17]  },
-  "Pioggia":    { spread: 60, warmth: 55, rev: 58, dens: 11, head: 45, periods: [5, 7, 9, 11]    },
-  "Vespro":     { spread: 35, warmth: 85, rev: 85, dens: 3,  head: 22, periods: [17, 19, 23, 29] },
-  "Carillon":   { spread: 70, warmth: 45, rev: 66, dens: 8,  head: 35, periods: [4, 9, 17, 25]   },
-  "Arcipelago": { spread: 72, warmth: 58, rev: 80, dens: 3,  head: 18, periods: [13, 16, 21, 25] },
-  "Collina":    { spread: 40, warmth: 75, rev: 55, dens: 6,  head: 38, periods: [8, 13, 19, 27]  },
-  "Finestra":   { spread: 55, warmth: 30, rev: 40, dens: 4,  head: 20, periods: [9, 14, 23, 25]  },
-  "Nuvola":     { spread: 63, warmth: 4,  rev: 92, dens: 14, head: 64, periods: [6, 11, 19, 25]  },
+  sereno:     { spread: 45, warmth: 70, rev: 72, dens: 5,  head: 30, periods: [7, 11, 13, 17]  },
+  pioggia:    { spread: 60, warmth: 55, rev: 58, dens: 11, head: 45, periods: [5, 7, 9, 11]    },
+  vespro:     { spread: 35, warmth: 85, rev: 85, dens: 3,  head: 22, periods: [17, 19, 23, 29] },
+  carillon:   { spread: 70, warmth: 45, rev: 66, dens: 8,  head: 35, periods: [4, 9, 17, 25]   },
+  arcipelago: { spread: 72, warmth: 58, rev: 80, dens: 3,  head: 18, periods: [13, 16, 21, 25] },
+  collina:    { spread: 40, warmth: 75, rev: 55, dens: 6,  head: 38, periods: [8, 13, 19, 27]  },
+  finestra:   { spread: 55, warmth: 30, rev: 40, dens: 4,  head: 20, periods: [9, 14, 23, 25]  },
+  nuvola:     { spread: 63, warmth: 4,  rev: 92, dens: 14, head: 64, periods: [6, 11, 19, 25]  },
 };
 
 /* --- palette oraria -------------------------------------------------------
    L'ora del giorno inclina registro (filtro), calore (timbro) e spazio
    (riverbero). È l'unica influenza esterna sul suono: non chiede permessi,
-   non usa sensori, e rende l'ascolto notturno diverso da quello diurno.    */
+   non usa sensori, e rende l'ascolto notturno diverso da quello diurno.
+
+   Come per i mood, qui viaggia un `id`: la parola che si legge nella riga di
+   stato la sceglie i18n.js. Il modello resta senza lingua.                 */
 function timePalette(h) {
-  if (h >= 5  && h < 8)  return { name: "alba",       toneBias:  +6, warmBias:  +6, spaceBias:  +6 };
-  if (h >= 8  && h < 12) return { name: "mattino",    toneBias: +14, warmBias:  -6, spaceBias:  -6 };
-  if (h >= 12 && h < 17) return { name: "pomeriggio", toneBias: +18, warmBias: -10, spaceBias: -10 };
-  if (h >= 17 && h < 20) return { name: "tramonto",   toneBias:  +4, warmBias:  +8, spaceBias:  +6 };
-  if (h >= 20 && h < 23) return { name: "sera",       toneBias: -10, warmBias: +12, spaceBias: +10 };
-  return                        { name: "notturna",   toneBias: -20, warmBias: +18, spaceBias: +14 };
+  if (h >= 5  && h < 8)  return { id: "alba",       toneBias:  +6, warmBias:  +6, spaceBias:  +6 };
+  if (h >= 8  && h < 12) return { id: "mattino",    toneBias: +14, warmBias:  -6, spaceBias:  -6 };
+  if (h >= 12 && h < 17) return { id: "pomeriggio", toneBias: +18, warmBias: -10, spaceBias: -10 };
+  if (h >= 17 && h < 20) return { id: "tramonto",   toneBias:  +4, warmBias:  +8, spaceBias:  +6 };
+  if (h >= 20 && h < 23) return { id: "sera",       toneBias: -10, warmBias: +12, spaceBias: +10 };
+  return                        { id: "notturna",   toneBias: -20, warmBias: +18, spaceBias: +14 };
 }
 
-let currentPalette = { name: "—", toneBias: 0, warmBias: 0, spaceBias: 0 };
+let currentPalette = { id: "", toneBias: 0, warmBias: 0, spaceBias: 0 };
 /* valori efficaci = posizione del fader + inclinazione oraria */
 let effWarmth = 0.70, effRev = 0.72, lastHead = 30;
 

@@ -29,6 +29,14 @@ suonano. Non aggiungere altri colori senza chiederlo.
 
 **Nessuna dipendenza da installare, nessun passaggio di compilazione.** Si
 apre `index.html` e funziona. Non introdurre bundler, npm o framework.
+Vale anche per le traduzioni: **niente file JSON caricati con `fetch`**, che
+su `file://` il CORS blocca — l'app resterebbe senza testi al doppio clic.
+Il dizionario è un oggetto JavaScript in `i18n.js`.
+
+**Il modello non conosce le parole.** `MOODS` e `timePalette` espongono
+`id` (`vespro`, `notturna`), mai etichette: i nomi visibili stanno in
+`i18n.js`, uno per lingua. Prima le due cose coincidevano, e un mood non si
+poteva rinominare senza rinominare il preset.
 
 ## Insidie già incontrate (non ripeterle)
 
@@ -60,6 +68,18 @@ quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 
 **Attenzione alle allocazioni nei cicli a 60 fps.** Niente nuovi buffer o
 array dentro `draw`.
+
+**Le stringhe del canvas si preparano al cambio di lingua, non a ogni
+fotogramma.** `CANVAS.phrase` e `CANVAS.drops` sono costruite una volta da
+`buildCanvasCache`; `draw` le legge e basta. Vale soprattutto per i
+formattatori: costruire un `Intl.NumberFormat` dentro `draw` costa più di
+tutto il resto del disegno. Ne esistono due, creati una volta per lingua.
+
+**Il giapponese non ha maiuscolo.** La gerarchia delle etichette minute
+poggia su MAIUSCOLO più tracking ampio, un dispositivo che in giapponese
+semplicemente non esiste: le regole `:lang(ja)` in `style.css` la
+ricostruiscono con corpo e 字間, e sul canvas c'è `CANVAS.trackMul`, perché
+i glifi a piena larghezza vanno spaziati molto meno di quelli latini.
 
 ## Convenzioni
 

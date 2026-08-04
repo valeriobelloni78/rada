@@ -4,10 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rada</title>
-<meta name="description" content="Quattro frasi sonore di lunghezza diversa che non tornano mai insieme allo stesso modo. Strumento generativo nel browser.">
+
+<!-- Le anteprime social restano in inglese: i crawler leggono questi meta
+     prima che il JavaScript giri, quindi qualunque lingua ci sia scritta qui
+     è quella che appare quando si condivide il link. i18n.js li riscrive
+     comunque nella lingua corrente, per i motori che eseguono lo script. -->
+<meta name="description" content="Four sound phrases of different lengths that never come back together the same way. A generative instrument in the browser.">
 
 <meta property="og:title" content="Rada">
-<meta property="og:description" content="Quattro frasi sonore di lunghezza diversa che non tornano mai insieme allo stesso modo.">
+<meta property="og:description" content="Four sound phrases of different lengths that never come back together the same way.">
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="css/style.css">
@@ -19,40 +24,44 @@
 
   <div class="head">
     <h1>Ra<em>d</em>a</h1>
-    <div class="status" id="status">
-      <span class="pulse"></span>
-      <span id="statusText">in attesa</span>
+    <div class="headRight">
+      <nav class="langs" id="langs" aria-label="Lingua"></nav>
+      <span class="langSep" aria-hidden="true"></span>
+      <div class="status" id="status">
+        <span class="pulse"></span>
+        <span id="statusText">in attesa</span>
+      </div>
     </div>
   </div>
 
   <div class="loopCard">
     <div class="cardHead">
-      <span class="t">Le quattro frasi</span>
+      <span class="t" data-i18n="card.title">Le quattro frasi</span>
       <span class="realign" id="realign">—</span>
     </div>
-    <div class="loopHint">trascina: durata · clic: silenzia · ↻ nuova idea</div>
+    <div class="loopHint" data-i18n="card.hint">trascina: durata · clic: silenzia · ↻ nuova idea</div>
     <div id="canvas-holder"></div>
   </div>
 
   <div class="controls">
     <div class="ctl">
-      <label for="spread">Ampiezza registro <b id="vSpread">—</b></label>
+      <label for="spread"><span data-i18n="ctl.spread">Ampiezza registro</span> <b id="vSpread">—</b></label>
       <input type="range" id="spread" min="0" max="100" value="45">
     </div>
     <div class="ctl">
-      <label for="warmth">Calore timbrico <b id="vWarmth">—</b></label>
+      <label for="warmth"><span data-i18n="ctl.warmth">Calore timbrico</span> <b id="vWarmth">—</b></label>
       <input type="range" id="warmth" min="0" max="100" value="70">
     </div>
     <div class="ctl">
-      <label for="rev">Spazio / coda <b id="vRev">—</b></label>
+      <label for="rev"><span data-i18n="ctl.rev">Spazio / coda</span> <b id="vRev">—</b></label>
       <input type="range" id="rev" min="0" max="100" value="72">
     </div>
     <div class="ctl">
-      <label for="dens">Densità dell'idea <b id="vDens">—</b></label>
+      <label for="dens"><span data-i18n="ctl.dens">Densità dell'idea</span> <b id="vDens">—</b></label>
       <input type="range" id="dens" min="2" max="14" value="5">
     </div>
     <div class="ctl">
-      <label for="head">Addensamento <b id="vHead">—</b></label>
+      <label for="head"><span data-i18n="ctl.head">Addensamento</span> <b id="vHead">—</b></label>
       <input type="range" id="head" min="10" max="70" value="30">
     </div>
   </div>
@@ -69,8 +78,8 @@
 
 <div class="gate" id="gate">
   <h2>Ra<em>d</em>a</h2>
-  <p>Quattro frasi sonore di lunghezza diversa, ciascuna col proprio periodo.</p>
-  <div class="enter">Entra</div>
+  <p data-i18n="gate.text">Quattro frasi sonore di lunghezza diversa, ciascuna col proprio periodo.</p>
+  <div class="enter" data-i18n="gate.enter">Entra</div>
 </div>
 
 <!-- p5.js, versione fissata perché il progetto non cambi comportamento da solo.
@@ -78,7 +87,9 @@
      questa riga con  <script src="lib/p5.min.js"></script>  -->
 <script src="https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.min.js"></script>
 
-<!-- l'ordine conta: il modello prima, poi il suono, poi il disegno, infine i comandi -->
+<!-- l'ordine conta: le parole e il modello prima (non dipendono da nulla),
+     poi il suono, poi il disegno, infine i comandi -->
+<script src="js/i18n.js"></script>
 <script src="js/model.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/sketch.js"></script>

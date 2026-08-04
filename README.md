@@ -55,11 +55,18 @@ Nessuna dipendenza da installare, nessun passaggio di compilazione: si apre
 ```
 index.html          struttura e collegamenti
 css/style.css       palette, tipografia, impaginazione
+js/i18n.js          le quattro lingue. Non dipende da nulla
 js/model.js         lo stato: frasi, idee, piani. Non dipende da nulla
 js/audio.js         Web Audio API: sintesi e scheduler
 js/sketch.js        p5.js: disegno dei quadranti e interazione
-js/ui.js            cursori, mood, riga di stato
+js/ui.js            cursori, mood, lingua, riga di stato
 ```
+
+**L'interfaccia parla quattro lingue** — italiano, francese, inglese e
+giapponese — e sceglie da sé quella del browser alla prima apertura,
+ripiegando sull'inglese per tutte le altre. Le sigle in alto a destra
+cambiano lingua al volo, anche mentre suona, e la scelta viene ricordata.
+Si può anche imporre dall'indirizzo, con `?lang=ja`.
 
 **Il suono usa la Web Audio API direttamente, non p5.sound.** Il cuore di Rada è
 uno *scheduler a lookahead*: ogni 25 ms guarda 150 ms avanti e prenota le note sul
@@ -84,7 +91,9 @@ dimensione. Provare a sostituire i trattini con qualcos'altro è il modo più
 rapido per capire come funziona.
 
 Per cambiare le configurazioni temporali, guarda `MOODS` in `js/model.js` — e
-ricordati la regola dei periodi coprimi, altrimenti perdi lo sfasamento.
+ricordati la regola dei periodi coprimi, altrimenti perdi lo sfasamento. Le
+chiavi lì sono identificatori: i nomi che si leggono sui bottoni stanno in
+`js/i18n.js`, uno per lingua.
 
 ## Limiti noti
 
@@ -114,10 +123,14 @@ concentrating its notes at the head of its cycle with silence filling the rest.
 Because the periods are pairwise coprime, the phrases never realign the same way
 — the full combination repeats only after nearly five hours.
 
-Drag a dial to change its loop length, click to mute, press ↻ for a new musical
-idea. Five faders shape the overall sound; four presets change both timbre and
-temporal configuration. The instrument also reads your system clock and shifts
-its character across the day.
+Drag a dial to change its phrase length, click to mute, press ↻ for a new
+musical idea. Five faders shape the overall sound; eight presets change both
+timbre and temporal configuration. The instrument also reads your system clock
+and shifts its character across the day.
+
+The interface speaks Italian, French, English and Japanese, picking up your
+browser's language on first visit and falling back to English. Switch it from
+the top right, or force it with `?lang=ja`.
 
 Audio uses the Web Audio API directly with a lookahead scheduler (sample-accurate
 timing matters here); graphics use p5.js. No build step, no dependencies to
