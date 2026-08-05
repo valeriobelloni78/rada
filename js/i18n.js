@@ -28,7 +28,9 @@ const STRINGS = {
   it: {
     "meta.description": "Quattro frasi sonore di lunghezza diversa che non tornano mai insieme allo stesso modo. Strumento generativo nel browser.",
     "ui.langNav":       "Lingua",
-    "gate.text":        "Quattro frasi sonore di lunghezza diversa, ciascuna col proprio periodo.",
+    "ui.guide":         "Guida",
+    "ui.guideAria":     "Guida (si apre in una nuova scheda)",
+    "gate.text":        "Uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra.",
     "gate.enter":       "Entra",
     "card.title":       "Le quattro frasi",
     "card.hint":        "trascina: durata · clic: silenzia · ↻ nuova idea",
@@ -61,7 +63,9 @@ const STRINGS = {
   fr: {
     "meta.description": "Quatre phrases sonores de longueurs différentes qui ne reviennent jamais ensemble de la même façon. Un instrument génératif dans le navigateur.",
     "ui.langNav":       "Langue",
-    "gate.text":        "Quatre phrases sonores de longueurs différentes, chacune avec sa propre période.",
+    "ui.guide":         "Guide",
+    "ui.guideAria":     "Guide (s'ouvre dans un nouvel onglet)",
+    "gate.text":        "Un espace sonore où l'on peut s'attarder dans ses souvenirs en regardant par la fenêtre.",
     "gate.enter":       "Entrer",
     "card.title":       "Les quatre phrases",
     "card.hint":        "glisser" + NNBSP + ": durée · clic" + NNBSP + ": silence · ↻ nouvelle idée",
@@ -94,7 +98,9 @@ const STRINGS = {
   en: {
     "meta.description": "Four sound phrases of different lengths that never come back together the same way. A generative instrument in the browser.",
     "ui.langNav":       "Language",
-    "gate.text":        "Four sound phrases of different lengths, each with its own period.",
+    "ui.guide":         "Guide",
+    "ui.guideAria":     "Guide (opens in a new tab)",
+    "gate.text":        "A sound space where you can linger among your own memories while looking out of the window.",
     "gate.enter":       "Enter",
     "card.title":       "The four phrases",
     "card.hint":        "drag: duration · click: mute · ↻ new idea",
@@ -127,7 +133,9 @@ const STRINGS = {
   ja: {
     "meta.description": "長さの異なる四つの音のフレーズが、二度と同じかたちで重ならない。ブラウザで動く生成的な楽器。",
     "ui.langNav":       "言語",
-    "gate.text":        "長さの異なる四つの音のフレーズ。それぞれが固有の周期を持つ。",
+    "ui.guide":         "手引き",
+    "ui.guideAria":     "手引き（新しいタブで開きます）",
+    "gate.text":        "窓の外を眺めながら、自分の記憶のなかに佇んでいられる音の空間。",
     "gate.enter":       "入る",
     "card.title":       "四つのフレーズ",
     "card.hint":        "ドラッグ：長さ · クリック：消音 · ↻ 新しい楽想",
@@ -250,12 +258,57 @@ function dropsLabel(n) {
   return CANVAS.drops[n] !== undefined ? CANVAS.drops[n] : CANVAS.drops[MAX_DROPS_CACHE];
 }
 
-/* --- applicazione al documento -------------------------------------------- */
+/* --- il selettore di lingua ------------------------------------------------
+   Costruito qui e non nelle singole pagine, perché dev'essere identico
+   ovunque compaia: interfaccia e guida hanno le stesse quattro sigle, con lo
+   stesso comportamento. Prima esisteva in due copie e sarebbero divergute.  */
+let langSwitchEl = null;
+
+function buildLangSwitch(el) {
+  if (!el) return;
+  langSwitchEl = el;
+  LANGS.forEach(l => {
+    const b = document.createElement("button");
+    b.className = "lang";
+    b.dataset.lang = l;
+    b.textContent = LANG_LABEL[l];
+    if (l === "ja") b.lang = "ja";   // così le sintesi vocali lo leggono giusto
+    b.onclick = () => setLang(l);
+    el.appendChild(b);
+  });
+  markLang();
+}
+
+function markLang() {
+  if (!langSwitchEl) return;
+  langSwitchEl.querySelectorAll(".lang").forEach(b => {
+    const on = b.dataset.lang === lang;
+    b.classList.toggle("sel", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  langSwitchEl.setAttribute("aria-label", T("ui.langNav"));
+}
+
+/* --- applicazione al documento --------------------------------------------
+   Due attributi, non uno: `data-i18n` scrive testo semplice, `data-i18n-html`
+   accetta il marcatore interno (corsivi, risalti, capoversi) di cui la guida
+   ha bisogno. Le stringhe vengono da questi file, non da fuori.            */
 function applyI18n() {
   document.documentElement.lang = lang;
 
   document.querySelectorAll("[data-i18n]").forEach(el => {
     el.textContent = T(el.getAttribute("data-i18n"));
+  });
+
+  document.querySelectorAll("[data-i18n-html]").forEach(el => {
+    el.innerHTML = T(el.getAttribute("data-i18n-html"));
+  });
+
+  /* L'etichetta che sente chi non vede: un collegamento che apre una scheda
+     nuova va annunciato, altrimenti il cambio di contesto arriva senza
+     preavviso. Sullo schermo non compare nulla.                            */
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    el.setAttribute("aria-label", T(el.getAttribute("data-i18n-aria")));
   });
 
   /* Le anteprime social restano in inglese nel sorgente, perché i crawler
@@ -275,6 +328,7 @@ function setLang(l) {
   buildFormatters();
   buildCanvasCache();
   applyI18n();
+  markLang();
   if (typeof onLanguageChange === "function") onLanguageChange();
 }
 

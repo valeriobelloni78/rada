@@ -98,28 +98,10 @@ Object.keys(MOODS).forEach((id, i) => {
 });
 
 /* --- lingua ---------------------------------------------------------------
-   Quattro sigle, quella attiva in arancione. La lingua di partenza la decide
-   il browser (vedi detectLang in i18n.js); da qui in poi comanda la scelta
-   dell'utente, che resta memorizzata.                                      */
-const langsEl = $("langs");
-LANGS.forEach(l => {
-  const b = document.createElement("button");
-  b.className = "lang";
-  b.dataset.lang = l;
-  b.textContent = LANG_LABEL[l];
-  if (l === "ja") b.lang = "ja";   // così le sintesi vocali lo leggono giusto
-  b.onclick = () => setLang(l);
-  langsEl.appendChild(b);
-});
-
-function markLang() {
-  langsEl.querySelectorAll(".lang").forEach(b => {
-    const on = b.dataset.lang === lang;
-    b.classList.toggle("sel", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-  });
-  langsEl.setAttribute("aria-label", T("ui.langNav"));
-}
+   Le quattro sigle le costruisce i18n.js, che le fa identiche qui e nella
+   guida. La lingua di partenza la decide il browser (vedi detectLang); da qui
+   in poi comanda la scelta dell'utente, che resta memorizzata.             */
+buildLangSwitch($("langs"));
 
 /* Chiamata da setLang (i18n.js) dopo che il documento è già stato tradotto:
    qui si aggiorna solo ciò che il dizionario non raggiunge da solo, cioè il
@@ -128,7 +110,6 @@ function onLanguageChange() {
   document.querySelectorAll("#moods .mood").forEach(b => {
     b.textContent = moodName(b.dataset.mood);
   });
-  markLang();
   onPowerChange(running);
   onRealignChange();
   readouts();
@@ -155,7 +136,6 @@ $("gate").addEventListener("click", async () => {
 });
 
 applyI18n();
-markLang();
 $("powerLabel").textContent = T("power.play");
 refreshStatus();
 onRealignChange();

@@ -1,0 +1,179 @@
+/* =============================================================================
+   RADA · guida.css — la pagina di documentazione
+
+   Si appoggia a style.css, che resta l'unica fonte della palette: qui non c'è
+   nessun colore scritto a mano, solo le variabili già definite là.
+
+   La gerarchia dei rettangoli ricalca quella dell'interfaccia: il bordo pieno
+   d'inchiostro è quello del riquadro dei quadranti e resta per le sezioni
+   portanti; le celle minori usano il filo tenue delle pillole dei mood. Se
+   avessero tutte lo stesso bordo la pagina diventerebbe una parete di scatole
+   identiche, e la lettura non avrebbe più un ordine.
+============================================================================= */
+
+/* La pagina è lunga: il contenuto parte dall'alto invece di stare al centro,
+   e la misura si stringe, perché una riga di mille pixel non si legge.      */
+.stage.doc{justify-content:flex-start}
+.wrap.doc{max-width:900px}
+
+/* ------------------------------------------------------------- testata */
+.logoLink{color:inherit;text-decoration:none}
+.backLink{
+  font-family:var(--sans);font-weight:400;
+  font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dust);text-decoration:none;transition:.2s;
+}
+.backLink:hover{color:var(--ink)}
+
+/* --------------------------------------------------- rettangoli portanti */
+.docCard{
+  border:1.5px solid var(--ink);
+  border-radius:24px;
+  padding:22px 26px 24px;
+  margin-bottom:14px;
+}
+.docCard .cardHead{margin:0 0 10px}
+.docCard h2.t{margin:0;font-weight:200;font-size:16px;letter-spacing:.1em}
+
+.docCard p{
+  margin:0 0 11px;
+  font-size:14px;line-height:1.75;font-weight:300;
+  color:var(--ink-2);
+}
+.docCard p:last-child{margin-bottom:0}
+/* <em> qui non inclina: rialza soltanto il colore, perché la gerarchia del
+   progetto è fatta di peso e spaziatura, non di corsivi.                   */
+.docCard em{font-style:normal;color:var(--ink)}
+/* <i> invece inclina davvero: serve per i termini tecnici citati in quanto
+   termini — "coprimi" — dove il corsivo ha un significato preciso.         */
+.docCard i{font-style:italic;color:var(--ink)}
+
+/* Il riquadro d'apertura non ha titolo: è la voce che invita, non una
+   sezione. Un corpo appena più grande gli dà il respiro che il titolo
+   mancante non gli dà.                                                     */
+.docCard.docOpen p{font-size:15px;line-height:1.85}
+
+/* nota di coda: più tenue del corpo, staccata da un filo */
+.docNote{
+  margin-top:14px !important;
+  padding-top:12px;
+  border-top:1px solid var(--hair);
+  font-size:12.5px !important;
+  color:var(--dust) !important;
+}
+
+/* ----------------------------------------------- etichette di sezione */
+.docLabel{
+  margin:26px 0 10px 8px;
+  font-family:var(--sans);font-weight:400;
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dust);
+}
+.docIntro{
+  margin:0 8px 12px;
+  font-size:13px;line-height:1.7;font-weight:300;color:var(--ink-2);
+}
+.docIntro em{font-style:normal;color:var(--ink)}
+
+/* --------------------------------------------------------- celle minori */
+.docGrid{display:grid;gap:10px;margin-bottom:14px}
+.docGrid.g4{grid-template-columns:repeat(4,1fr)}
+
+.docCell{
+  border:1.5px solid var(--hair);
+  border-radius:16px;
+  padding:15px 16px 16px;
+  display:flex;flex-direction:column;
+}
+.docCell .k{
+  font-family:var(--sans);font-weight:400;
+  font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:8px;
+}
+.docCell p{
+  margin:0;
+  font-size:12.5px;line-height:1.65;font-weight:300;
+  color:var(--ink-2);
+}
+/* il tempo di riallineamento, nello stesso arancione che lo mostra a schermo */
+.docCell .mt{
+  margin-top:auto;padding-top:10px;
+  font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--amber);font-variant-numeric:tabular-nums;
+}
+
+/* -------------------------------------------- elenco dei cursori
+   Etichetta a sinistra e testo a destra: la stessa lettura del pannello dei
+   comandi, dove il nome sta accanto al valore.                             */
+.docList{margin:0;display:grid;grid-template-columns:minmax(0,180px) 1fr;gap:10px 22px}
+.docList dt{
+  font-family:var(--sans);font-weight:400;
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);padding-top:3px;
+}
+.docList dd{
+  margin:0;
+  font-size:13px;line-height:1.7;font-weight:300;color:var(--ink-2);
+}
+.docList dd em{font-style:normal;color:var(--ink)}
+
+/* ------------------------------------------------------ due affiancate */
+.docPair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.docPair .docCard{margin-bottom:0}
+
+.docEnd{margin-top:14px}
+
+/* ------------------------------------------------------------- chiusura */
+.docFoot{
+  display:flex;align-items:center;gap:14px;
+  margin:26px 8px 0;
+}
+.docFoot a{
+  font-family:var(--sans);font-weight:400;
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dust);text-decoration:none;transition:.2s;
+}
+.docFoot a:hover{color:var(--ink)}
+.docFoot .sep{width:1px;height:10px;background:var(--hair);flex:none}
+
+/* ---------------------------------------------------------- adattamenti */
+@media (max-width:719px){
+  .docGrid.g4{grid-template-columns:repeat(2,1fr)}
+  .docPair{grid-template-columns:1fr}
+  .docList{grid-template-columns:1fr;gap:4px 0}
+  .docList dd{margin-bottom:10px}
+  .docCard{padding:18px 18px 20px}
+}
+@media (max-width:479px){
+  /* i gesti hanno testi lunghi e vanno in colonna singola; i mood no: due
+     righe scarse ciascuno, e in colonna singola occuperebbero due schermate
+     di puro scorrimento. Restano affiancati come le pillole nell'interfaccia. */
+  .docGrid.g4{grid-template-columns:1fr}
+  .docGrid.g4.moodGrid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .moodGrid .docCell{padding:13px 13px 14px}
+  .moodGrid .docCell p{font-size:12px;line-height:1.6}
+}
+
+/* -------------------------------- il giapponese, se un giorno tradurremo */
+:lang(ja) .docLabel,
+:lang(ja) .docCell .k,
+:lang(ja) .docList dt,
+:lang(ja) .backLink,
+:lang(ja) .docFoot a{
+  text-transform:none;
+  letter-spacing:.08em;
+}
+:lang(ja) .docCard p,
+:lang(ja) .docList dd{line-height:1.95;letter-spacing:.02em}
+
+/* Nemmeno il corsivo esiste in giapponese: l'obliquo che il browser applica
+   ai glifi CJK non è un carattere, è una deformazione calcolata. Per marcare
+   un termine — 互いに素 — la tipografia giapponese usa i 圏点, i punti posti
+   sopra i caratteri: stesso compito del nostro corsivo, altro strumento.   */
+:lang(ja) .docCard i{
+  font-style:normal;
+  -webkit-text-emphasis:filled dot currentColor;
+  text-emphasis:filled dot currentColor;
+  -webkit-text-emphasis-position:over right;
+  text-emphasis-position:over right;
+}
