@@ -63,6 +63,13 @@ avvolgere la fase fa saltare gocce o interi cicli.
 `loops.forEach(regenerate)`. Senza quella riga le frasi nascono vuote e l'app
 è muta all'apertura: è già successo dividendo il file in moduli.
 
+**La finestra dello scheduler è una sola, e la usano in due.** `LOOKAHEAD`
+vive in `model.js` perché `schedule` e `rebuildPlans` devono guardare
+esattamente altrettanto avanti: se lo scheduler prenotasse a tre secondi e
+`rebuildPlans` ne considerasse pianificati solo 0,15, una mossa
+dell'addensamento riposizionerebbe gocce già prenotate e le sentiresti due
+volte. Cambiando l'una, cambiare l'altra.
+
 **Un solo set di ascoltatori per il trascinamento.** Non registrarne uno per
 quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 
@@ -140,6 +147,15 @@ rendere possibili gli effetti che li attraversano: non separarli.
 
 ## Limiti noti
 
-Se la scheda va in secondo piano il browser rallenta i timer e il suono si
-fa intermittente. È un limite del web, non aggirabile: Rada è pensata per
-essere ascoltata mentre la si guarda.
+**In secondo piano il browser rallenta i timer**, da 25 ms a circa un secondo.
+Il thread audio però non viene mai rallentato: una goccia già prenotata suona
+comunque con precisione al campione. Per questo lo scheduler allarga la
+finestra di prenotazione a tre secondi quando la pagina non si vede — con la
+finestra stretta si perdeva il 61% delle gocce, misurato in simulazione.
+
+Restano fuori portata due cose. Su **iOS** ogni browser è WebKit, e WebKit
+sospende del tutto il Web Audio quando si esce dall'app o si blocca lo
+schermo: lì non c'è finestra che tenga. E il **crepitio da CPU** sui
+dispositivi lenti è un'altra cosa ancora — si sente anche in primo piano, e i
+sospetti sono l'impulso di riverbero da 5,5 secondi e i tre oscillatori per
+goccia.

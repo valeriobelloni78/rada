@@ -97,9 +97,10 @@ chiavi lì sono identificatori: i nomi che si leggono sui bottoni stanno in
 
 ## Limiti noti
 
-- Se lasci la scheda in secondo piano il browser rallenta i timer e il suono
-  diventa intermittente. È un limite del web, non aggirabile: Rada è pensata per
-  essere ascoltata mentre la si guarda.
+- In secondo piano il browser rallenta i timer, ma il thread audio no: lo
+  scheduler se ne accorge e prenota le gocce tre secondi avanti invece di 150
+  millisecondi, così il suono regge. Su iOS invece non c'è rimedio — ogni
+  browser è WebKit, e WebKit sospende il Web Audio quando esci dall'app.
 - Serve una connessione al primo caricamento, perché p5.js arriva da una CDN.
   Per usarla del tutto offline, scarica `p5.min.js` in una cartella `lib/` e
   cambia la riga corrispondente in `index.html`.

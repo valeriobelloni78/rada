@@ -113,6 +113,15 @@ function buildPlan(L) {
     .sort((a, b) => a.ph - b.ph);
 }
 
+/* Quanto avanti lo scheduler prenota le gocce, in secondi.
+
+   Vive qui, e non in audio.js, perché rebuildPlans deve usare ESATTAMENTE la
+   stessa finestra dello scheduler: se le due divergessero, una ricostruzione
+   del piano potrebbe riposizionare gocce già prenotate, e si sentirebbero due
+   volte. Il valore lo cambia audio.js quando la pagina passa in secondo
+   piano — il modello si limita a custodirlo, senza sapere perché.          */
+let LOOKAHEAD = 0.15;
+
 /* Ricostruzione a caldo, quando cambia l'addensamento: riposiziona l'indice
    sulla prima goccia non ancora pianificata. Il confronto avviene su TEMPI
    ASSOLUTI, non su fasi: cycleStart può trovarsi nel futuro, e avvolgere la
@@ -121,7 +130,7 @@ function rebuildPlans(now) {
   loops.forEach(L => {
     buildPlan(L);
     if (now === null) { L.idx = 0; return; }
-    const horizon = now + 0.15;
+    const horizon = now + LOOKAHEAD;
     const k = L.plan.findIndex(p => (L.cycleStart + p.ph * L.period) >= horizon);
     L.idx = (k < 0) ? L.plan.length : k;
   });
