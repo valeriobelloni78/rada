@@ -143,6 +143,14 @@
 .docColophon a:hover{color:var(--ink);border-bottom-color:var(--hair)}
 .docColophon a:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px;border-radius:2px}
 .docColophon .sep{width:1px;height:10px;background:var(--hair);flex:none}
+/* L'indirizzo non è cliccabile: stessa misura del collegamento accanto, ma
+   senza il filo che compare al passaggio — non deve promettere un clic che
+   non c'è. Resta selezionabile, che è come si usa.                        */
+.docColophon .posta{
+  font-family:var(--sans);font-weight:400;
+  font-size:10px;letter-spacing:.1em;color:var(--dust);
+  padding-bottom:2px;border-bottom:1px solid transparent;
+}
 @media (max-width:479px){
   .docColophon .sep{display:none}      /* a capo, il trattino resterebbe appeso */
   .docColophon .recapiti{gap:8px;flex-direction:column}
