@@ -173,9 +173,17 @@ comunque con precisione al campione. Per questo lo scheduler allarga la
 finestra di prenotazione a tre secondi quando la pagina non si vede — con la
 finestra stretta si perdeva il 61% delle gocce, misurato in simulazione.
 
-Restano fuori portata due cose. Su **iOS** ogni browser è WebKit, e WebKit
-sospende del tutto il Web Audio quando si esce dall'app o si blocca lo
-schermo: lì non c'è finestra che tenga. E il **crepitio da CPU** sui
-dispositivi lenti è un'altra cosa ancora — si sente anche in primo piano, e i
-sospetti sono l'impulso di riverbero da 5,5 secondi e i tre oscillatori per
-goccia.
+La finestra però si adatta: se i giri dello scheduler si diradano davvero —
+schermo bloccato, non semplice secondo piano — insegue il ritardo osservato
+fino a dodici secondi. Il tetto è un compromesso: più in alto si va, più
+audio resta impegnato al ritorno, e i cursori sembrano non rispondere.
+
+Su **iOS** il problema è doppio e va tenuto distinto. Il primo è che WebKit
+considera un AudioContext "suono d'ambiente" e lo sospende a schermo bloccato:
+per questo si dichiara `navigator.audioSession.type = "playback"`, che è la
+categoria della riproduzione lunga (e che fa suonare Rada anche con
+l'interruttore del silenzioso inserito — voluto). Il secondo è che lo
+scheduler vive sul thread principale: se iOS lo congela del tutto, nessuna
+finestra basta, e l'unica vera soluzione sarebbe spostare la prenotazione
+dentro un AudioWorklet, cioè sul thread audio. **Da verificare su un iPhone
+vero.**

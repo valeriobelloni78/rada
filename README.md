@@ -107,9 +107,13 @@ chiavi lì sono identificatori: i nomi che si leggono sui bottoni stanno in
 ## Limiti noti
 
 - In secondo piano il browser rallenta i timer, ma il thread audio no: lo
-  scheduler se ne accorge e prenota le gocce tre secondi avanti invece di 150
-  millisecondi, così il suono regge. Su iOS invece non c'è rimedio — ogni
-  browser è WebKit, e WebKit sospende il Web Audio quando esci dall'app.
+  scheduler se ne accorge e prenota le gocce più avanti — tre secondi, e fino
+  a dodici se i timer vengono strozzati sul serio, come a schermo bloccato.
+- Su iOS Rada si dichiara al sistema come riproduzione musicale, così da
+  restare viva a schermo bloccato e comparire fra i comandi della schermata di
+  blocco. Ne consegue che suona anche con l'interruttore del silenzioso
+  inserito. Se il sistema congela del tutto la pagina non c'è comunque
+  finestra che tenga: servirebbe spostare lo scheduler in un AudioWorklet.
 - Serve una connessione al primo caricamento, perché p5.js arriva da una CDN.
   Per usarla del tutto offline, scarica `p5.min.js` in una cartella `lib/` e
   cambia la riga corrispondente in `index.html`.

@@ -25,8 +25,49 @@ const TIMELINE_SEC = 30;
    toccare la cronologia nella pagina principale il guasto sarebbe muto.   */
 const dropHistory = [];
 
+/* --- come il sistema deve considerare questo suono ------------------------
+   Di suo, un AudioContext è "suono d'ambiente": iOS lo zittisce con
+   l'interruttore laterale e lo sospende appena si blocca lo schermo, perché
+   lo tratta come l'effetto sonoro di una pagina qualsiasi.
+
+   `playback` dichiara l'opposto — questo è un lettore, il suono è il
+   contenuto — ed è la categoria che WebKit riserva alla riproduzione lunga.
+   Due conseguenze, ed entrambe sono volute: Rada suona anche con
+   l'interruttore del silenzioso inserito, e chiede al sistema di continuare
+   a schermo bloccato.
+
+   L'API esiste solo su WebKit; altrove il ramo non fa nulla.             */
+function dichiaraSessioneDiRiproduzione() {
+  try {
+    if (navigator.audioSession) navigator.audioSession.type = "playback";
+  } catch (e) {}
+}
+
+/* Il pannello di controllo del sistema — schermata di blocco, centro di
+   controllo — mostra ciò che sta suonando e offre play e pausa. Dichiararsi
+   qui non è solo una cortesia: è il modo in cui il sistema riconosce una
+   sessione musicale come tale, e quindi degna di restare viva.            */
+function dichiaraMediaSession() {
+  const ms = navigator.mediaSession;
+  if (!ms) return;
+  try {
+    if (typeof MediaMetadata === "function")
+      ms.metadata = new MediaMetadata({ title: "Rada", artist: T("media.artist") });
+    ms.setActionHandler("play",  () => { if (!running) togglePower(); });
+    ms.setActionHandler("pause", () => { if (running)  togglePower(); });
+    ms.setActionHandler("stop",  () => { if (running)  togglePower(); });
+  } catch (e) {}
+}
+
+function statoMediaSession() {
+  try {
+    if (navigator.mediaSession) navigator.mediaSession.playbackState = running ? "playing" : "paused";
+  } catch (e) {}
+}
+
 /* --- costruzione del grafo ----------------------------------------------- */
 function buildAudio() {
+  dichiaraSessioneDiRiproduzione();
   ctx = new (window.AudioContext || window.webkitAudioContext)();
 
   master = ctx.createGain();
@@ -54,6 +95,7 @@ function buildAudio() {
 
   restartCycles();
   setInterval(schedule, 25);
+  dichiaraMediaSession();
 }
 
 /* Impulso di riverbero: rumore con decadimento esponenziale. Sintetico, così
@@ -145,7 +187,16 @@ function restartCycles() {
 
    In primo piano la finestra torna stretta, perché è ciò che rende immediati
    i cursori: quel che è già prenotato non si può più cambiare.            */
-const LOOKAHEAD_VISIBILE = 0.15, LOOKAHEAD_NASCOSTA = 3.0;
+const LOOKAHEAD_VISIBILE = 0.15, LOOKAHEAD_NASCOSTA = 3.0, LOOKAHEAD_MAX = 12.0;
+
+/* Quando lo scheduler è passato l'ultima volta, sul clock audio. Serve a
+   misurare quanto il sistema sta davvero strozzando i timer: tre secondi di
+   margine bastano contro il rallentamento a un secondo di una scheda in
+   secondo piano, ma non contro uno schermo bloccato, dove il thread può
+   restare fermo molto più a lungo. La finestra si adatta al ritardo
+   osservato invece di indovinarlo — e nel caso normale non cambia nulla,
+   perché il ritardo è piccolo.                                            */
+let ultimoGiro = 0;
 
 document.addEventListener("visibilitychange", () => {
   LOOKAHEAD = document.hidden ? LOOKAHEAD_NASCOSTA : LOOKAHEAD_VISIBILE;
@@ -157,7 +208,18 @@ document.addEventListener("visibilitychange", () => {
    clock audio.                                                             */
 function schedule() {
   if (!ctx || !running) return;
-  const now = ctx.currentTime, horizon = now + LOOKAHEAD;
+  const now = ctx.currentTime;
+
+  /* A pagina nascosta la finestra insegue il ritardo vero, con un margine di
+     sicurezza. Reattiva e non profetica: il primo ritardo lungo si paga
+     comunque, ma dal secondo in poi la finestra lo copre.                 */
+  if (document.hidden) {
+    const ritardo = now - ultimoGiro;
+    LOOKAHEAD = clamp(ritardo * 2.5, LOOKAHEAD_NASCOSTA, LOOKAHEAD_MAX);
+  }
+  ultimoGiro = now;
+
+  const horizon = now + LOOKAHEAD;
   /* Solo in avanti: al ritorno in primo piano la finestra si stringe, ma le
      gocce prenotate con quella larga restano prenotate. Assegnare qui il
      nuovo orizzonte cancellerebbe proprio la memoria che serve. Il valore è
@@ -295,6 +357,7 @@ async function togglePower() {
   if (running) {
     running = false;
     onPowerChange(false);
+    statoMediaSession();
     master.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
     clearTimeout(sospensione);
     sospensione = setTimeout(() => {
@@ -304,7 +367,9 @@ async function togglePower() {
     clearTimeout(sospensione);
     if (ctx.state === "suspended") { try { await ctx.resume(); } catch (e) {} }
     running = true;
+    dichiaraSessioneDiRiproduzione();   // la categoria si riafferma alla ripresa
     onPowerChange(true);
+    statoMediaSession();
     master.gain.setTargetAtTime(0.9, ctx.currentTime, 0.4);
   }
 }
