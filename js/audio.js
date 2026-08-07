@@ -36,11 +36,10 @@ function buildAudio() {
   /* La convoluzione è di gran lunga la voce più cara della catena, e il costo
      cresce con la lunghezza dell'impulso. Su uno schermo piccolo — cioè su un
      telefono, dove la CPU è quella che crepita — se ne usa uno più corto:
-     all'orecchio cambia poco, al processore molto. Dimezza anche l'attesa
-     alla partenza, perché l'impulso si genera campione per campione.      */
+     all'orecchio cambia poco, al processore molto.                        */
   const piccolo = typeof matchMedia === "function"
                 && matchMedia("(max-width: 719px)").matches;
-  verb.buffer = makeImpulse(piccolo ? 2.6 : 5.5);
+  makeImpulse(piccolo ? 2.6 : 5.5);
   wetGain = ctx.createGain(); wetGain.gain.value = 0.6;
   dryGain = ctx.createGain(); dryGain.gain.value = 0.6;
 
@@ -58,16 +57,59 @@ function buildAudio() {
 }
 
 /* Impulso di riverbero: rumore con decadimento esponenziale. Sintetico, così
-   non serve caricare un file esterno.                                      */
+   non serve caricare un file esterno.
+
+   Mezzo milione di campioni generati uno per uno, e tutti nell'istante esatto
+   in cui l'utente preme "Entra": in un colpo solo bloccherebbero il thread
+   principale proprio lì, con uno scatto visibile mentre la soglia sfuma.
+   Si genera quindi a fette, restituendo il controllo al browser fra l'una e
+   l'altra, e il buffer si attacca al convolutore solo quando è pronto.
+
+   Nel frattempo il convolutore, che senza buffer tace, semplicemente non
+   contribuisce: si sente il suono diretto. Non è un problema, perché le
+   prime gocce arrivano comunque dopo due decimi di secondo buoni — e la
+   generazione, a fette, ne impiega meno.
+
+   L'inviluppo si calcola UNA volta per campione e serve entrambi i canali:
+   prima il ciclo era per canale, e la potenza — la parte cara — veniva
+   calcolata due volte per ogni posizione.
+
+   Le fette si concatenano con un MessageChannel e non con setTimeout, che ha
+   un'attesa minima imposta dal browser — quattro millisecondi, che diventano
+   un secondo se la pagina non si vede: l'impulso arriverebbe dopo le prime
+   gocce, e il pezzo attaccherebbe asciutto. Un messaggio su una porta è un
+   compito come gli altri, ma senza quel ritardo.                          */
+const FETTA = 12000;            // campioni per volta: circa un millisecondo
+
 function makeImpulse(sec) {
   const len = Math.floor(ctx.sampleRate * sec);
   const b = ctx.createBuffer(2, len, ctx.sampleRate);
-  for (let ch = 0; ch < 2; ch++) {
-    const d = b.getChannelData(ch);
-    for (let i = 0; i < len; i++)
-      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.4);
+  const sx = b.getChannelData(0), dx = b.getChannelData(1);
+  let i = 0;
+
+  const fetta = () => {
+    const fine = Math.min(i + FETTA, len);
+    for (; i < fine; i++) {
+      const env = Math.pow(1 - i / len, 3.4);
+      sx[i] = (Math.random() * 2 - 1) * env;
+      dx[i] = (Math.random() * 2 - 1) * env;
+    }
+    return i < len;
+  };
+
+  if (typeof MessageChannel !== "function") {   // rete di sicurezza
+    while (fetta()) {}
+    if (verb) verb.buffer = b;
+    return;
   }
-  return b;
+
+  const canale = new MessageChannel();
+  canale.port1.onmessage = () => {
+    if (fetta()) { canale.port2.postMessage(0); return; }
+    if (verb) verb.buffer = b;
+    canale.port1.close(); canale.port2.close();
+  };
+  canale.port2.postMessage(0);
 }
 
 /* Ripartenza dei cicli.
