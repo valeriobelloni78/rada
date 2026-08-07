@@ -241,4 +241,15 @@ if (typeof window.p5 === "undefined") {
   avviso.setAttribute("data-i18n", "err.noCanvas");
   avviso.textContent = T("err.noCanvas");
   $("canvas-holder").appendChild(avviso);
+
+  /* E qui la parte che non si vede ma si sente. `tickParams` — che smussa i
+     cursori verso il valore scelto e applica l'inclinazione oraria — è
+     chiamata da `draw`, che senza p5 non gira mai: i cinque comandi
+     resterebbero inerti, e il messaggio qui sopra sarebbe una mezza verità.
+     Il battito lo riprende requestAnimationFrame, che è del browser e non di
+     p5, con la stessa cadenza e la stessa pausa quando la pagina si nasconde. */
+  (function battito() {
+    tickParams();
+    requestAnimationFrame(battito);
+  })();
 }
