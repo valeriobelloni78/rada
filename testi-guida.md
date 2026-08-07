@@ -28,7 +28,7 @@ sotto la parola `TAGLIARE`.
 
 ## [testata]
 
-Link in alto a destra: Torna allo strumento
+Link in alto a destra: Ascolta Rada
 
 ---
 
@@ -239,7 +239,7 @@ Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suona
 
 ## [piede della pagina]
 
-Primo link: Torna allo strumento
+Primo link: Ascolta Rada
 Secondo link: Il codice su GitHub
 
 ---

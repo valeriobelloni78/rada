@@ -90,6 +90,17 @@ le sue callback del mouse si sommerebbero a quelle dei riquadri facendo
 scattare ogni gesto due volte: per questo `mousePressed` e sorelle sono state
 tolte, e tutta l'interazione passa dai riquadri.
 
+**Ogni goccia lascia sette nodi audio, e vanno scollegati a mano.**
+`playDrop` costruisce tre oscillatori più guadagni e panner. Il rilascio
+automatico dipende dalla raccolta della memoria, che è attività del thread
+PRINCIPALE — proprio quello che a schermo bloccato viene strozzato. Il thread
+audio intanto continua ad accumulare: il grafo cresce più in fretta di quanto
+venga ripulito, la CPU audio sale, i buffer prima frusciano e poi saltano.
+Misurato col mood più denso a pagina nascosta: senza `onended` i nodi vivi
+salivano senza limite (189 → 273 → 371 in ventuno secondi), con `onended` si
+assestano attorno al centinaio. **Chiunque aggiunga nodi per nota deve
+scollegarli quando la nota finisce.**
+
 **Un solo set di ascoltatori per il trascinamento.** Non registrarne uno per
 quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 
