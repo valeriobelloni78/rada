@@ -287,8 +287,19 @@ const GUIDA = {
 for (const k in GUIDA.fr) GUIDA.fr[k] = GUIDA.fr[k].split("~").join(NNBSP);
 
 /* Il dizionario della guida si aggiunge a quello dell'interfaccia: da qui in
-   poi T() trova le une e le altre senza distinzione.                       */
-for (const l of LANGS) Object.assign(STRINGS[l], GUIDA[l]);
+   poi T() trova le une e le altre senza distinzione.
+
+   Object.assign sovrascrive in silenzio: una chiave scelta per sbaglio uguale
+   a una dell'interfaccia cambierebbe le parole dei comandi senza che nessuno
+   se ne accorga. L'unica sovrapposizione voluta è la descrizione per le
+   anteprime, che qui deve parlare della guida e non dello strumento.      */
+const SOVRASCRIVIBILI = new Set(["meta.description"]);
+for (const l of LANGS) {
+  for (const k in GUIDA[l])
+    if (k in STRINGS[l] && !SOVRASCRIVIBILI.has(k))
+      console.warn("guida-i18n: la chiave « " + k + " » esisteva già in " + l);
+  Object.assign(STRINGS[l], GUIDA[l]);
+}
 
 /* I nomi dei mood NON stanno qui: arrivano dal dizionario dell'interfaccia,
    così i bottoni e la guida non possono raccontare due nomi diversi.       */

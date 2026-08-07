@@ -20,7 +20,10 @@ let running = false;
    con esattezza quando una goccia suona davvero; il disegno la legge soltanto,
    come già fa con L.cycles per la lancetta.                                */
 const TIMELINE_SEC = 30;
-const history = [];
+/* Non si chiama `history`: una const globale con quel nome OSCURA
+   window.history per ogni script caricato dopo, e il giorno in cui servisse
+   toccare la cronologia nella pagina principale il guasto sarebbe muto.   */
+const dropHistory = [];
 
 /* --- costruzione del grafo ----------------------------------------------- */
 function buildAudio() {
@@ -30,7 +33,14 @@ function buildAudio() {
   master.gain.value = 0;
 
   verb = ctx.createConvolver();
-  verb.buffer = makeImpulse(5.5);
+  /* La convoluzione è di gran lunga la voce più cara della catena, e il costo
+     cresce con la lunghezza dell'impulso. Su uno schermo piccolo — cioè su un
+     telefono, dove la CPU è quella che crepita — se ne usa uno più corto:
+     all'orecchio cambia poco, al processore molto. Dimezza anche l'attesa
+     alla partenza, perché l'impulso si genera campione per campione.      */
+  const piccolo = typeof matchMedia === "function"
+                && matchMedia("(max-width: 719px)").matches;
+  verb.buffer = makeImpulse(piccolo ? 2.6 : 5.5);
   wetGain = ctx.createGain(); wetGain.gain.value = 0.6;
   dryGain = ctx.createGain(); dryGain.gain.value = 0.6;
 
@@ -70,6 +80,7 @@ function makeImpulse(sec) {
 function restartCycles() {
   if (!ctx) return;
   const now = ctx.currentTime;
+  bookedUntil = 0;                // i vecchi cicli non esistono più
   loops.forEach((L, i) => {
     const firstPh = L.plan.length ? L.plan[0].ph : 0;
     const entrata = 0.2 + i * 0.28 + Math.random() * 0.25;   // 0,2 – 1,3 s
@@ -105,8 +116,14 @@ document.addEventListener("visibilitychange", () => {
 function schedule() {
   if (!ctx || !running) return;
   const now = ctx.currentTime, horizon = now + LOOKAHEAD;
+  /* Solo in avanti: al ritorno in primo piano la finestra si stringe, ma le
+     gocce prenotate con quella larga restano prenotate. Assegnare qui il
+     nuovo orizzonte cancellerebbe proprio la memoria che serve. Il valore è
+     assoluto, quindi invecchia da sé: appena `now` lo supera, il massimo
+     qui sotto torna a essere la finestra corrente.                        */
+  if (horizon > bookedUntil) bookedUntil = horizon;
 
-  while (history.length && history[0].t < now - TIMELINE_SEC) history.shift();
+  while (dropHistory.length && dropHistory[0].t < now - TIMELINE_SEC) dropHistory.shift();
 
   loops.forEach(L => {
     let guard = 0;
@@ -139,7 +156,7 @@ function schedule() {
         const at = Math.max(t, now);
         playDrop(at, p.ev, L);
         p.ev.flash = at;
-        history.push({ t: at, loop: L.i, rel: p.ev.rel });
+        dropHistory.push({ t: at, loop: L.i, rel: p.ev.rel });
       }
       L.idx++;
     }
@@ -165,10 +182,18 @@ function playDrop(when, ev, L) {
   modGain.gain.value = freq * (0.6 - warmth * 0.45);
   mod.connect(modGain); modGain.connect(car.frequency);
 
-  const par = ctx.createOscillator();
-  par.type = "sine"; par.frequency.value = freq * 2.01;
-  const parGain = ctx.createGain();
-  parGain.gain.value = (1 - warmth) * 0.11;
+  /* Il parziale "campana" si spegne da sé man mano che il calore sale: oltre
+     una certa soglia il suo guadagno è sotto la soglia dell'udibile, e
+     accendere un oscillatore per nulla costa quanto accenderne uno che si
+     sente. Con i mood caldi è un terzo delle voci risparmiato.            */
+  const parAmp = (1 - warmth) * 0.11;
+  let par = null, parGain = null;
+  if (parAmp > 0.004) {
+    par = ctx.createOscillator();
+    par.type = "sine"; par.frequency.value = freq * 2.01;
+    parGain = ctx.createGain();
+    parGain.gain.value = parAmp;
+  }
 
   const env = ctx.createGain();
   env.gain.value = 0;
@@ -182,12 +207,13 @@ function playDrop(when, ev, L) {
   pan.pan.value = clamp(L.pan + (Math.random() * 2 - 1) * 0.18, -1, 1);
 
   car.connect(env);
-  par.connect(parGain); parGain.connect(env);
+  if (par) { par.connect(parGain); parGain.connect(env); }
   env.connect(pan); pan.connect(filt);
 
-  car.start(when); mod.start(when); par.start(when);
   const stop = when + rel + 0.1;
-  car.stop(stop); mod.stop(stop); par.stop(stop);
+  car.start(when); car.stop(stop);
+  mod.start(when); mod.stop(stop);
+  if (par) { par.start(when); par.stop(stop); }
 }
 
 /* --- modulazione lenta ----------------------------------------------------

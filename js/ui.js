@@ -34,6 +34,7 @@ function onRealignChange() {
   else if (l < 86400) t = fmtOne(l / 3600)           + sep + T("unit.hours");
   else                t = fmtOne(l / 86400)          + sep + T("unit.days");
   $("realign").textContent = T("realign", { t });
+  syncA11y();          // il trascinamento sul canvas deve riscrivere i cursori
 }
 
 /* --- riga di stato -------------------------------------------------------- */
@@ -58,8 +59,11 @@ function refreshStatus() {
 }
 setInterval(refreshStatus, 15000);
 
-/* chiamate dal canvas quando cambia lo stato delle frasi */
-function onLoopsChange() { refreshStatus(); }
+/* Annunci dal canvas: il disegno segnala che qualcosa è cambiato senza
+   sapere chi lo ascolta. */
+function onLoopsChange() { refreshStatus(); syncA11y(); }
+addEventListener("rada:loops",   onLoopsChange);
+addEventListener("rada:realign", () => onRealignChange());
 /* Il pulsante è un COMANDO, non un indicatore: la scritta dice che cosa
    accadrà premendolo, non che cosa sta accadendo. Lo stato è già raccontato
    dal punto che pulsa e dalla riga in alto.                                */
@@ -97,6 +101,63 @@ Object.keys(MOODS).forEach((id, i) => {
   moodsEl.appendChild(b);
 });
 
+/* --- comandi equivalenti da tastiera --------------------------------------
+   I quadranti vivono nel canvas, che per una tastiera e per un lettore di
+   schermo è una superficie muta: trascinare, silenziare e rigenerare erano
+   gesti raggiungibili solo col puntatore. Qui gli stessi tre comandi
+   esistono come elementi HTML nativi, fuori campo ma nel documento.
+
+   La sincronia va in DUE direzioni: questi comandi cambiano il modello, e il
+   trascinamento sul canvas riscrive questi comandi (vedi syncA11y, chiamata
+   da onRealignChange e onLoopsChange).                                     */
+const ROMAN = ["I", "II", "III", "IV"];
+const a11yEls = [];
+
+(function buildA11y() {
+  const box = $("a11yLoops");
+  loops.forEach((L, i) => {
+    const row = document.createElement("div");
+    row.className = "a11yRow";
+
+    const lab = document.createElement("label");
+    lab.htmlFor = "a11yDur" + i;
+    const dur = document.createElement("input");
+    dur.type = "range"; dur.id = "a11yDur" + i;
+    dur.min = PERIOD_MIN; dur.max = PERIOD_MAX; dur.step = 0.5;
+    dur.value = L.target;
+    dur.addEventListener("input", e => {
+      L.target = +e.target.value;
+      onRealignChange();
+    });
+
+    const mute = document.createElement("button");
+    mute.type = "button";
+    mute.addEventListener("click", () => { L.muted = !L.muted; onLoopsChange(); });
+
+    const regen = document.createElement("button");
+    regen.type = "button";
+    regen.addEventListener("click", () => regenerate(L));
+
+    row.append(lab, dur, mute, regen);
+    box.appendChild(row);
+    a11yEls.push({ lab, dur, mute, regen });
+  });
+})();
+
+/* Riallinea etichette e valori: le prime cambiano con la lingua, i secondi
+   col trascinamento sul canvas.                                            */
+function syncA11y() {
+  a11yEls.forEach((e, i) => {
+    const n = ROMAN[i], L = loops[i];
+    e.lab.textContent = T("a11y.duration", { n });
+    e.dur.value = L.target;
+    e.dur.setAttribute("aria-valuetext", fmtOne(L.target) + " " + T("canvas.seconds"));
+    e.mute.textContent = T(L.muted ? "a11y.unmute" : "a11y.mute", { n });
+    e.mute.setAttribute("aria-pressed", L.muted ? "true" : "false");
+    e.regen.textContent = T("a11y.regen", { n });
+  });
+}
+
 /* --- lingua ---------------------------------------------------------------
    Le quattro sigle le costruisce i18n.js, che le fa identiche qui e nella
    guida. La lingua di partenza la decide il browser (vedi detectLang); da qui
@@ -113,6 +174,7 @@ function onLanguageChange() {
   onPowerChange(running);
   onRealignChange();
   readouts();
+  syncA11y();
 }
 
 /* --- avvio ---------------------------------------------------------------- */
@@ -132,7 +194,28 @@ addEventListener("keydown", e => {
 --------------------------------------------------------------------------- */
 $("gate").addEventListener("click", async () => {
   $("gate").classList.add("off");
+  /* `inert` e non solo la dissolvenza: la transizione CSS non gira se la
+     scheda passa in secondo piano proprio in questo istante, e il bottone
+     resterebbe raggiungibile col Tab pur essendo invisibile.              */
+  $("gate").inert = true;
+  document.querySelector(".stage").inert = false;   // la pagina torna navigabile
+  /* Il fuoco va spostato solo se si è entrati da tastiera: chi ha usato il
+     mouse non se lo aspetta, e l'anello di messa a fuoco sarebbe rumore in
+     un'interfaccia costruita sul poco. Chi invece è entrato col tasto Invio
+     resterebbe altrimenti con il fuoco su un elemento appena disattivato.  */
+  if (ingressoDaTastiera) $("power").focus();
   await togglePower();
+});
+/* Il bottone è dentro la soglia: il clic risale da solo. Qui si intercetta
+   solo la tastiera, perché Invio e spazio su un <button> non generano un
+   clic sull'antenato in tutti i browser.                                   */
+let ingressoDaTastiera = false;
+$("enter").addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    ingressoDaTastiera = true;
+    $("gate").click();
+  }
 });
 
 applyI18n();
@@ -140,3 +223,22 @@ $("powerLabel").textContent = T("power.play");
 refreshStatus();
 onRealignChange();
 readouts();
+syncA11y();
+
+/* Finché il cancello è chiuso, tutto ciò che sta dietro è fuori gioco: senza
+   questo il Tab uscirebbe dalla soglia e andrebbe a dare fuoco a comandi che
+   nessuno può vedere. `inert` fa esattamente questo, ed è ignorato senza
+   danni dai browser che non lo conoscono.                                 */
+document.querySelector(".stage").inert = true;
+$("enter").focus();
+
+/* Se p5 non arriva — CDN irraggiungibile, rete assente — il canvas non nasce
+   e resterebbe un vuoto inspiegato al centro della pagina. Il motore audio
+   però è indipendente da p5 e continua a suonare: si dice.                */
+if (typeof window.p5 === "undefined") {
+  const avviso = document.createElement("p");
+  avviso.className = "loopHint";
+  avviso.setAttribute("data-i18n", "err.noCanvas");
+  avviso.textContent = T("err.noCanvas");
+  $("canvas-holder").appendChild(avviso);
+}

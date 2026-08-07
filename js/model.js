@@ -122,6 +122,15 @@ function buildPlan(L) {
    piano — il modello si limita a custodirlo, senza sapere perché.          */
 let LOOKAHEAD = 0.15;
 
+/* Fin dove lo scheduler ha REALMENTE prenotato, in tempo assoluto.
+
+   Non basta condividere LOOKAHEAD: mentre la pagina è nascosta si prenota tre
+   secondi avanti, ma al ritorno in primo piano la finestra torna stretta. Se
+   in quell'istante rebuildPlans calcolasse l'orizzonte con la finestra nuova,
+   riporterebbe l'indice su gocce prenotate con quella vecchia e le farebbe
+   risuonare. Serve ricordare il confine vero, non ricalcolarlo.            */
+let bookedUntil = 0;
+
 /* Ricostruzione a caldo, quando cambia l'addensamento: riposiziona l'indice
    sulla prima goccia non ancora pianificata. Il confronto avviene su TEMPI
    ASSOLUTI, non su fasi: cycleStart può trovarsi nel futuro, e avvolgere la
@@ -130,7 +139,7 @@ function rebuildPlans(now) {
   loops.forEach(L => {
     buildPlan(L);
     if (now === null) { L.idx = 0; return; }
-    const horizon = now + LOOKAHEAD;
+    const horizon = Math.max(now + LOOKAHEAD, bookedUntil);
     const k = L.plan.findIndex(p => (L.cycleStart + p.ph * L.period) >= horizon);
     L.idx = (k < 0) ? L.plan.length : k;
   });

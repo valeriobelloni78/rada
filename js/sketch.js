@@ -23,9 +23,26 @@ const R_DROP     = 2.1 / 54, R_DROP_HOT = 3.6 / 54;
 const LINK_WINDOW = 0.18;   // scarto massimo, in secondi, fra due gocce "vicine"
 
 let COL = {};               // palette letta dal CSS
-let cells = [];             // geometria corrente dei quadranti
-let hotDrops = [];          // gocce accese in questo fotogramma, per i legami effimeri
 let holder;
+
+/* Strutture riusate a ogni fotogramma. `draw` non deve allocare (CLAUDE.md):
+   qui nascevano un array e cinque oggetti nuovi sessanta volte al secondo,
+   più uno per ogni goccia accesa. Ora si scrive dentro queste, che esistono
+   una volta sola — lo stesso principio già applicato a handTrail.          */
+const SIZE  = { w: 0, h: 0, cols: 0, rows: 0, cell: 0, stripH: 0 };
+const cells = loops.map(() => ({ L: null, cx: 0, cy: 0, r: 0 }));
+const HOT_MAX = 96;
+const hotPool = Array.from({ length: HOT_MAX }, () => ({ x: 0, y: 0, t: 0, loop: 0 }));
+let hotCount = 0;
+
+/* Chi ha chiesto meno movimento non riceve la coda della lancetta: resta la
+   punta, che è informazione, non decorazione.                              */
+const menoMoto = typeof matchMedia === "function"
+               ? matchMedia("(prefers-reduced-motion: reduce)") : null;
+
+/* Il bersaglio del ↻ non può scendere sotto il polpastrello: su un telefono
+   r·0,22 vale una quindicina di pixel, contro i 44 raccomandati.           */
+const regenHit = r => Math.max(r * 0.22, 22);
 
 /* Coda della lancetta: gli ultimi HAND_TRAIL_LEN angoli, per suggerire il
    moto anche nei giri lunghi dove lo spostamento fra un fotogramma e
@@ -69,11 +86,13 @@ const STRIP_FRAC = 0.34;
 function canvasSize() {
   const avail = holder ? holder.clientWidth : 320;
   const wide  = avail >= 720;
-  const cols  = wide ? 4 : 2;
-  const rows  = wide ? 1 : 2;
-  const cell  = Math.min(avail / cols, 260);
-  const stripH = cell * STRIP_FRAC;
-  return { w: cell * cols, h: cell * rows + stripH, cols, rows, cell, stripH };
+  SIZE.cols   = wide ? 4 : 2;
+  SIZE.rows   = wide ? 1 : 2;
+  SIZE.cell   = Math.min(avail / SIZE.cols, 260);
+  SIZE.stripH = SIZE.cell * STRIP_FRAC;
+  SIZE.w      = SIZE.cell * SIZE.cols;
+  SIZE.h      = SIZE.cell * SIZE.rows + SIZE.stripH;
+  return SIZE;
 }
 
 function windowResized() {
@@ -82,22 +101,35 @@ function windowResized() {
 }
 
 function layout(s) {
-  return loops.map((L, i) => {
-    const col = i % s.cols, row = Math.floor(i / s.cols);
-    return { L,
-             cx: (col + 0.5) * s.cell,
-             cy: (row + 0.5) * s.cell,
-             r:  s.cell * 0.32 };
-  });
+  for (let i = 0; i < cells.length; i++) {
+    const c = cells[i], col = i % s.cols, row = Math.floor(i / s.cols);
+    c.L  = loops[i];
+    c.cx = (col + 0.5) * s.cell;
+    c.cy = (row + 0.5) * s.cell;
+    c.r  = s.cell * 0.32;
+  }
 }
+
+let lastRunning = null;
 
 function draw() {
   tickParams();                 // smussa i parametri e applica la palette oraria
-  clear();
   const s = canvasSize();
-  cells = layout(s);
+
+  /* Il contenitore può cambiare larghezza senza che la finestra venga
+     ridimensionata: senza questo il disegno userebbe misure che il canvas
+     non ha ancora preso, e finirebbe tagliato.                            */
+  if (width !== s.w || height !== s.h) resizeCanvas(s.w, s.h);
+
+  /* A motore fermo non si muove quasi nulla: dodici fotogrammi al secondo
+     bastano a far rispondere i cursori, e non scaldano la batteria per
+     ridisegnare l'identico.                                               */
+  if (running !== lastRunning) { lastRunning = running; frameRate(running ? 60 : 12); }
+
+  clear();
+  layout(s);
   const now = audioNow();
-  hotDrops.length = 0;
+  hotCount = 0;
   for (const c of cells) drawDial(c, now);
   drawLinks(now);
   drawTimeline(s, now);
@@ -117,7 +149,7 @@ function drawDial(cell, now) {
   textSize(clamp(r * 0.10, 7, 10));
   trackedText(CANVAS.phrase[L.i], cx, cy - r * 1.20, r * 0.028 * CANVAS.trackMul);
 
-  const overRegen = dist(mouseX, mouseY, cx + r * 0.95, cy - r * 1.20) < r * 0.22;
+  const overRegen = dist(mouseX, mouseY, cx + r * 0.95, cy - r * 1.20) < regenHit(r);
   fill(overRegen ? COL.amber : COL.dust);
   textSize(clamp(r * 0.17, 12, 17));
   text("↻", cx + r * 0.95, cy - r * 1.20);
@@ -126,13 +158,13 @@ function drawDial(cell, now) {
      L'addensamento viene dal PIANO, non dal valore live del cursore, così
      quel che vedi coincide sempre con quel che suona.                     */
   const head = L.planHead;
+  strokeCap(ROUND);              // una volta, non a ogni trattino
   for (let i = 0; i < TICKS; i++) {
     const a = -HALF_PI + i * TWO_PI / TICKS;
     const on = ((i / TICKS) - L.offset + 1) % 1 < head;
     const ri = (on ? R_ACTIVE : R_INNER) * r;
     stroke(on ? COL.ink : COL.hair);
     strokeWeight((on ? W_TICK_ON : W_TICK_OFF) * r);
-    strokeCap(ROUND);
     line(cx + cos(a) * ri, cy + sin(a) * ri, cx + cos(a) * r, cy + sin(a) * r);
   }
 
@@ -149,7 +181,10 @@ function drawDial(cell, now) {
     const rr = lerp(R_DROPS_LO, R_DROPS, (p.ev.rel + 1) / 2) * r;
     const dx = cx + cos(a) * rr, dy = cy + sin(a) * rr;
     circle(dx, dy, rad * 2);
-    if (hot) hotDrops.push({ x: dx, y: dy, t: p.ev.flash, loop: L.i });
+    if (hot && hotCount < HOT_MAX) {
+      const o = hotPool[hotCount++];
+      o.x = dx; o.y = dy; o.t = p.ev.flash; o.loop = L.i;
+    }
   }
 
   /* lancetta: fase udibile esatta, presa dalla coda dei cicli. Una breve
@@ -168,7 +203,8 @@ function drawDial(cell, now) {
     handTrailPos[L.i] = pos;
 
     strokeCap(ROUND);
-    for (let k = 0; k < HAND_TRAIL_LEN; k++) {
+    const passi = (menoMoto && menoMoto.matches) ? 1 : HAND_TRAIL_LEN;
+    for (let k = 0; k < passi; k++) {
       const idx = (pos - 1 - k + HAND_TRAIL_LEN * 2) % HAND_TRAIL_LEN;
       const ta = trail[idx];
       if (Number.isNaN(ta)) continue;
@@ -201,13 +237,13 @@ function drawDial(cell, now) {
    LINK_WINDOW secondi l'una dall'altra, un filo sottile le unisce sul
    canvas condiviso e sfuma con loro. È il momento in cui il collage per un
    istante quasi coincide — mai per davvero, perché i periodi sono coprimi.
-   Legge le posizioni raccolte in hotDrops durante drawDial di questo stesso
+   Legge le posizioni raccolte in hotPool durante drawDial di questo stesso
    fotogramma: nessun nuovo array, solo lettura di ciò che è già lì.        */
 function drawLinks(now) {
   strokeCap(ROUND);
-  for (let i = 0; i < hotDrops.length; i++) {
-    for (let j = i + 1; j < hotDrops.length; j++) {
-      const a = hotDrops[i], b = hotDrops[j];
+  for (let i = 0; i < hotCount; i++) {
+    for (let j = i + 1; j < hotCount; j++) {
+      const a = hotPool[i], b = hotPool[j];
       if (a.loop === b.loop) continue;
       const gap = Math.abs(a.t - b.t);
       if (gap > LINK_WINDOW) continue;
@@ -256,7 +292,7 @@ function drawTimeline(s, now) {
 
   if (!ctx) return;
   noStroke();
-  for (const ev of history) {
+  for (const ev of dropHistory) {
     const age = now - ev.t;
     if (age < 0 || age > TIMELINE_SEC) continue;
     const x = lerp(right, left, age / TIMELINE_SEC);
@@ -289,9 +325,15 @@ function trackedText(str, x, y, tracking) {
 --------------------------------------------------------------------------- */
 let drag = null, dragY = 0, dragV = 0, dragMoved = 0, dragT0 = 0;
 
+/* Il disegno non chiama più per nome le funzioni dei comandi: annuncia che
+   qualcosa è cambiato, e chi se ne occupa ascolta. Sketch e ui stanno sullo
+   stesso piano — model ← audio ← sketch/ui — e una chiamata diretta fra pari
+   è un legame che nessuna delle due parti dichiara.                        */
+const annuncia = che => dispatchEvent(new CustomEvent("rada:" + che));
+
 function cellAt(x, y) {
   for (const c of cells) {
-    if (dist(x, y, c.cx + c.r * 0.95, c.cy - c.r * 1.20) < c.r * 0.22)
+    if (dist(x, y, c.cx + c.r * 0.95, c.cy - c.r * 1.20) < regenHit(c.r))
       return { cell: c, regen: true };
     if (dist(x, y, c.cx, c.cy) < c.r * 1.06)
       return { cell: c, regen: false };
@@ -316,7 +358,7 @@ function moveAt(y) {
   const dy = dragY - y;
   dragMoved = Math.max(dragMoved, Math.abs(dy));
   drag.target = clamp(dragV + dy / 130 * (PERIOD_MAX - PERIOD_MIN), PERIOD_MIN, PERIOD_MAX);
-  onRealignChange();                 // definita in ui.js
+  annuncia("realign");
   return true;
 }
 
@@ -324,9 +366,9 @@ function releaseDrag() {
   if (!drag) return;
   if (dragMoved < 5 && Date.now() - dragT0 < 350) {   // clic secco, non trascinamento
     drag.muted = !drag.muted;
-    onLoopsChange();                 // definita in ui.js
+    annuncia("loops");
   }
-  onRealignChange();
+  annuncia("realign");
   drag = null;
 }
 

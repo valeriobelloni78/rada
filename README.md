@@ -5,9 +5,7 @@
 Rada è uno strumento generativo che vive nel browser. Non riproduce un brano
 registrato: costruisce il suono in tempo reale, ora per ora, e non si ripete mai.
 
-→ **[Ascolta Rada](https://TUO-UTENTE.github.io/rada/)**
-
-<!-- Sostituisci TUO-UTENTE con il tuo nome utente GitHub dopo aver attivato Pages -->
+→ **[Ascolta Rada](https://valeriobelloni78.github.io/rada/)** · [Guida](https://valeriobelloni78.github.io/rada/guida.html)
 
 ---
 
@@ -37,11 +35,16 @@ spezzoni di nastro di lunghezze diverse, qui sono oscillatori e uno scheduler.
 | Clic su un quadrante | silenzia o riattiva quella frase |
 | ↻ sopra un quadrante | genera una nuova idea musicale per quella frase |
 | Barra spaziatrice | avvia e ferma |
+| Tasto Tab | raggiunge gli stessi comandi in forma nativa, per chi non usa il puntatore |
 
 I cinque cursori governano il suono d'insieme: ampiezza del registro, calore
 timbrico, spazio riverberante, densità delle idee e addensamento (quanta parte
-del giro è attiva). I quattro **mood** sono preset completi — timbro *e*
+del giro è attiva). Gli otto **mood** sono preset completi — timbro *e*
 configurazione temporale — e rigenerano tutte le idee.
+
+Tutta l'interazione dei quadranti esiste anche come comandi HTML nativi,
+fuori campo ma raggiungibili col tasto Tab: il canvas da solo sarebbe muto
+per una tastiera e per un lettore di schermo.
 
 L'app legge inoltre **l'ora del sistema** e inclina di conseguenza registro,
 calore e riverbero: alle 23 suona più cupa e spaziosa che a mezzogiorno. È
@@ -53,13 +56,17 @@ Nessuna dipendenza da installare, nessun passaggio di compilazione: si apre
 `index.html` e funziona.
 
 ```
-index.html          struttura e collegamenti
+index.html          lo strumento: struttura e collegamenti
+guida.html          la pagina di documentazione
 css/style.css       palette, tipografia, impaginazione
+css/guida.css       impaginazione della sola guida
 js/i18n.js          le quattro lingue. Non dipende da nulla
+js/guida-i18n.js    le parole della guida, sempre nelle quattro lingue
 js/model.js         lo stato: frasi, idee, piani. Non dipende da nulla
 js/audio.js         Web Audio API: sintesi e scheduler
 js/sketch.js        p5.js: disegno dei quadranti e interazione
 js/ui.js            cursori, mood, lingua, riga di stato
+testi-guida.md      tavolo di lavoro dei testi italiani della guida
 ```
 
 **L'interfaccia parla quattro lingue** — italiano, francese, inglese e
@@ -69,8 +76,10 @@ cambiano lingua al volo, anche mentre suona, e la scelta viene ricordata.
 Si può anche imporre dall'indirizzo, con `?lang=ja`.
 
 **Il suono usa la Web Audio API direttamente, non p5.sound.** Il cuore di Rada è
-uno *scheduler a lookahead*: ogni 25 ms guarda 150 ms avanti e prenota le note sul
-clock del motore audio, preciso al singolo campione. I timer di JavaScript sono
+uno *scheduler a lookahead*: ogni 25 ms prenota le note sul clock del motore
+audio, preciso al singolo campione. La finestra è adattiva — 150 ms quando la
+pagina si vede, tre secondi quando è in secondo piano, dove il browser rallenta
+i timer ma non il thread audio. I timer di JavaScript sono
 troppo imprecisi per frasi che devono restare in fase per ore, e p5.sound è pensato
 per gesti immediati più che per pianificazione rigorosa. La precisione temporale
 qui è il progetto, non un dettaglio.
