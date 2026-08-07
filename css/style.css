@@ -122,8 +122,28 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
   color:var(--dust);margin:0 8px 6px;
 }
 
-#canvas-holder{width:100%;display:flex;justify-content:center}
-#canvas-holder canvas{display:block;touch-action:none;cursor:ns-resize}
+#canvas-holder{width:100%;display:flex;justify-content:center;position:relative}
+
+/* Il canvas lascia scorrere la pagina; sono i quattro riquadri qui sotto a
+   trattenere il dito dove c'è davvero qualcosa da trascinare.
+
+   L'`!important` non è pigrizia: p5 scrive `touch-action:none` DIRETTAMENTE
+   nell'attributo style del canvas, e una regola normale del foglio di stile
+   perderebbe contro di esso. Le dichiarazioni importanti dell'autore invece
+   battono lo stile in linea, ed è l'unico modo di avere l'ultima parola
+   senza mettere le mani nelle viscere della libreria.                      */
+#canvas-holder canvas{display:block;touch-action:pan-y pinch-zoom !important}
+
+/* Trasparenti e senza dimensioni proprie: le riceve sketch.js, che li
+   ricalcola solo quando il canvas cambia misura. Coprono il quadrante e il
+   suo ↻, non l'intera cella: gli spazi fra un quadrante e l'altro, e la
+   fascia temporale, restano al dito per scorrere la pagina.               */
+.dialZone{
+  position:absolute;
+  touch-action:none;
+  cursor:ns-resize;
+  -webkit-tap-highlight-color:transparent;
+}
 
 /* -------------------------------------------------------------- controlli */
 .controls{

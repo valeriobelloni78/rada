@@ -52,11 +52,15 @@ const HAND_TRAIL_LEN = 10;
 const handTrail = loops.map(() => { const a = new Float32Array(HAND_TRAIL_LEN); a.fill(NaN); return a; });
 const handTrailPos = new Int32Array(loops.length);
 
+let cvEl = null;                 // l'elemento canvas, per convertire le coordinate
+
 function setup() {
   holder = document.getElementById("canvas-holder");
   const s = canvasSize();
   const c = createCanvas(s.w, s.h);
   c.parent(holder);
+  cvEl = c.elt;
+  buildZones();
   readPalette();
   /* La pila include i grotteschi giapponesi di sistema: per il latino non
      cambia nulla (risolve sui primi), ma evita che il giapponese finisca su
@@ -119,7 +123,7 @@ function draw() {
   /* Il contenitore può cambiare larghezza senza che la finestra venga
      ridimensionata: senza questo il disegno userebbe misure che il canvas
      non ha ancora preso, e finirebbe tagliato.                            */
-  if (width !== s.w || height !== s.h) resizeCanvas(s.w, s.h);
+  if (width !== s.w || height !== s.h) { resizeCanvas(s.w, s.h); daRiposizionare = true; }
 
   /* A motore fermo non si muove quasi nulla: dodici fotogrammi al secondo
      bastano a far rispondere i cursori, e non scaldano la batteria per
@@ -128,6 +132,7 @@ function draw() {
 
   clear();
   layout(s);
+  if (daRiposizionare) { placeZones(); daRiposizionare = false; }
   const now = audioNow();
   hotCount = 0;
   for (const c of cells) drawDial(c, now);
@@ -333,6 +338,11 @@ const annuncia = che => dispatchEvent(new CustomEvent("rada:" + che));
 
 function cellAt(x, y) {
   for (const c of cells) {
+    /* Finché il primo fotogramma non è passato, le celle esistono ma sono
+       vuote: nessuna frase e raggio zero. E siccome regenHit non scende mai
+       sotto i 22 px — serve al polpastrello — un tocco vicino all'origine
+       troverebbe comunque il ↻ e chiederebbe di rigenerare il nulla.      */
+    if (!c.L) continue;
     if (dist(x, y, c.cx + c.r * 0.95, c.cy - c.r * 1.20) < regenHit(c.r))
       return { cell: c, regen: true };
     if (dist(x, y, c.cx, c.cy) < c.r * 1.06)
@@ -372,10 +382,98 @@ function releaseDrag() {
   drag = null;
 }
 
-function mousePressed()  { if (pressAt(mouseX, mouseY)) return false; }
-function mouseDragged()  { if (moveAt(mouseY)) return false; }
-function mouseReleased() { releaseDrag(); }
+/* ---------------------------------------------------------------------------
+   QUATTRO RIQUADRI SENSIBILI, uno per quadrante.
 
-function touchStarted() { if (touches.length && pressAt(touches[0].x, touches[0].y)) return false; }
-function touchMoved()   { if (touches.length && moveAt(touches[0].y)) return false; }
-function touchEnded()   { releaseDrag(); }
+   Il canvas è uno solo e il CSS non sa distinguere le sue regioni: o il dito
+   comanda tutto, o non comanda niente. Con `touch-action:none` sull'intero
+   canvas — come faceva p5 — su un telefono non si riusciva a scorrere la
+   pagina passando sopra mezza schermata di quadranti.
+
+   La soluzione è spostare il bersaglio: il canvas lascia scorrere, e sopra ai
+   quadranti stanno quattro riquadri trasparenti che invece trattengono il
+   dito. Coprono il cerchio e il suo ↻, non tutta la cella, così le fasce fra
+   un quadrante e l'altro tornano al browser.
+
+   Perché non bastava restituire `false` dalle callback di p5: p5 2.x consegna
+   i tocchi come POINTER EVENT, e per quelli lo scorrimento lo decide solo
+   `touch-action` — `preventDefault` su pointerdown non lo ferma. Quindi
+   l'unica leva è quale elemento riceve il tocco, ed è questa.
+
+   Da qui viene anche tutta l'interazione col mouse: p5 ascolta su `window`,
+   quindi le sue callback si sommerebbero a queste facendo scattare ogni
+   gesto due volte. mousePressed/mouseDragged/mouseReleased sono state tolte.
+--------------------------------------------------------------------------- */
+const zones = [];
+let daRiposizionare = true;
+
+function buildZones() {
+  for (let i = 0; i < loops.length; i++) {
+    const z = document.createElement("div");
+    z.className = "dialZone";
+    holder.appendChild(z);
+    armaZona(z);
+    zones.push(z);
+  }
+}
+
+/* Il riquadro abbraccia il quadrante e il suo ↻, che sporge in alto a destra */
+function placeZones() {
+  if (!cvEl) return;
+  const offL = cvEl.offsetLeft, offT = cvEl.offsetTop;
+  cells.forEach((c, i) => {
+    const hit   = regenHit(c.r);
+    const left  = c.cx - 1.06 * c.r;
+    const right = Math.max(c.cx + 1.06 * c.r, c.cx + 0.95 * c.r + hit);
+    const top   = Math.min(c.cy - 1.06 * c.r, c.cy - 1.20 * c.r - hit);
+    const bot   = c.cy + 1.06 * c.r;
+    const st = zones[i].style;
+    st.left   = (offL + left) + "px";
+    st.top    = (offT + top)  + "px";
+    st.width  = (right - left) + "px";
+    st.height = (bot - top)    + "px";
+  });
+}
+
+/* Coordinate del puntatore nello spazio del disegno */
+function puntoCanvas(e) {
+  const r = cvEl.getBoundingClientRect();
+  return { x: (e.clientX - r.left) * (width  / r.width),
+           y: (e.clientY - r.top)  * (height / r.height) };
+}
+
+function armaZona(z) {
+  z.addEventListener("pointerdown", e => {
+    const p = puntoCanvas(e);
+    if (!pressAt(p.x, p.y)) return;
+    e.preventDefault();
+    /* La cattura tiene il gesto legato a questo riquadro anche quando il dito
+       ne esce: il trascinamento copre 130 px, molto più del riquadro.
+
+       Protetta, perché solleva un'eccezione se il puntatore nel frattempo non
+       è più attivo — cosa che capita davvero, per esempio quando il sistema
+       interrompe il gesto. Senza la rete, l'eccezione uscirebbe da qui e il
+       trascinamento resterebbe appeso.                                     */
+    if (drag) { try { z.setPointerCapture(e.pointerId); } catch (err) {} }
+  });
+
+  z.addEventListener("pointermove", e => {
+    if (!drag) return;
+    moveAt(puntoCanvas(e).y);
+    e.preventDefault();
+  });
+
+  const chiudi = e => {
+    releaseDrag();
+    if (z.hasPointerCapture(e.pointerId)) z.releasePointerCapture(e.pointerId);
+  };
+  z.addEventListener("pointerup", chiudi);
+  z.addEventListener("pointercancel", chiudi);
+}
+
+/* Rete di sicurezza: se la cattura non è riuscita, o se il sistema porta via
+   il gesto, il dito si alza lontano dal riquadro e `chiudi` non scatta — il
+   trascinamento resterebbe attivo per sempre. Qui `releaseDrag` esce subito
+   quando non c'è nulla da chiudere, quindi il doppio passaggio è innocuo.  */
+addEventListener("pointerup",     () => { if (drag) releaseDrag(); });
+addEventListener("pointercancel", () => { if (drag) releaseDrag(); });

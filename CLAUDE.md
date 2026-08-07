@@ -70,6 +70,26 @@ esattamente altrettanto avanti: se lo scheduler prenotasse a tre secondi e
 dell'addensamento riposizionerebbe gocce già prenotate e le sentiresti due
 volte. Cambiando l'una, cambiare l'altra.
 
+**p5 2.x consegna i tocchi come pointer event, e questo cambia tutto.**
+`touchStarted`, `touchMoved` e `touchEnded` **non esistono più** nella
+libreria: zero occorrenze nel sorgente della 2.3.2. p5 ascolta `pointerdown`
+e compagni **su `window`**, e li instrada nelle callback del mouse. Due
+conseguenze che è costato fatica scoprire:
+
+- p5 scrive `touch-action:none` **nell'attributo style del canvas**. Una
+  regola normale del foglio di stile perde contro lo stile in linea: serve
+  `!important`, che è l'unica dichiarazione d'autore che lo batte.
+- con i pointer event lo scorrimento della pagina lo decide **solo**
+  `touch-action`. `preventDefault` su `pointerdown` non lo ferma. Quindi non
+  esiste modo di decidere da JavaScript, gesto per gesto, se scorrere.
+
+Da qui i **quattro riquadri trasparenti** (`.dialZone`) sopra i quadranti: il
+canvas lascia scorrere la pagina, i riquadri no. È l'unica leva rimasta —
+cambiare quale elemento riceve il tocco. E poiché p5 ascolta su `window`,
+le sue callback del mouse si sommerebbero a quelle dei riquadri facendo
+scattare ogni gesto due volte: per questo `mousePressed` e sorelle sono state
+tolte, e tutta l'interazione passa dai riquadri.
+
 **Un solo set di ascoltatori per il trascinamento.** Non registrarne uno per
 quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 
