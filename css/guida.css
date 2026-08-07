@@ -37,7 +37,7 @@
 
 .docCard p{
   margin:0 0 11px;
-  font-size:14px;line-height:1.75;font-weight:300;
+  font-size:14px;line-height:1.5;font-weight:300;
   color:var(--ink-2);
 }
 .docCard p:last-child{margin-bottom:0}
@@ -51,7 +51,7 @@
 /* Il riquadro d'apertura non ha titolo: è la voce che invita, non una
    sezione. Un corpo appena più grande gli dà il respiro che il titolo
    mancante non gli dà.                                                     */
-.docCard.docOpen p{font-size:15px;line-height:1.85}
+.docCard.docOpen p{font-size:15px;line-height:1.6}
 
 /* nota di coda: più tenue del corpo, staccata da un filo */
 .docNote{
@@ -62,6 +62,33 @@
   color:var(--dust) !important;
 }
 
+/* ------------------------------------------------------------ giustificato
+   I blocchi diventano rettangoli pieni: è la ragione per cui lo si vuole in
+   un impianto minimale, dove il bordo del testo conta quanto il testo.
+
+   Ha un prezzo, e la sillabazione è ciò che lo abbassa. Senza, il browser può
+   solo allargare gli spazi fra le parole, e in una colonna stretta li allarga
+   in modo grottesco. `hyphens:auto` usa i dizionari del browser, che seguono
+   l'attributo lang del documento: cambiando lingua cambia anche il modo in
+   cui le parole si spezzano. Il giapponese non ne ha bisogno — va già a capo
+   fra qualunque coppia di caratteri — e infatti lì il giustificato è la norma.
+
+   `text-align-last:left` tiene l'ultima riga com'era: giustificare anche
+   quella spalanca l'ultimo rigo di ogni capoverso.                        */
+.docCard p,
+.docList dd,
+.docIntro,
+.docCell p{
+  text-align:justify;
+  text-align-last:left;
+  -webkit-hyphens:auto;
+  hyphens:auto;
+}
+
+/* Il colophon resta centrato: due righe corte, e giustificarle non avrebbe
+   nulla da distribuire.                                                   */
+.docColophon p{text-align:center;hyphens:manual}
+
 /* ----------------------------------------------- etichette di sezione */
 .docLabel{
   margin:26px 0 10px 8px;
@@ -71,7 +98,7 @@
 }
 .docIntro{
   margin:0 8px 12px;
-  font-size:13px;line-height:1.7;font-weight:300;color:var(--ink-2);
+  font-size:13px;line-height:1.5;font-weight:300;color:var(--ink-2);
 }
 .docIntro em{font-style:normal;color:var(--ink)}
 
@@ -92,7 +119,7 @@
 }
 .docCell p{
   margin:0;
-  font-size:12.5px;line-height:1.65;font-weight:300;
+  font-size:12.5px;line-height:1.45;font-weight:300;
   color:var(--ink-2);
 }
 /* il tempo di riallineamento, nello stesso arancione che lo mostra a schermo */
@@ -113,7 +140,7 @@
 }
 .docList dd{
   margin:0;
-  font-size:13px;line-height:1.7;font-weight:300;color:var(--ink-2);
+  font-size:13px;line-height:1.5;font-weight:300;color:var(--ink-2);
 }
 .docList dd em{font-style:normal;color:var(--ink)}
 
@@ -184,7 +211,13 @@
   .docGrid.g4{grid-template-columns:1fr}
   .docGrid.g4.moodGrid{grid-template-columns:repeat(2,1fr);gap:8px}
   .moodGrid .docCell{padding:13px 13px 14px}
-  .moodGrid .docCell p{font-size:12px;line-height:1.6}
+  /* Unica eccezione al giustificato di tutta la pagina, e per misura non per
+     gusto: qui la colonna scende a 142 px, cioè ventun caratteri per riga.
+     Sotto quella soglia il browser non ha più nulla da distribuire se non gli
+     spazi fra le parole, e li spalanca — "poche  gocce  ben". Nemmeno la
+     sillabazione basta, perché le parole restano più lunghe dello spazio che
+     avanza. Meglio un bordo destro irregolare che una riga a buchi.       */
+  .moodGrid .docCell p{font-size:12px;line-height:1.42;text-align:left}
 }
 
 /* -------------------------------- il giapponese, se un giorno tradurremo */
@@ -197,7 +230,7 @@
   letter-spacing:.08em;
 }
 :lang(ja) .docCard p,
-:lang(ja) .docList dd{line-height:1.95;letter-spacing:.02em}
+:lang(ja) .docList dd{line-height:1.75;letter-spacing:.02em}
 
 /* Nemmeno il corsivo esiste in giapponese: l'obliquo che il browser applica
    ai glifi CJK non è un carattere, è una deformazione calcolata. Per marcare
