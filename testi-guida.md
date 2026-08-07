@@ -35,12 +35,9 @@ Link in alto a destra: Ascolta Rada
 ## [riquadro 1 — apertura, senza titolo]
 
 Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra.
-
 In questo spazio puoi prenderti cura della tua attenzione, le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”.
-
 L'ascolto è un'attività da coltivare, è un territorio che ha le sue poetiche e i suoi campi di forza.
 Rada è un'insenatura tranquilla lungo la costa di un oceano di rumore.
-
 Tra le gocce troverai dei silenzi che parlano; ascoltali.
 
 ---
@@ -50,9 +47,7 @@ Tra le gocce troverai dei silenzi che parlano; ascoltali.
 **Titolo:** Il concetto
 
 Rada sviluppa il suono mentre lo ascolti.
-
 Quattro frasi girano ciascuna col proprio periodo, nella configurazione di partenza questi periodi sono di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.
-
 Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.
 
 ---
@@ -64,7 +59,6 @@ Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo pro
 **Dicitura in arancione, in alto a destra:** 7 · 11 · 13 · 17 → 4,7 ore
 
 Perché la combinazione resti imprevedibile, i quattro periodi devono essere *coprimi* a due a due: presi a coppie, non devono avere alcun divisore in comune.
-
 Se due frasi durassero ad esempio sei e nove secondi condividerebbero il tre come divisore, e tornerebbero a coincidere ogni diciotto secondi. L'orecchio sentirebbe subito questa ripetizione e il collage collasserebbe in un motivo riconoscibile. Con sette, undici, tredici e diciassette — primi fra loro — la combinazione completa si ripete solo dopo 17.017 secondi, quasi cinque ore.
 
 ---
@@ -234,6 +228,16 @@ Una **rada** è il tratto di mare riparato dove le navi sostano al riparo dai ve
 ## [nota in fondo al riquadro Il nome]
 
 Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo rosso le unisce per un istante. 
+
+---
+
+## [riquadro 7]
+
+Rada è un progetto sviluppato da Valerio Belloni
+
+www.valeriobelloni.art
+
+valerio.belloni@pm.me
 
 ---
 

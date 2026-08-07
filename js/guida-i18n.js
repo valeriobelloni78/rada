@@ -77,6 +77,7 @@ const GUIDA = {
     "g.name.note": "Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo rosso le unisce per un istante.",
 
     "g.foot.code": "Il codice su GitHub",
+    "g.credits": "Rada è un progetto sviluppato da Valerio Belloni",
   },
 
   fr: {
@@ -143,6 +144,7 @@ const GUIDA = {
     "g.name.note": "Un détail qu'on ne remarque qu'en regardant~: quand deux gouttes de phrases différentes sonnent à moins de deux dixièmes de seconde l'une de l'autre, un fin fil rouge les relie un instant.",
 
     "g.foot.code": "Le code sur GitHub",
+    "g.credits": "Rada est un projet développé par Valerio Belloni",
   },
 
   en: {
@@ -209,6 +211,7 @@ const GUIDA = {
     "g.name.note": "A detail you only catch by watching: when two drops from different phrases sound less than two tenths of a second apart, a thin red thread joins them for a moment.",
 
     "g.foot.code": "The code on GitHub",
+    "g.credits": "Rada is a project developed by Valerio Belloni",
   },
 
   ja: {
@@ -275,6 +278,7 @@ const GUIDA = {
     "g.name.note": "見ていなければ気づかない細部があります。異なるフレーズの滴どうしが五分の一秒に満たない差で鳴るとき、細い赤い糸が一瞬だけ両者を結びます。",
 
     "g.foot.code": "GitHubのコード",
+    "g.credits": "RadaはValerio Belloniが制作しています。",
   },
 
 };

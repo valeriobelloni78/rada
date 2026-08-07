@@ -123,6 +123,31 @@
 
 .docEnd{margin-top:14px}
 
+/* --------------------------------------------------------------- colophon
+   Ultima cosa della pagina: una firma. Centrato perché il resto è allineato
+   a sinistra, e questo scarto dice da solo «qui il discorso è finito».
+   I recapiti non vanno in maiuscolo come le altre etichette minute: un
+   indirizzo di posta in maiuscolo si legge peggio e sembra un errore.    */
+.docCard.docColophon{margin-top:14px;text-align:center}
+.docColophon p{font-size:13px;color:var(--ink-2)}
+.docColophon .recapiti{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;margin-top:12px;
+}
+.docColophon a{
+  font-family:var(--sans);font-weight:400;
+  font-size:10px;letter-spacing:.1em;
+  color:var(--dust);text-decoration:none;transition:.2s;
+  border-bottom:1px solid transparent;padding-bottom:2px;
+}
+.docColophon a:hover{color:var(--ink);border-bottom-color:var(--hair)}
+.docColophon a:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px;border-radius:2px}
+.docColophon .sep{width:1px;height:10px;background:var(--hair);flex:none}
+@media (max-width:479px){
+  .docColophon .sep{display:none}      /* a capo, il trattino resterebbe appeso */
+  .docColophon .recapiti{gap:8px;flex-direction:column}
+}
+
 /* ------------------------------------------------------------- chiusura */
 .docFoot{
   display:flex;align-items:center;gap:14px;
