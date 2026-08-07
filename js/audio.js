@@ -318,6 +318,19 @@ function playDrop(when, ev, L) {
   car.start(when); car.stop(stop);
   mod.start(when); mod.stop(stop);
   if (par) { par.start(when); par.stop(stop); }
+
+  /* Sette nodi per goccia, e finché restano collegati il thread audio continua
+     a percorrerli. Il rilascio automatico però dipende dalla raccolta della
+     memoria, che è attività del thread PRINCIPALE — proprio quello che a
+     schermo bloccato viene strozzato. Il risultato è che il grafo cresce più
+     in fretta di quanto venga ripulito: prima frusciano i buffer, poi saltano,
+     infine il suono crolla. Scollegare a mano rende il rilascio immediato e
+     non più soggetto a quando il thread principale trova tempo.           */
+  car.onended = () => {
+    car.disconnect(); mod.disconnect(); modGain.disconnect();
+    if (par) { par.disconnect(); parGain.disconnect(); }
+    env.disconnect(); pan.disconnect();
+  };
 }
 
 /* --- modulazione lenta ----------------------------------------------------
