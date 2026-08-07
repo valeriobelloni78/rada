@@ -237,7 +237,7 @@ Rada è un progetto sviluppato da Valerio Belloni
 
 www.valeriobelloni.art
 
-valerio.belloni@pm.me
+valerio.belloni [at] pm.me
 
 ---
 
