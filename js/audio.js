@@ -68,7 +68,22 @@ function statoMediaSession() {
 /* --- costruzione del grafo ----------------------------------------------- */
 function buildAudio() {
   dichiaraSessioneDiRiproduzione();
-  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  /* `latencyHint: "playback"` chiede al browser il buffer PIÙ LUNGO che
+     ritiene ragionevole, invece di quello più corto.
+
+     Di suo un AudioContext nasce per strumenti suonati dal vivo, dove ogni
+     millisecondo di ritardo si sente sotto le dita: buffer minuscoli, e se la
+     CPU non consegna in tempo il buffer resta vuoto — è quel raschio. Rada
+     però non risponde a nessun gesto in tempo reale: le gocce sono prenotate
+     secondi in anticipo sul clock del motore audio, quindi un ritardo
+     d'uscita più lungo non si percepisce affatto. In cambio il thread audio
+     ha molto più margine per consegnare in tempo, che è esattamente ciò che
+     manca su un telefono modesto.
+
+     Nessun costo e nessun effetto udibile: solo più respiro.             */
+  const Costruttore = window.AudioContext || window.webkitAudioContext;
+  try { ctx = new Costruttore({ latencyHint: "playback" }); }
+  catch (e) { ctx = new Costruttore(); }
 
   master = ctx.createGain();
   master.gain.value = 0;
@@ -178,6 +193,24 @@ function buildRiverbero() {
     nodo.connect(unione, 0, canale);
   });
 
+  /* Un filo di continua, inudibile, iniettato negli anelli.
+
+     Quando la coda svanisce, i valori che circolano nei ritardi scendono
+     sotto il minimo dei numeri in virgola mobile normalizzati e diventano
+     "denormali": su molti processori l'aritmetica su quei valori costa
+     decine di volte tanto, e il costo compare proprio quando il riverbero
+     dovrebbe essere silenzioso. Aggiungendo 10⁻¹⁵ i valori nell'anello non
+     scendono mai sotto il normale. A −300 dB non lo sente nessuno.
+
+     Chrome di suo azzera i denormali, quindi su molti dispositivi questo non
+     serve; costa un nodo e toglie di mezzo il dubbio.                    */
+  if (typeof ctx.createConstantSource === "function") {
+    const semino = ctx.createConstantSource();
+    semino.offset.value = 1e-15;
+    semino.connect(ingresso);
+    semino.start();
+  }
+
   return { ingresso, uscita: unione };
 }
 
@@ -185,13 +218,20 @@ function buildRiverbero() {
    Mai sotto l'unità: serve a dividere, e dividere per meno di uno alzerebbe
    il guadagno dell'anello invece di abbassarlo.                           */
 function piccoDi(filtro) {
-  const N = 512, nyq = ctx.sampleRate / 2;
-  const hz = new Float32Array(N), mag = new Float32Array(N), fase = new Float32Array(N);
-  for (let i = 0; i < N; i++) hz[i] = 20 * Math.pow(nyq / 20, i / (N - 1));
-  filtro.getFrequencyResponse(hz, mag, fase);
-  let max = 1;
-  for (let i = 0; i < N; i++) if (mag[i] > max) max = mag[i];
-  return max;
+  /* Il ripiego non è 1, ed è importante che non lo sia: con 1 il guadagno
+     dell'anello non verrebbe ridotto affatto, il giro tornerebbe sopra
+     l'unità e la rete divergerebbe. Se la misura non riesce si preferisce
+     una coda un po' più corta a un riverbero che esplode.                */
+  const PRUDENTE = 1.3;
+  try {
+    const N = 512, nyq = ctx.sampleRate / 2;
+    const hz = new Float32Array(N), mag = new Float32Array(N), fase = new Float32Array(N);
+    for (let i = 0; i < N; i++) hz[i] = 20 * Math.pow(nyq / 20, i / (N - 1));
+    filtro.getFrequencyResponse(hz, mag, fase);
+    let max = 0;
+    for (let i = 0; i < N; i++) if (mag[i] > max) max = mag[i];
+    return (isFinite(max) && max >= 1) ? max : PRUDENTE;
+  } catch (e) { return PRUDENTE; }
 }
 
 /* Passa-tutto di Schroeder, nella forma canonica:

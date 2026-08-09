@@ -101,6 +101,25 @@ salivano senza limite (189 → 273 → 371 in ventuno secondi), con `onended` si
 assestano attorno al centinaio. **Chiunque aggiunga nodi per nota deve
 scollegarli quando la nota finisce.**
 
+**Il contesto audio nasce con `latencyHint: "playback"`.** Di suo un
+AudioContext è tarato per strumenti suonati dal vivo: buffer da 256 campioni,
+cioè 5,8 ms per consegnare senza mai mancare un colpo. Su un telefono modesto
+non ce la fa, e ogni buffer mancato è un raschio. Rada non risponde a nessun
+gesto in tempo reale — le gocce sono prenotate secondi prima — quindi il
+ritardo d'uscita non si percepisce: con `playback` il buffer sale a 1024
+campioni, quattro volte il margine. **Non rimetterlo com'era per "ridurre la
+latenza": qui non serve a niente e costa il suono.**
+
+**La rete del riverbero è in retroazione, quindi va trattata con rispetto.**
+Due trappole già scattate: il passa-basso di Web Audio ha guadagno fino a
+1,22 anche a Q basso — moltiplicato per il guadagno dell'anello porta il giro
+sopra l'unità e la coda cresce invece di spegnersi (misurato: +600 dB in venti
+secondi) — e per questo `piccoDi` misura il picco vero del filtro e ci divide,
+con un ripiego prudente a 1,3 se la misura non riesce, **mai 1**. C'è poi un
+filo di continua a 10⁻¹⁵ iniettato negli anelli: tiene i valori sopra la
+soglia dei denormali, che su molti processori costano decine di volte tanto
+proprio quando la coda sta svanendo.
+
 **Un solo set di ascoltatori per il trascinamento.** Non registrarne uno per
 quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 
