@@ -11,7 +11,7 @@
    Catena: [gocce] → filtro passa-basso → (diretto + riverbero) → uscita
 ============================================================================= */
 
-let ctx = null, master, verb, wetGain, dryGain, filt;
+let ctx = null, master, wetGain, dryGain, filt;
 let running = false;
 
 /* Storia delle gocce suonate di recente, per la fascia temporale condivisa
@@ -73,14 +73,7 @@ function buildAudio() {
   master = ctx.createGain();
   master.gain.value = 0;
 
-  verb = ctx.createConvolver();
-  /* La convoluzione è di gran lunga la voce più cara della catena, e il costo
-     cresce con la lunghezza dell'impulso. Su uno schermo piccolo — cioè su un
-     telefono, dove la CPU è quella che crepita — se ne usa uno più corto:
-     all'orecchio cambia poco, al processore molto.                        */
-  const piccolo = typeof matchMedia === "function"
-                && matchMedia("(max-width: 719px)").matches;
-  makeImpulse(piccolo ? 2.6 : 5.5);
+  const riverbero = buildRiverbero();
   wetGain = ctx.createGain(); wetGain.gain.value = 0.6;
   dryGain = ctx.createGain(); dryGain.gain.value = 0.6;
 
@@ -90,7 +83,8 @@ function buildAudio() {
   filt.Q.value = 0.6;
 
   filt.connect(dryGain); dryGain.connect(master);
-  filt.connect(verb);    verb.connect(wetGain); wetGain.connect(master);
+  filt.connect(riverbero.ingresso);
+  riverbero.uscita.connect(wetGain); wetGain.connect(master);
   master.connect(ctx.destination);
 
   restartCycles();
@@ -98,60 +92,132 @@ function buildAudio() {
   dichiaraMediaSession();
 }
 
-/* Impulso di riverbero: rumore con decadimento esponenziale. Sintetico, così
-   non serve caricare un file esterno.
+/* --- IL RIVERBERO ----------------------------------------------------------
+   Prima era una convoluzione: rumore con decadimento, lungo secondi. Suona
+   benissimo e costa moltissimo — il costo cresce con la coda, e va pagato a
+   ogni istante anche nel silenzio, perché il convolutore macina comunque.
+   Con una coda di 2,6 secondi sono quasi 250.000 campioni per canale, sempre.
+   È il costo FISSO della catena: la ragione per cui su Android il suono
+   degradava allo stesso modo col mood più fitto e con quello più rarefatto.
 
-   Mezzo milione di campioni generati uno per uno, e tutti nell'istante esatto
-   in cui l'utente preme "Entra": in un colpo solo bloccherebbero il thread
-   principale proprio lì, con uno scatto visibile mentre la soglia sfuma.
-   Si genera quindi a fette, restituendo il controllo al browser fra l'una e
-   l'altra, e il buffer si attacca al convolutore solo quando è pronto.
+   Qui c'è invece una rete di ritardi in retroazione, alla Schroeder: quattro
+   filtri a pettine smorzati in parallelo, poi due catene passa-tutto che ne
+   diffondono l'uscita. Ogni nodo costa lo stesso a ogni campione, qualunque
+   sia la lunghezza della coda — e la coda diventa gratis, tanto che non serve
+   più accorciarla sul telefono.
 
-   Nel frattempo il convolutore, che senza buffer tace, semplicemente non
-   contribuisce: si sente il suono diretto. Non è un problema, perché le
-   prime gocce arrivano comunque dopo due decimi di secondo buoni — e la
-   generazione, a fette, ne impiega meno.
+   I quattro ritardi sono 31, 37, 41 e 43 millisecondi: numeri primi, quindi
+   coprimi a due a due. È la stessa regola che tiene sfasate le quattro frasi,
+   e serve alla stessa cosa — se due ritardi condividessero un divisore le
+   loro ripetizioni coinciderebbero, e la coda suonerebbe metallica invece che
+   diffusa.
 
-   L'inviluppo si calcola UNA volta per campione e serve entrambi i canali:
-   prima il ciclo era per canale, e la potenza — la parte cara — veniva
-   calcolata due volte per ogni posizione.
+   I passa-tutto non colorano il timbro, rimescolano solo le fasi: è ciò che
+   trasforma quattro echi distinti in una nube continua. Sinistra e destra ne
+   hanno di lunghezze diverse, ed è da lì che nasce l'ampiezza stereo che
+   prima veniva dal rumore scorrelato dei due canali dell'impulso.        */
+const RIV_T60 = 3.6;                       // secondi perché la coda cali di 60 dB
+const RIV_SMORZAMENTO = 2800;              // Hz: la coda si scurisce mentre svanisce
 
-   Le fette si concatenano con un MessageChannel e non con setTimeout, che ha
-   un'attesa minima imposta dal browser — quattro millisecondi, che diventano
-   un secondo se la pagina non si vede: l'impulso arriverebbe dopo le prime
-   gocce, e il pezzo attaccherebbe asciutto. Un messaggio su una porta è un
-   compito come gli altri, ma senza quel ritardo.                          */
-const FETTA = 12000;            // campioni per volta: circa un millisecondo
+/* Quattro pettini in comune, poi due catene di passa-tutto — una per canale —
+   con ritardi diversi. Tutti e otto i numeri sono primi, quindi coprimi a due
+   a due: la stessa regola che tiene sfasate le quattro frasi, e per la stessa
+   ragione. Se due ritardi condividessero un divisore le loro ripetizioni
+   coinciderebbero, e la coda suonerebbe metallica invece che diffusa.
 
-function makeImpulse(sec) {
-  const len = Math.floor(ctx.sampleRate * sec);
-  const b = ctx.createBuffer(2, len, ctx.sampleRate);
-  const sx = b.getChannelData(0), dx = b.getChannelData(1);
-  let i = 0;
+   I pettini stanno in comune, e non divisi fra i canali, per una ragione
+   misurata: dividendoli, i due lati uscivano con sei decibel di scarto —
+   un anello più corto ripete più spesso e rende più energia. Partendo dalla
+   stessa somma il bilanciamento è garantito per costruzione, e la larghezza
+   stereo la danno i passa-tutto, che spostano le fasi senza toccare i livelli. */
+const RIV_PETTINI = [31, 37, 41, 43];      // ms, primi fra loro
+const RIV_PASSATUTTO = [[7, 11], [5, 13]]; // ms, una coppia per canale
 
-  const fetta = () => {
-    const fine = Math.min(i + FETTA, len);
-    for (; i < fine; i++) {
-      const env = Math.pow(1 - i / len, 3.4);
-      sx[i] = (Math.random() * 2 - 1) * env;
-      dx[i] = (Math.random() * 2 - 1) * env;
-    }
-    return i < len;
-  };
+function buildRiverbero() {
+  /* L'ingresso è forzato a un canale solo: la rete lavora in mono e la stereo
+     rinasce dai passa-tutto. Lasciarla stereo raddoppierebbe il lavoro per
+     un'informazione che il riverbero dissolve comunque.                   */
+  const ingresso = ctx.createGain();
+  ingresso.channelCount = 1;
+  ingresso.channelCountMode = "explicit";
 
-  if (typeof MessageChannel !== "function") {   // rete di sicurezza
-    while (fetta()) {}
-    if (verb) verb.buffer = b;
-    return;
+  const somma = ctx.createGain();
+  somma.gain.value = 1 / RIV_PETTINI.length;
+
+  for (const ms of RIV_PETTINI) {
+    const ritardo = ctx.createDelay(0.1);
+    ritardo.delayTime.value = ms / 1000;
+
+    const smorza = ctx.createBiquadFilter();   // le alte svaniscono prima
+    smorza.type = "lowpass";
+    smorza.frequency.value = RIV_SMORZAMENTO;
+    smorza.Q.value = Math.SQRT1_2;
+
+    /* Guadagno dell'anello dal T60 voluto — g = 10^(−3·ritardo/T60) — diviso
+       per il picco REALE del filtro che sta nell'anello.
+
+       Quella divisione è la condizione di stabilità, e non è teoria. Il
+       passa-basso di Web Audio non si comporta come dice il manuale: la sua
+       risposta arriva a 1,22 anche a Q basso, dove un Butterworth non
+       dovrebbe superare l'unità. Moltiplicato per lo 0,94 dell'anello il giro
+       sale a 1,15, e la rete invece di spegnersi cresce — misurato prima di
+       accorgersene: la coda saliva a +600 dB in venti secondi. Il picco non
+       si indovina, si chiede al filtro.                                   */
+    const anello = ctx.createGain();
+    anello.gain.value = Math.pow(10, -3 * (ms / 1000) / RIV_T60) / piccoDi(smorza);
+
+    ingresso.connect(ritardo);
+    ritardo.connect(smorza); smorza.connect(anello); anello.connect(ritardo);
+    ritardo.connect(somma);
   }
 
-  const canale = new MessageChannel();
-  canale.port1.onmessage = () => {
-    if (fetta()) { canale.port2.postMessage(0); return; }
-    if (verb) verb.buffer = b;
-    canale.port1.close(); canale.port2.close();
-  };
-  canale.port2.postMessage(0);
+  const unione = ctx.createChannelMerger(2);
+  RIV_PASSATUTTO.forEach((coppia, canale) => {
+    let nodo = somma;
+    for (const ms of coppia) nodo = passatutto(nodo, ms, 0.5);
+    nodo.connect(unione, 0, canale);
+  });
+
+  return { ingresso, uscita: unione };
+}
+
+/* Il guadagno massimo di un filtro, misurato sulla sua risposta reale.
+   Mai sotto l'unità: serve a dividere, e dividere per meno di uno alzerebbe
+   il guadagno dell'anello invece di abbassarlo.                           */
+function piccoDi(filtro) {
+  const N = 512, nyq = ctx.sampleRate / 2;
+  const hz = new Float32Array(N), mag = new Float32Array(N), fase = new Float32Array(N);
+  for (let i = 0; i < N; i++) hz[i] = 20 * Math.pow(nyq / 20, i / (N - 1));
+  filtro.getFrequencyResponse(hz, mag, fase);
+  let max = 1;
+  for (let i = 0; i < N; i++) if (mag[i] > max) max = mag[i];
+  return max;
+}
+
+/* Passa-tutto di Schroeder, nella forma canonica:
+
+       v[n] = x[n] + g·v[n−M]
+       y[n] = v[n−M] − g·v[n]
+
+   La reazione in avanti parte da v, cioè dall'INGRESSO del ritardo, non da x.
+   Prendendola da x — come faceva la prima stesura — il coefficiente sul
+   termine ritardato diventa (1+g²) invece di 1, e il filtro smette di essere
+   passa-tutto: colora il timbro e sbilancia i livelli. Sembra una sfumatura,
+   e invece è la differenza fra diffondere e alterare.                     */
+function passatutto(sorgente, ms, g) {
+  const v       = ctx.createGain();               // il nodo di somma: x + g·v ritardato
+  const ritardo = ctx.createDelay(0.1);
+  ritardo.delayTime.value = ms / 1000;
+  const anello  = ctx.createGain(); anello.gain.value  =  g;
+  const diretto = ctx.createGain(); diretto.gain.value = -g;
+  const uscita  = ctx.createGain();
+
+  sorgente.connect(v);
+  ritardo.connect(anello); anello.connect(v);     // anello: v riceve g·v(ritardato)
+  v.connect(ritardo);
+  ritardo.connect(uscita);                        // + v(ritardato)
+  v.connect(diretto); diretto.connect(uscita);    // − g·v
+  return uscita;
 }
 
 /* Ripartenza dei cicli.
