@@ -23,10 +23,16 @@ const DR_R_INNER    = 0.815;   // estremo interno dei trattini
    gocce: essendo linee e non punti, due archi vicini di registro si
    confonderebbero in una macchia. Allargandola si legge il profilo delle
    altezze, che è l'informazione che l'arco porta oltre alla durata.
-   Il limite esterno resta sotto la corona dei trattini (0,815), quello
-   interno sopra il testo centrale.                                       */
-const DR_R_ARCO     = 0.780;   // raggio massimo degli archi (registro acuto)
-const DR_R_ARCO_LO  = 0.440;   // raggio minimo (registro grave)
+
+   All'esterno la fascia entra DENTRO la corona dei trattini, che comincia a
+   0,815: gli archi acuti la attraversano invece di fermarsi prima, e la
+   raggiera diventa il loro fondo invece che il loro confine. Si ferma però
+   a 0,93, perché il cerchio deve restare chiuso da un bordo che nessun arco
+   tocca. All'interno la fascia comincia più larga del numero centrale, che
+   con un corpo di 0,30 raggi arriva attorno a 0,40: partendo da lì gli archi
+   gravi gli si appoggiavano addosso.                                     */
+const DR_R_ARCO     = 0.930;   // raggio massimo degli archi (registro acuto)
+const DR_R_ARCO_LO  = 0.520;   // raggio minimo (registro grave)
 const DR_R_HAND     = 0.704;
 const DR_W_TICK     = 1.2 / 54;
 const DR_STRIP_FRAC = 0.34;    // altezza della fascia, in frazioni del lato della cella
@@ -243,8 +249,7 @@ function drawQuadranteTenute(cell, now) {
 
   /* al centro: la durata, e nient'altro */
   g.fillStyle = COL.ink;
-  g.font = "200 " + (r * 0.30).toFixed(1) + "px " + fontPila();
-  g.fillText(fmtOne(L.target) + CANVAS.seconds, cx, cy);
+  durataAlCentro(g, fmtOne(L.target), CANVAS.seconds, cx, cy, r);
 
   g.restore();
 }

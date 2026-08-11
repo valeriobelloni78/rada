@@ -256,8 +256,7 @@ function drawDial(cell, now) {
      formattatore costruito una volta sola in i18n.js — crearne uno qui
      costerebbe più di tutto il resto del fotogramma.                       */
   g.fillStyle = COL.ink;
-  g.font = "200 " + (r * 0.30).toFixed(1) + "px " + fontPila();
-  g.fillText(fmtOne(L.target) + CANVAS.seconds, cx, cy);
+  durataAlCentro(g, fmtOne(L.target), CANVAS.seconds, cx, cy, r);
 
   g.restore();
 }
@@ -343,6 +342,27 @@ function drawTimeline(s, now) {
     g.fill();
   }
   g.restore();
+}
+
+/* La durata al centro del quadrante: il numero grande e, accanto, l'unità
+   più piccola. Sono due disegni e non uno perché "7,0s" con la esse della
+   stessa misura della cifra la fa leggere come una lettera del numero; a
+   sette decimi diventa quello che è, un'unità di misura. Vale identico per
+   il 秒 giapponese, che è un'unità anche lui.
+
+   Il testo resta centrato sul quadrante: si misurano i due pezzi, si somma,
+   e si parte da metà larghezza a sinistra del centro.                     */
+function durataAlCentro(g, numero, unita, cx, cy, r) {
+  const grande  = "200 " + (r * 0.30).toFixed(1) + "px " + fontPila();
+  const piccola = "200 " + (r * 0.21).toFixed(1) + "px " + fontPila();
+  g.font = grande;  const wN = g.measureText(numero).width;
+  g.font = piccola; const wU = g.measureText(unita).width;
+  const prima = g.textAlign;
+  g.textAlign = "left";
+  const x = cx - (wN + wU) / 2;
+  g.font = grande;  g.fillText(numero, x, cy);
+  g.font = piccola; g.fillText(unita, x + wN, cy);
+  g.textAlign = prima;
 }
 
 /* Il contesto 2D non conosce la spaziatura fra lettere, che qui è parte
