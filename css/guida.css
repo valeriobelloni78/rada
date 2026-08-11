@@ -101,8 +101,13 @@
 }
 
 /* Il colophon resta centrato: due righe corte, e giustificarle non avrebbe
-   nulla da distribuire.                                                   */
-.docColophon p{text-align:center;hyphens:manual}
+   nulla da distribuire.
+
+   Serve anche `text-align-last`, che è una proprietà a sé: la regola qui
+   sopra la mette a `left` per tutta la pagina, e `text-align:center` da solo
+   non la tocca. In un capoverso di una o due righe l'ultima riga è tutto il
+   capoverso — quindi restava a sinistra, centrato per finta.              */
+.docColophon p{text-align:center;text-align-last:center;hyphens:manual}
 
 /* ----------------------------------------------- etichette di sezione */
 .docLabel{
