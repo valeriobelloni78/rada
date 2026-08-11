@@ -155,14 +155,20 @@ function drawDial(cell, now) {
   push();
   drawingContext.globalAlpha = dim;
 
-  /* etichetta e comando di rigenerazione, sopra il quadrante */
+  /* etichetta e comando di rigenerazione, sopra il quadrante. I pesi sono
+     dichiarati sempre, mai lasciati al valore di prima: la tela delle tenute
+     disegna gli stessi tre elementi con gli stessi pesi (400, 300, 200), e
+     due riquadri affiancati che scrivono la stessa cosa in due modi si
+     notano subito.                                                         */
   noStroke();
   fill(COL.dust);
+  textWeight(400);
   textSize(clamp(r * 0.10, 7, 10));
   trackedText(CANVAS.phrase[L.i], cx, cy - r * 1.20, r * 0.028 * CANVAS.trackMul);
 
   const overRegen = dist(mouseX, mouseY, cx + r * 0.95, cy - r * 1.20) < regenHit(r);
   fill(overRegen ? COL.amber : COL.dust);
+  textWeight(300);
   textSize(clamp(r * 0.17, 12, 17));
   text("↻", cx + r * 0.95, cy - r * 1.20);
 
@@ -235,6 +241,7 @@ function drawDial(cell, now) {
      costerebbe più di tutto il resto del fotogramma.                      */
   noStroke();
   fill(COL.ink);
+  textWeight(200);                       // il peso dei display, come nei tessuti
   textSize(r * 0.30);
   text(fmtOne(L.target) + CANVAS.seconds, cx, cy);
 
