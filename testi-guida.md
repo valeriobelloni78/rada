@@ -89,7 +89,7 @@ Genera una nuova idea musicale per quella frase soltanto: altre note, altro nume
 
 **Etichetta:** Barra spaziatrice
 
-Avvia e ferma. Ferma il clock del motore audio, e alla ripresa il collage riparte esattamente da dov'era.
+Avvia e ferma tutto. Ogni riquadro ha però anche il suo pulsante, che governa solo la propria classe. Alla ripresa il collage riparte esattamente da dov'era.
 
 ---
 
@@ -199,6 +199,120 @@ Densità massima, riverbero quasi al limite e timbro vetroso: tante gocce dure d
 
 ---
 
+## [riquadro 3b — I tessuti]
+
+**Titolo:** I tessuti
+
+Sotto le quattro frasi ce ne sono altre quattro, e non fanno la stessa cosa. Le gocce accadono: un attacco, una coda, e la nota è già passata. I tessuti invece durano — si aprono lentamente, restano aperti anche mezzo minuto, si dissolvono. Sovrapponendosi fra loro e alle gocce formano le tessiture, ed è la ragione per cui esistono.
+
+Anche qui i periodi sono coprimi a due a due, con una precisazione: sono numeri primi da diciannove in su, quindi coprimi anche con quelli delle frasi. Le linee che non tornano mai insieme sono otto, non due gruppi da quattro.
+
+Ogni riquadro ha il suo pulsante: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario. La barra spaziatrice invece vale per entrambi.
+
+---
+
+## [etichetta di sezione 4]
+
+I cinque cursori dei tessuti
+
+## [cursore tessuti 1]
+
+**Nome:** Estensione
+
+Quanto si allarga il ventaglio delle altezze, misurato in ottave. A zero tutti i tessuti cadono sulla stessa nota; al massimo si distendono sulle quattro ottave della scala.
+
+## [cursore tessuti 2]
+
+**Nome:** Affioramento
+
+I secondi che un tessuto impiega a emergere. Nulla attacca, tutto affiora: è l'inviluppo rovesciato rispetto a quello delle gocce.
+
+## [cursore tessuti 3]
+
+**Nome:** Dissolvenza
+
+I secondi che impiega a sparire. Insieme all'affioramento decide quanta parte del tessuto è movimento e quanta è stasi.
+
+## [cursore tessuti 4]
+
+**Nome:** Intreccio
+
+Quanti tessuti restano aperti insieme, in media, su ciascuna linea. Sotto uno restano dei silenzi; sopra due la trama non si interrompe mai. È il numero che si vede nella fascia in fondo al riquadro.
+
+## [cursore tessuti 5]
+
+**Nome:** Battito
+
+Ogni tessuto è fatto di due sinusoidi appena scordate, e la loro differenza in hertz è la pulsazione che si sente. È tutta la vita che serve a un suono che deve restare fermo a lungo.
+
+---
+
+## [etichetta di sezione 5]
+
+Gli otto tessuti
+
+## [introduzione ai tessuti]
+
+Come per le frasi, ogni mood è una configurazione completa. Due cose però restano fuori dai cursori: quanti tessuti per giro e quanto stanno sotto alle gocce sono il carattere del preset, non una manopola.
+
+## [tessuto 1]
+
+**Nome:** Velo
+**Tempo:** 4,5 giorni
+
+L'equilibrio di partenza: registro medio, sovrapposizione appena sopra l'uno.
+
+## [tessuto 2]
+
+**Nome:** Fondale
+**Tempo:** 15,8 giorni
+
+Uno strato solo per giro, lunghissimo e grave. Il più immobile degli otto.
+
+## [tessuto 3]
+
+**Nome:** Bordone
+**Tempo:** 5,8 giorni
+
+Tre per giro molto sovrapposti: la trama non si interrompe mai.
+
+## [tessuto 4]
+
+**Nome:** Respiro
+**Tempo:** 13,6 giorni
+
+Registro largo e sovrapposizione sotto l'uno: fra un tessuto e l'altro resta il silenzio.
+
+## [tessuto 5]
+
+**Nome:** Bruma
+**Tempo:** 26,8 giorni
+
+Il più acuto e il più tenue, quasi tre ottave di estensione.
+
+## [tessuto 6]
+
+**Nome:** Radice
+**Tempo:** 11,1 giorni
+
+Meno di un'ottava, tutta in basso, e il livello più alto degli otto.
+
+## [tessuto 7]
+
+**Nome:** Vetrata
+**Tempo:** 17,9 giorni
+
+Battito quasi doppio degli altri e affioramento rapido: il più inquieto.
+
+## [tessuto 8]
+
+**Nome:** Marea
+**Tempo:** 34,3 giorni
+
+Un tessuto solo per giro, che può durare fino a cinquanta secondi.
+
+---
+
 ## [riquadro 4 — L'ora del giorno]
 
 **Titolo:** L'ora del giorno
@@ -213,7 +327,7 @@ Le palette sono sei: **alba**, **mattino**, **pomeriggio**, **tramonto**, **sera
 
 **Titolo:** La fascia temporale
 
-Sotto i quadranti scorrono da destra verso sinistra gli ultimi trenta secondi di tutte e quattro le frasi. Ogni punto è una goccia. 
+Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto.
 
 Puoi guardarlo come se fosse uno spartito in movimento, o un sovrapporsi di strati sonori che scorrono con viscosità differenti.
 

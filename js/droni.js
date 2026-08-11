@@ -18,8 +18,14 @@
 
 const DR_TICKS      = 48;
 const DR_R_INNER    = 0.815;   // estremo interno dei trattini
-const DR_R_ARCO     = 0.741;   // raggio massimo degli archi (registro acuto)
-const DR_R_ARCO_LO  = 0.580;   // raggio minimo (registro grave)
+/* Gli archi occupano una fascia radiale molto più larga di quella delle
+   gocce: essendo linee e non punti, due archi vicini di registro si
+   confonderebbero in una macchia. Allargandola si legge il profilo delle
+   altezze, che è l'informazione che l'arco porta oltre alla durata.
+   Il limite esterno resta sotto la corona dei trattini (0,815), quello
+   interno sopra il testo centrale.                                       */
+const DR_R_ARCO     = 0.780;   // raggio massimo degli archi (registro acuto)
+const DR_R_ARCO_LO  = 0.440;   // raggio minimo (registro grave)
 const DR_R_HAND     = 0.704;
 const DR_W_TICK     = 1.2 / 54;
 const DR_STRIP_FRAC = 0.34;    // altezza della fascia, in frazioni del lato della cella
@@ -148,7 +154,7 @@ function drawFasciaTessuti(s, now) {
     /* Più corposo dei punti delle gocce — un tessuto è suono continuo, non
        un istante — ma non tanto da riempire la corsia: le quattro linee
        devono restare leggibili anche quando si accavallano.              */
-    g.lineWidth   = (aperto ? 0.26 : 0.17) * laneH;
+    g.lineWidth   = (aperto ? 0.17 : 0.11) * laneH;
     g.globalAlpha = (spento ? 0.3 : 1) * (aperto ? 1 : 0.5);
     g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
   }
@@ -211,7 +217,7 @@ function drawQuadranteTenute(cell, now) {
        in cui si apre — lo stesso lampo delle gocce, per lo stesso motivo —
        poi inchiostro pieno finché suona, filo tenue quando tace.          */
     g.strokeStyle = appena ? COL.amber : suona ? COL.ink : COL.ink2;
-    g.lineWidth = (suona ? 3 : 1.7) / 54 * r;
+    g.lineWidth = (suona ? 2 : 1.1) / 54 * r;
     g.globalAlpha = (spento ? 0.3 : 1) * (suona ? 1 : 0.5);
     g.beginPath();
     g.arc(cx, cy, rr, a0, a1);
