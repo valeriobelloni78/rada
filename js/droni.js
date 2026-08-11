@@ -22,9 +22,10 @@ const DR_R_ARCO     = 0.741;   // raggio massimo degli archi (registro acuto)
 const DR_R_ARCO_LO  = 0.580;   // raggio minimo (registro grave)
 const DR_R_HAND     = 0.704;
 const DR_W_TICK     = 1.2 / 54;
+const DR_STRIP_FRAC = 0.34;    // altezza della fascia, in frazioni del lato della cella
 
 let drCv = null, dr2d = null, drHolder = null;
-const drSize  = { w: 0, h: 0, cols: 0, rows: 0, cell: 0 };
+const drSize  = { w: 0, h: 0, cols: 0, rows: 0, cell: 0, stripH: 0 };
 const drCells = droni.map(() => ({ L: null, cx: 0, cy: 0, r: 0 }));
 const drZones = [];
 let drDaRiposizionare = true;
@@ -42,8 +43,9 @@ function drCanvasSize() {
   drSize.cols = wide ? 4 : 2;
   drSize.rows = wide ? 1 : 2;
   drSize.cell = Math.min(avail / drSize.cols, 260);
+  drSize.stripH = drSize.cell * DR_STRIP_FRAC;
   drSize.w = drSize.cell * drSize.cols;
-  drSize.h = drSize.cell * drSize.rows;
+  drSize.h = drSize.cell * drSize.rows + drSize.stripH;
   return drSize;
 }
 
@@ -90,6 +92,67 @@ function drawDroni() {
 
   const now = audioNow();
   for (const c of drCells) drawQuadranteTenute(c, now);
+  drawFasciaTessuti(s, now);
+}
+
+/* ---------------------------------------------------------------------------
+   LA FASCIA DEI TESSUTI, gemella di quella delle frasi e diversa per una cosa
+   sola: là ogni evento è un punto, qui è un SEGMENTO. Una goccia accade in un
+   istante e un punto la dice tutta; un tessuto occupa un tratto di tempo, e
+   solo un segmento può mostrare quanto.
+
+   È anche il posto dove la sovrapposizione — l'Intreccio — smette di essere
+   un numero e si vede: quattro corsie di segmenti che si accavallano, o che
+   lasciano dei vuoti.
+
+   Legge `toneHistory`, scritta dallo scheduler: mostra ciò che è stato
+   davvero suonato, non ciò che è in programma.                            */
+function drawFasciaTessuti(s, now) {
+  const g = dr2d;
+  const top   = s.rows * s.cell + s.stripH * 0.16;
+  const h     = s.stripH * 0.76;
+  const laneH = h / droni.length;
+  const left  = s.w * 0.03, right = s.w * 0.97;
+
+  g.save();
+  g.lineCap = "butt";
+  g.strokeStyle = COL.hair;
+  g.lineWidth = 1;
+  for (let i = 0; i < droni.length; i++) {
+    const ly = top + (i + 0.5) * laneH;
+    g.beginPath(); g.moveTo(left, ly); g.lineTo(right, ly); g.stroke();
+  }
+
+  /* le due barre che chiudono la fascia: a destra è adesso, a sinistra il
+     fondo della memoria — identiche a quelle del riquadro sopra           */
+  g.strokeStyle = COL.dust;
+  g.beginPath();
+  g.moveTo(left,  top - laneH * 0.1); g.lineTo(left,  top + h + laneH * 0.1);
+  g.moveTo(right, top - laneH * 0.1); g.lineTo(right, top + h + laneH * 0.1);
+  g.stroke();
+
+  if (!ctx) { g.restore(); return; }
+
+  const ascissa = t => right + (left - right) * ((now - t) / TIMELINE_SEC);
+  g.lineCap = "round";
+  for (const ev of toneHistory) {
+    if (ev.fino < now - TIMELINE_SEC) continue;
+    const x0 = Math.max(left,  ascissa(ev.t));
+    const x1 = Math.min(right, ascissa(Math.min(ev.fino, now)));
+    if (x1 <= x0) continue;
+
+    const aperto = ev.fino > now;          // sta ancora suonando: arriva fino a destra
+    const spento = droni[ev.loop].muted || !tessutiOn;
+    const ly = top + (ev.loop + 0.5) * laneH;
+    g.strokeStyle = aperto ? COL.ink : COL.ink2;
+    /* Più corposo dei punti delle gocce — un tessuto è suono continuo, non
+       un istante — ma non tanto da riempire la corsia: le quattro linee
+       devono restare leggibili anche quando si accavallano.              */
+    g.lineWidth   = (aperto ? 0.26 : 0.17) * laneH;
+    g.globalAlpha = (spento ? 0.3 : 1) * (aperto ? 1 : 0.5);
+    g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
+  }
+  g.restore();
 }
 
 function drawQuadranteTenute(cell, now) {

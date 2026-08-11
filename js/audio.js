@@ -33,6 +33,11 @@ const TIMELINE_SEC = 30;
    toccare la cronologia nella pagina principale il guasto sarebbe muto.   */
 const dropHistory = [];
 
+/* La stessa cosa per i tessuti, ma con due tempi invece di uno: un tessuto
+   non accade, dura. La fascia in fondo al suo riquadro disegna segmenti, e
+   per farlo deve sapere dove ciascuno comincia e dove finisce.           */
+const toneHistory = [];
+
 /* --- come il sistema deve considerare questo suono ------------------------
    Di suo, un AudioContext è "suono d'ambiente": iOS lo zittisce con
    l'interruttore laterale e lo sospende appena si blocca lo schermo, perché
@@ -347,6 +352,10 @@ function schedule() {
   if (horizon > bookedUntil) bookedUntil = horizon;
 
   while (dropHistory.length && dropHistory[0].t < now - TIMELINE_SEC) dropHistory.shift();
+  /* Qui si guarda la FINE, non l'inizio: un tessuto lungo mezzo minuto è
+     ancora in corso molto dopo essere cominciato, e buttarlo via per l'età
+     del suo attacco lo cancellerebbe mentre sta ancora suonando.        */
+  while (toneHistory.length && toneHistory[0].fino < now - TIMELINE_SEC) toneHistory.shift();
 
   /* I cicli avanzano comunque, anche a classe spenta: così riaccendendola
      riparte da dov'era invece che da capo — la stessa promessa che la pausa
@@ -405,6 +414,7 @@ function suonaTenuta(at, ev, L) {
   const dur = playTone(at, ev, L);
   ev.flash = at;
   ev.fino  = at + dur;
+  toneHistory.push({ t: at, fino: at + dur, loop: L.i, rel: ev.rel });
 }
 
 /* --- VOCE: una goccia -----------------------------------------------------
