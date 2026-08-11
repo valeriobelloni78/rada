@@ -318,24 +318,7 @@ syncA11y();
 document.querySelector(".stage").inert = true;
 $("enter").focus();
 
-/* Se p5 non arriva — CDN irraggiungibile, rete assente — il canvas non nasce
-   e resterebbe un vuoto inspiegato al centro della pagina. Il motore audio
-   però è indipendente da p5 e continua a suonare: si dice.                */
-if (typeof window.p5 === "undefined") {
-  const avviso = document.createElement("p");
-  avviso.className = "loopHint";
-  avviso.setAttribute("data-i18n", "err.noCanvas");
-  avviso.textContent = T("err.noCanvas");
-  $("canvas-holder").appendChild(avviso);
-
-  /* E qui la parte che non si vede ma si sente. `tickParams` — che smussa i
-     cursori verso il valore scelto e applica l'inclinazione oraria — è
-     chiamata da `draw`, che senza p5 non gira mai: i cinque comandi
-     resterebbero inerti, e il messaggio qui sopra sarebbe una mezza verità.
-     Il battito lo riprende requestAnimationFrame, che è del browser e non di
-     p5, con la stessa cadenza e la stessa pausa quando la pagina si nasconde. */
-  (function battito() {
-    tickParams();
-    requestAnimationFrame(battito);
-  })();
-}
+/* Qui stava la rete per il caso in cui p5 non arrivasse dal CDN: un avviso al
+   posto del canvas e un battito di riserva per tenere vivi i cursori. Tolta
+   la libreria, non c'è più niente che possa non arrivare — il disegno è
+   codice di questo repository come il resto.                               */

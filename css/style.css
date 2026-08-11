@@ -123,29 +123,21 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
 }
 
 #canvas-holder{width:100%;display:flex;justify-content:center;position:relative}
-
-/* Il canvas lascia scorrere la pagina; sono i quattro riquadri qui sotto a
-   trattenere il dito dove c'è davvero qualcosa da trascinare.
-
-   L'`!important` non è pigrizia: p5 scrive `touch-action:none` DIRETTAMENTE
-   nell'attributo style del canvas, e una regola normale del foglio di stile
-   perderebbe contro di esso. Le dichiarazioni importanti dell'autore invece
-   battono lo stile in linea, ed è l'unico modo di avere l'ultima parola
-   senza mettere le mani nelle viscere della libreria.                      */
-#canvas-holder canvas{display:block;touch-action:pan-y pinch-zoom !important}
-
-/* La seconda tela: stesse regole della prima, `!important` compreso.
-
-   Questa tela non la crea p5 — la crea `droni.js` con l'API nativa — e per
-   un po' si è creduto che perciò lo stile in linea non la riguardasse. Non è
-   così: `setupDroni` viene chiamata da dentro `setup()` di p5, quindi quando
-   p5 stampa il suo `touch-action:none` la seconda tela esiste già e se lo
-   prende anche lei. Misurato: `pan-y pinch-zoom` sulla prima, `none` sulla
-   seconda, e il dito non scorreva la pagina in nessun punto del riquadro dei
-   tessuti. Vale la stessa regola: solo una dichiarazione importante batte lo
-   stile in linea.                                                          */
 #drone-holder{width:100%;display:flex;justify-content:center;position:relative}
-.droneCanvas{display:block;touch-action:pan-y pinch-zoom !important}
+
+/* LE DUE TELE LASCIANO SCORRERE LA PAGINA; sono i quattro riquadri qui sotto
+   — uno per quadrante — a trattenere il dito dove c'è davvero qualcosa da
+   trascinare. Con `touch-action:none` sull'intera tela, su un telefono non si
+   riuscirebbe a scorrere passando sopra mezza schermata di quadranti.
+
+   Qui c'era un `!important` per entrambe, e non era pigrizia: p5 scriveva
+   `touch-action:none` direttamente nell'attributo style di ogni canvas
+   esistente — la propria tela e anche quella dei tessuti, che pure non aveva
+   creato — e una regola normale del foglio perde contro lo stile in linea.
+   Tolta la libreria non lo scrive più nessuno, e le due righe tornano a
+   essere due righe normali.                                                */
+#canvas-holder canvas,
+.droneCanvas{display:block;touch-action:pan-y pinch-zoom}
 
 /* Il riquadro delle tenute è la stessa scatola dei quadranti, staccata da
    quella sopra e dai suoi mood.                                          */

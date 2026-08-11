@@ -6,11 +6,12 @@
    punti, perché accadono in un istante; le tenute sono ARCHI, perché durano —
    e la durata è la loro sostanza. Un punto non la potrebbe mostrare.
 
-   Disegnato con l'API 2D nativa, non con p5. Non per gusto: p5 in modalità
-   globale governa una sola tela, e questo riquadro ha un bordo suo, quindi non
-   può condividere quella dei quadranti. Il ciclo di fotogrammi però resta uno
-   solo — `draw` in sketch.js chiama `drawDroni` — così le due tele restano
-   sincronizzate e non si sommano due animazioni indipendenti.
+   Due tele, perché due riquadri con un bordo proprio non possono condividerne
+   una. Il ciclo di fotogrammi però resta uno solo — `ciclo` in sketch.js
+   disegna le frasi e poi chiama `drawDroni` — così le due tele restano
+   sincronizzate e non si sommano due animazioni indipendenti. Da sketch.js
+   arrivano anche la palette, `lerp`, `fontPila` e `trackedText`: quando
+   questo file è nato l'altro parlava p5 e non aveva nulla da prestare.
 
    Legge dal PIANO e dalla coda dei cicli, mai dai valori correnti: le stesse
    insidie del disegno principale valgono qui identiche (vedi CLAUDE.md).
@@ -38,10 +39,6 @@ let drDaRiposizionare = true;
 
 /* Il bersaglio del ↻, come nei quadranti sopra: mai sotto il polpastrello. */
 const drRegenHit = r => Math.max(r * 0.22, 22);
-
-/* `lerp` è un globale di p5, e questo file non deve dipendere da p5: se la
-   libreria non arrivasse, il riquadro delle tenute continuerebbe a disegnarsi. */
-const drLerp = (a, b, t) => a + (b - a) * t;
 
 function drCanvasSize() {
   const avail = drHolder ? drHolder.clientWidth : 320;
@@ -81,7 +78,7 @@ function drawDroni() {
   const s = drCanvasSize();
 
   /* Il rapporto fra pixel del dispositivo e pixel CSS: senza, su uno schermo
-     ad alta densità il disegno esce sfocato. p5 se ne occupa da sé, qui no. */
+     ad alta densità il disegno esce sfocato. Stesso conto dell'altra tela. */
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   if (drCv.width !== Math.round(s.w * dpr) || drCv.height !== Math.round(s.h * dpr)) {
     drCv.width  = Math.round(s.w * dpr);
@@ -171,14 +168,14 @@ function drawQuadranteTenute(cell, now) {
 
   /* etichetta e comando di rigenerazione */
   g.fillStyle = COL.dust;
-  g.font = "400 " + clamp(r * 0.10, 7, 10).toFixed(1) + "px " + drFont();
+  g.font = "400 " + clamp(r * 0.10, 7, 10).toFixed(1) + "px " + fontPila();
   g.textAlign = "center"; g.textBaseline = "middle";
-  drTracked(CANVAS.drone[L.i], cx, cy - r * 1.20, r * 0.028 * CANVAS.trackMul);
+  trackedText(dr2d, CANVAS.drone[L.i], cx, cy - r * 1.20, r * 0.028 * CANVAS.trackMul);
 
   const sopraRegen = drPuntatore.x >= 0 &&
     Math.hypot(drPuntatore.x - (cx + r * 0.95), drPuntatore.y - (cy - r * 1.20)) < drRegenHit(r);
   g.fillStyle = sopraRegen ? COL.amber : COL.dust;
-  g.font = "300 " + clamp(r * 0.17, 12, 17).toFixed(1) + "px " + drFont();
+  g.font = "300 " + clamp(r * 0.17, 12, 17).toFixed(1) + "px " + fontPila();
   g.fillText("↻", cx + r * 0.95, cy - r * 1.20);
 
   /* corona di trattini: qui è sempre tenue e uniforme. Nei quadranti delle
@@ -209,7 +206,7 @@ function drawQuadranteTenute(cell, now) {
     const appena = suona && now - ev.flash < 0.45;   // l'istante in cui si apre
     const a0 = -Math.PI / 2 + p.ph * Math.PI * 2;
     const a1 = a0 + clamp(ev.dur, 0.02, 1) * Math.PI * 2;
-    const rr = drLerp(DR_R_ARCO_LO, DR_R_ARCO, (ev.rel + 1) / 2) * r;
+    const rr = lerp(DR_R_ARCO_LO, DR_R_ARCO, (ev.rel + 1) / 2) * r;
 
     /* Tre stati, e l'arancione ne occupa solo uno. Una goccia lampeggia per
        meno di mezzo secondo; una tenuta resta aperta anche trenta secondi, e
@@ -246,32 +243,10 @@ function drawQuadranteTenute(cell, now) {
 
   /* al centro: la durata, e nient'altro */
   g.fillStyle = COL.ink;
-  g.font = "200 " + (r * 0.30).toFixed(1) + "px " + drFont();
+  g.font = "200 " + (r * 0.30).toFixed(1) + "px " + fontPila();
   g.fillText(fmtOne(L.target) + CANVAS.seconds, cx, cy);
 
   g.restore();
-}
-
-function drFont() {
-  return '"Helvetica Neue", -apple-system, system-ui, Roboto, Arial, ' +
-         '"Hiragino Sans", "Yu Gothic", "Noto Sans CJK JP", sans-serif';
-}
-
-/* Come trackedText in sketch.js: il contesto 2D non conosce la spaziatura fra
-   lettere più di quanto la conosca p5.                                     */
-function drTracked(str, x, y, tracking) {
-  const g = dr2d, chars = [...str];
-  let w = 0;
-  for (const c of chars) w += g.measureText(c).width + tracking;
-  w -= tracking;
-  let cx = x - w / 2;
-  const prima = g.textAlign;
-  g.textAlign = "left";
-  for (const c of chars) {
-    g.fillText(c, cx, y);
-    cx += g.measureText(c).width + tracking;
-  }
-  g.textAlign = prima;
 }
 
 /* --- interazione: gli stessi quattro riquadri trasparenti dei quadranti ----

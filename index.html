@@ -81,8 +81,8 @@
        Stesso impianto del riquadro sopra, ma gli eventi qui durano invece di
        accadere: tenute che si sovrappongono fra loro e alle gocce. Il canvas
        è separato perché due riquadri con bordo proprio non possono condividere
-       la stessa tela — e p5, in modalità globale, ne governa comunque una
-       sola: questo lo disegna l'API 2D nativa (js/droni.js).            -->
+       la stessa tela; lo disegna js/droni.js, dentro lo stesso ciclo di
+       fotogrammi dell'altro.                                            -->
   <div class="loopCard droneCard">
     <div class="cardHead">
       <span class="t" data-i18n="drone.title">Le quattro tenute</span>
@@ -152,13 +152,11 @@
   <button class="enter" id="enter" type="button" data-i18n="gate.enter">Entra</button>
 </div>
 
-<!-- p5.js, versione fissata perché il progetto non cambi comportamento da solo.
-     Per usarla in locale (senza rete): scarica p5.min.js in lib/ e sostituisci
-     questa riga con  <script src="lib/p5.min.js"></script>  -->
-<script src="https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.min.js"
-        integrity="sha384-hPm6eOZbf5TXzAfG+a6uOOtiu9ZbMnMIz/hZC9p+V0GG+xWXtXKNWz/5rvlJSCTn" crossorigin="anonymous"></script>
+<!-- Nessuna libreria: tutto ciò che serve è qui dentro, e la pagina si apre
+     anche senza rete. Il disegno usa l'API 2D del browser, il suono la Web
+     Audio API.
 
-<!-- l'ordine conta: le parole e il modello prima (non dipendono da nulla),
+     l'ordine conta: le parole e il modello prima (non dipendono da nulla),
      poi il suono, poi il disegno, infine i comandi -->
 <script src="js/i18n.js"></script>
 <script src="js/model.js"></script>

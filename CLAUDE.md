@@ -18,10 +18,14 @@ tenute sono **numeri primi da 19 in su**, e non per estetica: così sono
 coprimi anche con i 7·11·13·17 delle gocce, e le due classi non tornano
 insieme più di quanto non facciano le quattro frasi fra loro.
 
-**L'audio usa la Web Audio API, mai p5.sound.** Lo scheduler a lookahead
-prenota le note sul clock del motore audio, preciso al campione. p5.sound è
-pensato per gesti immediati e sarebbe una regressione sulla parte più
-delicata del progetto. p5 serve *solo* al disegno.
+**Nessuna libreria, né per il suono né per il disegno.** L'audio usa la Web
+Audio API direttamente: lo scheduler a lookahead prenota le note sul clock
+del motore audio, preciso al campione, e p5.sound — pensato per gesti
+immediati — sarebbe una regressione sulla parte più delicata del progetto.
+Il disegno usa l'API 2D del browser: c'era p5, ed è stato tolto, perché di
+quella libreria si usavano una ventina di nomi con un equivalente di una riga
+l'uno, e in cambio arrivava una dipendenza da CDN che impediva alla pagina di
+aprirsi senza rete. Non rimetterne una.
 
 **La palette è definita una volta sola**, nelle variabili CSS di
 `css/style.css`. Anche il canvas le legge (`readPalette` in `sketch.js`).
@@ -33,7 +37,8 @@ parsimonia: la "d" del logo, il punto che pulsa, la lancetta, le gocce che
 suonano. Non aggiungere altri colori senza chiederlo.
 
 **Nessuna dipendenza da installare, nessun passaggio di compilazione.** Si
-apre `index.html` e funziona. Non introdurre bundler, npm o framework.
+apre `index.html` e funziona — anche senza rete, da quando non c'è più il
+`<script>` che scaricava p5 da un CDN. Non introdurre bundler, npm o framework.
 Vale anche per le traduzioni: **niente file JSON caricati con `fetch`**, che
 su `file://` il CORS blocca — l'app resterebbe senza testi al doppio clic.
 Il dizionario è un oggetto JavaScript in `i18n.js`.
@@ -75,28 +80,22 @@ esattamente altrettanto avanti: se lo scheduler prenotasse a tre secondi e
 dell'addensamento riposizionerebbe gocce già prenotate e le sentiresti due
 volte. Cambiando l'una, cambiare l'altra.
 
-**p5 2.x consegna i tocchi come pointer event, e questo cambia tutto.**
-`touchStarted`, `touchMoved` e `touchEnded` **non esistono più** nella
-libreria: zero occorrenze nel sorgente della 2.3.2. p5 ascolta `pointerdown`
-e compagni **su `window`**, e li instrada nelle callback del mouse. Due
-conseguenze che è costato fatica scoprire:
+**Con i pointer event lo scorrimento della pagina lo decide SOLO
+`touch-action`.** `preventDefault` su `pointerdown` non lo ferma: non esiste
+modo di decidere da JavaScript, gesto per gesto, se la pagina debba scorrere.
 
-- p5 scrive `touch-action:none` **nell'attributo style del canvas**. Una
-  regola normale del foglio di stile perde contro lo stile in linea: serve
-  `!important`, che è l'unica dichiarazione d'autore che lo batte. E lo
-  scrive su **tutt'e due** le tele, anche su quella dei tessuti che p5 non
-  ha creato: `setupDroni` è chiamata da dentro `setup()`, quindi quando p5
-  stampa il suo `touch-action` la seconda tela esiste già.
-- con i pointer event lo scorrimento della pagina lo decide **solo**
-  `touch-action`. `preventDefault` su `pointerdown` non lo ferma. Quindi non
-  esiste modo di decidere da JavaScript, gesto per gesto, se scorrere.
+Da qui gli **otto riquadri trasparenti** (`.dialZone`), quattro per riquadro,
+sopra i quadranti: le tele lasciano scorrere la pagina (`touch-action:pan-y
+pinch-zoom`), i riquadri no. È l'unica leva che esiste — cambiare quale
+elemento riceve il tocco — e per questo tutta l'interazione passa di lì e
+nessun ascoltatore sta sulla tela.
 
-Da qui i **quattro riquadri trasparenti** (`.dialZone`) sopra i quadranti: il
-canvas lascia scorrere la pagina, i riquadri no. È l'unica leva rimasta —
-cambiare quale elemento riceve il tocco. E poiché p5 ascolta su `window`,
-le sue callback del mouse si sommerebbero a quelle dei riquadri facendo
-scattare ogni gesto due volte: per questo `mousePressed` e sorelle sono state
-tolte, e tutta l'interazione passa dai riquadri.
+Questa pagina è costata fatica quando c'era p5, che scriveva `touch-action:
+none` **nell'attributo style di ogni canvas presente** — la propria tela e
+anche quella dei tessuti, che non aveva creato — e batteva così le regole
+normali del foglio di stile. Servivano due `!important`. Tolta la libreria
+non lo scrive più nessuno: se un giorno una regola di `touch-action` sembrasse
+non avere effetto, la prima cosa da guardare resta comunque lo stile in linea.
 
 **Ogni goccia lascia sette nodi audio, e vanno scollegati a mano.**
 `playDrop` costruisce tre oscillatori più guadagni e panner. Il rilascio
@@ -132,12 +131,18 @@ proprio quando la coda sta svanendo.
 quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 
 **Attenzione alle allocazioni nei cicli a 60 fps.** Niente nuovi buffer o
-array dentro `draw`.
+array dentro `disegna`, che è il corpo del fotogramma.
+
+**Le soglie del ciclo stanno appena SOTTO il periodo voluto.** `PASSO_VIVO` è
+1/61 di secondo e `PASSO_FERMO` 1/13, non 1/60 e 1/12: i fotogrammi arrivano
+a passi discreti, e una soglia esatta verrebbe mancata per frazioni di
+millisecondo saltando un giro su due — trenta al secondo invece di sessanta.
+Misurato dopo la correzione: 12,0 fotogrammi al secondo a motore fermo.
 
 **Le stringhe del canvas si preparano al cambio di lingua, non a ogni
 fotogramma.** `CANVAS.phrase` e `CANVAS.drone` sono costruite una volta da
-`buildCanvasCache`; `draw` le legge e basta. Vale soprattutto per i
-formattatori: costruire un `Intl.NumberFormat` dentro `draw` costa più di
+`buildCanvasCache`; il disegno le legge e basta. Vale soprattutto per i
+formattatori: costruire un `Intl.NumberFormat` dentro il fotogramma costa più di
 tutto il resto del disegno. Ne esistono tre, creati una volta per lingua.
 
 **Il giapponese non ha maiuscolo.** La gerarchia delle etichette minute
@@ -172,12 +177,12 @@ e quella che suona un evento. Le gocce e le tenute differiscono per come
 suonano, non per come vengono collocate nel tempo — e due copie dello
 scheduler divergerebbero al primo ritocco.
 
-**Il riquadro delle tenute ha una tela propria, disegnata senza p5.** Due
-riquadri con bordo proprio non possono condividere una tela, e p5 in modalità
-globale ne governa comunque una sola: `droni.js` usa l'API 2D nativa. Il ciclo
-di fotogrammi resta però **uno solo** — `draw` in `sketch.js` chiama
-`drawDroni` — perché due animazioni indipendenti si sfaserebbero e su un
-telefono costerebbero il doppio.
+**Il riquadro dei tessuti ha una tela propria.** Due riquadri con bordo
+proprio non possono condividerne una. Il ciclo di fotogrammi resta però **uno
+solo** — `ciclo` in `sketch.js` disegna le frasi e poi chiama `drawDroni` —
+perché due animazioni indipendenti si sfaserebbero e su un telefono
+costerebbero il doppio. Vale anche per gli aiutanti: `lerp`, `fontPila`,
+`trackedText` e la palette stanno in `sketch.js` e le usano tutt'e due.
 
 **Una tenuta accesa non può restare arancione.** Una goccia lampeggia per
 meno di mezzo secondo; una tenuta resta aperta anche trenta. Tenerla accesa
@@ -195,8 +200,9 @@ i quadranti devono reggere a qualunque dimensione.
 
 **Tipografia**: una sola famiglia (grottesco di sistema), gerarchia data da
 peso e spaziatura. Peso 200 per i display, 300 per il testo, 400 con
-tracking ampio per le etichette minute. p5 non conosce la spaziatura fra
-lettere: per il testo su canvas usare `trackedText`.
+tracking ampio per le etichette minute. Il contesto 2D non conosce la
+spaziatura fra lettere: per il testo su canvas usare `trackedText`, che la
+compone lettera per lettera.
 
 **Le etichette dei comandi descrivono l'azione, non lo stato**
 ("Pausa", non "In ascolto"). Lo stato è raccontato dalla riga in alto e dal
