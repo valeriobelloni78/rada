@@ -64,7 +64,8 @@ js/i18n.js          le quattro lingue. Non dipende da nulla
 js/guida-i18n.js    le parole della guida, sempre nelle quattro lingue
 js/model.js         lo stato: frasi, idee, piani. Non dipende da nulla
 js/audio.js         Web Audio API: sintesi e scheduler
-js/sketch.js        p5.js: disegno dei quadranti e interazione
+js/frasi.js         disegno dei quadranti, interazione e ciclo di fotogrammi
+js/droni.js         la seconda tela: il riquadro dei tessuti
 js/ui.js            cursori, mood, lingua, riga di stato
 testi-guida.md      tavolo di lavoro dei testi italiani della guida
 ```
@@ -84,9 +85,12 @@ troppo imprecisi per frasi che devono restare in fase per ore, e p5.sound è pen
 per gesti immediati più che per pianificazione rigorosa. La precisione temporale
 qui è il progetto, non un dettaglio.
 
-**La grafica usa p5.js**, con tutti e quattro i quadranti su un unico canvas.
-Un solo piano di disegno permette, in futuro, effetti che attraversano le frasi:
-scie, relazioni, campi che reagiscono all'insieme.
+**La grafica usa l'API 2D del browser**, con tutti e quattro i quadranti delle
+frasi su un unico canvas. Un solo piano di disegno permette effetti che le
+attraversano — già oggi il filo che unisce due gocce quasi simultanee, e in
+futuro scie, relazioni, campi che reagiscono all'insieme. C'era p5.js, ed è
+stata tolta: se ne usava una ventina di nomi, tutti con un equivalente di una
+riga, e in cambio arrivava una dipendenza da CDN.
 
 Un dettaglio che chi mette mano al codice apprezzerà: la palette è definita
 **una volta sola**, nelle variabili CSS di `style.css`. Anche il canvas le legge.
@@ -94,7 +98,7 @@ Cambiarle lì cambia tutto.
 
 ## Modificarlo
 
-Il punto d'ingresso più interessante è `js/sketch.js`, dove ogni quadrante è
+Il punto d'ingresso più interessante è `js/frasi.js`, dove ogni quadrante è
 disegnato in proporzioni relative al raggio: il disegno regge a qualunque
 dimensione. Provare a sostituire i trattini con qualcos'altro è il modo più
 rapido per capire come funziona.
@@ -114,18 +118,13 @@ chiavi lì sono identificatori: i nomi che si leggono sui bottoni stanno in
   blocco. Ne consegue che suona anche con l'interruttore del silenzioso
   inserito. Se il sistema congela del tutto la pagina non c'è comunque
   finestra che tenga: servirebbe spostare lo scheduler in un AudioWorklet.
-- Serve una connessione al primo caricamento, perché p5.js arriva da una CDN.
-  Per usarla del tutto offline, scarica `p5.min.js` in una cartella `lib/` e
-  cambia la riga corrispondente in `index.html`.
 
 ## Licenza
 
 Codice rilasciato sotto licenza **MIT** — vedi [LICENSE](LICENSE). In pratica:
 puoi usarlo, modificarlo e ridistribuirlo, anche in progetti commerciali,
-mantenendo l'avviso di copyright.
-
-p5.js è distribuita separatamente sotto licenza LGPL-2.1 e resta soggetta ai
-propri termini.
+mantenendo l'avviso di copyright. Non c'è codice di terzi: nessuna libreria,
+nessuna licenza da rispettare oltre a questa.
 
 ---
 
@@ -147,5 +146,6 @@ browser's language on first visit and falling back to English. Switch it from
 the top right, or force it with `?lang=ja`.
 
 Audio uses the Web Audio API directly with a lookahead scheduler (sample-accurate
-timing matters here); graphics use p5.js. No build step, no dependencies to
-install — open `index.html` and it runs. MIT licensed.
+timing matters here); graphics use the browser's own 2D canvas API. No build
+step, no libraries, nothing to install — open `index.html` and it runs, even
+offline. MIT licensed.

@@ -3,7 +3,7 @@
 
    Non dipende da nulla, come il modello: contiene solo parole, e va caricato
    per primo. La direzione delle dipendenze resta quella di sempre —
-   i18n/model ← audio ← sketch/ui.
+   i18n/model ← audio ← disegno/ui.
 
    Due regole che valgono qui più che altrove:
 

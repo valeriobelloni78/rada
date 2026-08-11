@@ -7,9 +7,9 @@
    e la durata è la loro sostanza. Un punto non la potrebbe mostrare.
 
    Due tele, perché due riquadri con un bordo proprio non possono condividerne
-   una. Il ciclo di fotogrammi però resta uno solo — `ciclo` in sketch.js
+   una. Il ciclo di fotogrammi però resta uno solo — `ciclo` in frasi.js
    disegna le frasi e poi chiama `drawDroni` — così le due tele restano
-   sincronizzate e non si sommano due animazioni indipendenti. Da sketch.js
+   sincronizzate e non si sommano due animazioni indipendenti. Da frasi.js
    arrivano anche la palette, `lerp`, `fontPila` e `trackedText`: quando
    questo file è nato l'altro parlava p5 e non aveva nulla da prestare.
 

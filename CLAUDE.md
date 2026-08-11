@@ -28,7 +28,7 @@ l'uno, e in cambio arrivava una dipendenza da CDN che impediva alla pagina di
 aprirsi senza rete. Non rimetterne una.
 
 **La palette è definita una volta sola**, nelle variabili CSS di
-`css/style.css`. Anche il canvas le legge (`readPalette` in `sketch.js`).
+`css/style.css`. Anche il canvas le legge (`readPalette` in `frasi.js`).
 Non introdurre colori scritti direttamente nel JavaScript.
 
 **Un solo colore.** Tutta l'interfaccia è in scala di grigi caldi su fondo
@@ -179,10 +179,10 @@ scheduler divergerebbero al primo ritocco.
 
 **Il riquadro dei tessuti ha una tela propria.** Due riquadri con bordo
 proprio non possono condividerne una. Il ciclo di fotogrammi resta però **uno
-solo** — `ciclo` in `sketch.js` disegna le frasi e poi chiama `drawDroni` —
+solo** — `ciclo` in `frasi.js` disegna le frasi e poi chiama `drawDroni` —
 perché due animazioni indipendenti si sfaserebbero e su un telefono
 costerebbero il doppio. Vale anche per gli aiutanti: `lerp`, `fontPila`,
-`trackedText` e la palette stanno in `sketch.js` e le usano tutt'e due.
+`trackedText` e la palette stanno in `frasi.js` e le usano tutt'e due.
 
 **Una tenuta accesa non può restare arancione.** Una goccia lampeggia per
 meno di mezzo secondo; una tenuta resta aperta anche trenta. Tenerla accesa
@@ -193,7 +193,7 @@ solo nell'istante in cui si apre, poi inchiostro pieno finché suona.
 
 **Il modello non dipende da nulla.** `model.js` non conosce né l'audio né la
 grafica. Le dipendenze scorrono in una direzione sola:
-model ← audio ← sketch/ui. Mantenere questa separazione.
+model ← audio ← disegno/ui. Mantenere questa separazione.
 
 **Le proporzioni del disegno sono frazioni del raggio**, mai pixel fissi:
 i quadranti devono reggere a qualunque dimensione.

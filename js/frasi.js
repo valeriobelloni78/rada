@@ -1,5 +1,5 @@
 /* =============================================================================
-   RADA · sketch.js — la parte visiva delle frasi, e il ciclo di fotogrammi
+   RADA · frasi.js — la parte visiva delle frasi, e il ciclo di fotogrammi
 
    Tutti e quattro i quadranti vivono su UN SOLO canvas. È una scelta
    deliberata: avere un unico piano di disegno permette, in futuro, effetti
@@ -371,8 +371,8 @@ const puntatore = { x: -1, y: -1 };
 let drag = null, dragY = 0, dragV = 0, dragMoved = 0, dragT0 = 0;
 
 /* Il disegno non chiama più per nome le funzioni dei comandi: annuncia che
-   qualcosa è cambiato, e chi se ne occupa ascolta. Sketch e ui stanno sullo
-   stesso piano — model ← audio ← sketch/ui — e una chiamata diretta fra pari
+   qualcosa è cambiato, e chi se ne occupa ascolta. Disegno e ui stanno sullo
+   stesso piano — model ← audio ← disegno/ui — e una chiamata diretta fra pari
    è un legame che nessuna delle due parti dichiara.                        */
 const annuncia = che => dispatchEvent(new CustomEvent("rada:" + che));
 

@@ -2,7 +2,7 @@
    RADA · style.css
 
    Le variabili qui sotto sono l'unica fonte della palette: anche il canvas
-   le legge (js/sketch.js → readPalette). Cambiarle qui cambia tutto.
+   le legge (js/frasi.js → readPalette). Cambiarle qui cambia tutto.
 ============================================================================= */
 
 :root{
@@ -145,7 +145,7 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
 .barDroni{margin-top:14px}
 .controlsTessuti{margin-top:22px}
 
-/* Trasparenti e senza dimensioni proprie: le riceve sketch.js, che li
+/* Trasparenti e senza dimensioni proprie: le riceve frasi.js, che li
    ricalcola solo quando il canvas cambia misura. Coprono il quadrante e il
    suo ↻, non l'intera cella: gli spazi fra un quadrante e l'altro, e la
    fascia temporale, restano al dito per scorrere la pagina.               */
@@ -193,7 +193,7 @@ input[type=range]::-moz-range-thumb{
   gap:14px;flex-wrap:wrap;margin-top:26px;
 }
 /* otto mood: una sola riga su schermo largo, due righe da quattro su
-   cellulare. La soglia ricalca quella del canvas in sketch.js (avail>=720),
+   cellulare. La soglia ricalca quella del canvas in frasi.js (avail>=720),
    così i due layout cambiano registro nello stesso punto.                  */
 .moods{
   display:grid;
