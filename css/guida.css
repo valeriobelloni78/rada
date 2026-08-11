@@ -35,9 +35,15 @@
 .docCard .cardHead{margin:0 0 10px}
 .docCard h2.t{margin:0;font-weight:200;font-size:16px;letter-spacing:.1em}
 
+/* Un corpo solo per tutta la pagina, ed è quello delle celle minori: 12,5px
+   con interlinea 1,45. Prima ce n'erano quattro — 15 nell'apertura, 14 nei
+   riquadri, 13 nelle introduzioni e negli elenchi, 12,5 nelle celle — e la
+   scala non raccontava una gerarchia, raccontava soltanto l'ordine in cui i
+   pezzi erano stati scritti. La gerarchia qui la fanno il peso, il colore e
+   la spaziatura; il corpo può stare fermo.                                 */
 .docCard p{
   margin:0 0 11px;
-  font-size:14px;line-height:1.5;font-weight:300;
+  font-size:12.5px;line-height:1.45;font-weight:300;
   color:var(--ink-2);
 }
 .docCard p:last-child{margin-bottom:0}
@@ -47,11 +53,6 @@
 /* <i> invece inclina davvero: serve per i termini tecnici citati in quanto
    termini — "coprimi" — dove il corsivo ha un significato preciso.         */
 .docCard i{font-style:italic;color:var(--ink)}
-
-/* Il riquadro d'apertura non ha titolo: è la voce che invita, non una
-   sezione. Un corpo appena più grande gli dà il respiro che il titolo
-   mancante non gli dà.                                                     */
-.docCard.docOpen p{font-size:15px;line-height:1.6}
 
 /* nota di coda: più tenue del corpo, staccata da un filo */
 .docNote{
@@ -93,12 +94,12 @@
 .docLabel{
   margin:26px 0 10px 8px;
   font-family:var(--sans);font-weight:400;
-  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--dust);
 }
 .docIntro{
   margin:0 8px 12px;
-  font-size:13px;line-height:1.5;font-weight:300;color:var(--ink-2);
+  font-size:12.5px;line-height:1.45;font-weight:300;color:var(--ink-2);
 }
 .docIntro em{font-style:normal;color:var(--ink)}
 
@@ -135,12 +136,12 @@
 .docList{margin:0;display:grid;grid-template-columns:minmax(0,180px) 1fr;gap:10px 22px}
 .docList dt{
   font-family:var(--sans);font-weight:400;
-  font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink);padding-top:3px;
 }
 .docList dd{
   margin:0;
-  font-size:13px;line-height:1.5;font-weight:300;color:var(--ink-2);
+  font-size:12.5px;line-height:1.45;font-weight:300;color:var(--ink-2);
 }
 .docList dd em{font-style:normal;color:var(--ink)}
 
@@ -156,7 +157,7 @@
    I recapiti non vanno in maiuscolo come le altre etichette minute: un
    indirizzo di posta in maiuscolo si legge peggio e sembra un errore.    */
 .docCard.docColophon{margin-top:14px;text-align:center}
-.docColophon p{font-size:13px;color:var(--ink-2)}
+.docColophon p{font-size:12.5px;color:var(--ink-2)}
 .docColophon .recapiti{
   display:flex;align-items:center;justify-content:center;
   gap:14px;flex-wrap:wrap;margin-top:12px;

@@ -239,7 +239,7 @@ Quanti tessuti restano aperti insieme, in media, su ciascuna linea. Sotto uno re
 
 **Nome:** Battito
 
-Ogni tessuto è fatto di due sinusoidi appena scordate, e la loro differenza in hertz è la pulsazione che si sente. È tutta la vita che serve a un suono che deve restare fermo a lungo.
+Ogni tessuto è fatto di due sinusoidi appena scordate, e la loro differenza in hertz è la pulsazione che si sente: a mezzo hertz il suono si gonfia e si sgonfia una volta ogni due secondi, a due hertz trema. Senza quel battito una nota tenuta mezzo minuto sarebbe un muro immobile, e l'orecchio smetterebbe di seguirla.
 
 ---
 
@@ -267,7 +267,7 @@ Uno strato solo per giro, lunghissimo e grave. Il più immobile degli otto.
 
 ## [tessuto 3]
 
-**Nome:** Bordone
+**Nome:** Lino
 **Tempo:** 5,8 giorni
 
 Tre per giro molto sovrapposti: la trama non si interrompe mai.
@@ -288,21 +288,21 @@ Il più acuto e il più tenue, quasi tre ottave di estensione.
 
 ## [tessuto 6]
 
-**Nome:** Radice
+**Nome:** Tenda
 **Tempo:** 11,1 giorni
 
 Meno di un'ottava, tutta in basso, e il livello più alto degli otto.
 
 ## [tessuto 7]
 
-**Nome:** Vetrata
+**Nome:** Seta
 **Tempo:** 17,9 giorni
 
 Battito quasi doppio degli altri e affioramento rapido: il più inquieto.
 
 ## [tessuto 8]
 
-**Nome:** Marea
+**Nome:** Vela
 **Tempo:** 34,3 giorni
 
 Un tessuto solo per giro, che può durare fino a cinquanta secondi.

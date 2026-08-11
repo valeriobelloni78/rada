@@ -185,12 +185,12 @@ const DRONE_MIN = 12, DRONE_MAX = 60;
 const DRONI_MOODS = {
   velo:    { spread: 55, apri: 3.0, chiudi: 4.3, sovr: 1.10, battito: 0.57, dens: 2, liv: 32, periods: [19, 23, 29, 31] },
   fondale: { spread: 22, apri: 3.5, chiudi: 5.0, sovr: 0.82, battito: 0.41, dens: 1, liv: 38, periods: [29, 31, 37, 41] },
-  bordone: { spread: 38, apri: 3.2, chiudi: 4.7, sovr: 2.10, battito: 0.48, dens: 3, liv: 28, periods: [19, 23, 31, 37] },
+  lino:    { spread: 38, apri: 3.2, chiudi: 4.7, sovr: 2.10, battito: 0.48, dens: 3, liv: 28, periods: [19, 23, 31, 37] },
   respiro: { spread: 66, apri: 2.6, chiudi: 3.8, sovr: 0.72, battito: 0.70, dens: 2, liv: 30, periods: [23, 29, 41, 43] },
   bruma:   { spread: 70, apri: 2.9, chiudi: 4.1, sovr: 0.88, battito: 0.63, dens: 2, liv: 26, periods: [31, 37, 43, 47] },
-  radice:  { spread: 18, apri: 3.5, chiudi: 5.0, sovr: 1.76, battito: 0.39, dens: 2, liv: 42, periods: [19, 29, 37, 47] },
-  vetrata: { spread: 60, apri: 2.0, chiudi: 3.0, sovr: 1.50, battito: 0.92, dens: 3, liv: 28, periods: [23, 31, 41, 53] },
-  marea:   { spread: 45, apri: 3.3, chiudi: 4.8, sovr: 0.92, battito: 0.44, dens: 1, liv: 36, periods: [29, 41, 47, 53] },
+  tenda:   { spread: 18, apri: 3.5, chiudi: 5.0, sovr: 1.76, battito: 0.39, dens: 2, liv: 42, periods: [19, 29, 37, 47] },
+  seta:    { spread: 60, apri: 2.0, chiudi: 3.0, sovr: 1.50, battito: 0.92, dens: 3, liv: 28, periods: [23, 31, 41, 53] },
+  vela:    { spread: 45, apri: 3.3, chiudi: 4.8, sovr: 0.92, battito: 0.44, dens: 1, liv: 36, periods: [29, 41, 47, 53] },
 };
 
 /* I cinque che l'utente muove. Gli altri due arrivano dal mood e basta. */
