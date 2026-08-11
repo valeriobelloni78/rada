@@ -199,11 +199,7 @@ Densità massima, riverbero quasi al limite e timbro vetroso: tante gocce dure d
 
 **Titolo:** I tessuti
 
-Sotto le quattro frasi ce ne sono altre quattro, e non fanno la stessa cosa. Le gocce accadono: un attacco, una coda, e la nota è già passata. I tessuti invece durano — si aprono lentamente, restano aperti anche mezzo minuto, si dissolvono. Sovrapponendosi fra loro e alle gocce formano le tessiture, ed è la ragione per cui esistono.
-
-Anche qui i periodi sono coprimi a due a due, con una precisazione: sono numeri primi da diciannove in su, quindi coprimi anche con quelli delle frasi. Le linee che non tornano mai insieme sono otto, non due gruppi da quattro.
-
-Ogni riquadro ha il suo pulsante: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario. La barra spaziatrice invece vale per entrambi.
+Sotto le quattro frasi ce ne sono altre quattro, e non fanno la stessa cosa. Le gocce accadono: un attacco, una coda, e la nota è già passata. I tessuti invece durano — si aprono lentamente, restano aperti anche mezzo minuto, si dissolvono. Sovrapponendosi fra loro e alle gocce formano le tessiture, ed è la ragione per cui esistono. Anche qui i periodi sono coprimi a due a due, e lo sono anche con quelli delle frasi: le linee che non tornano mai insieme sono otto, non due gruppi da quattro. Non devono essere numeri primi — basta che non abbiano fattori in comune — ed è per questo che si scende fino a otto secondi. Ogni riquadro ha il suo pulsante: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario. La barra spaziatrice invece vale per entrambi.
 
 ---
 
@@ -254,21 +250,21 @@ Come per le frasi, ogni stato d'animo è una configurazione completa. Due cose p
 ## [tessuto 1]
 
 **Nome:** Velo
-**Tempo:** 4,5 giorni
+**Tempo:** 1,3 giorni
 
 L'equilibrio di partenza: registro medio, sovrapposizione appena sopra l'uno.
 
 ## [tessuto 2]
 
 **Nome:** Fondale
-**Tempo:** 15,8 giorni
+**Tempo:** 23,4 giorni
 
 Uno strato solo per giro, lunghissimo e grave. Il più immobile degli otto.
 
 ## [tessuto 3]
 
 **Nome:** Lino
-**Tempo:** 5,8 giorni
+**Tempo:** 14,6 ore
 
 Tre per giro molto sovrapposti: la trama non si interrompe mai.
 
@@ -296,14 +292,14 @@ Meno di un'ottava, tutta in basso, e il livello più alto degli otto.
 ## [tessuto 7]
 
 **Nome:** Seta
-**Tempo:** 17,9 giorni
+**Tempo:** 14,5 ore
 
 Battito quasi doppio degli altri e affioramento rapido: il più inquieto.
 
 ## [tessuto 8]
 
 **Nome:** Vela
-**Tempo:** 34,3 giorni
+**Tempo:** 36,6 giorni
 
 Un tessuto solo per giro, che può durare fino a cinquanta secondi.
 
@@ -323,9 +319,7 @@ Le palette sono sei: **alba**, **mattino**, **pomeriggio**, **tramonto**, **sera
 
 **Titolo:** La fascia temporale
 
-Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto.
-
-Puoi guardarlo come se fosse uno spartito in movimento, o un sovrapporsi di strati sonori che scorrono con viscosità differenti.
+Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto. Puoi guardarlo come se fosse uno spartito in movimento, o un sovrapporsi di strati sonori che scorrono con viscosità differenti.
 
 ---
 

@@ -16,7 +16,7 @@ non c'è, non ci sarà.
 | Dove | Cosa |
 |---|---|
 | la riga d'apertura | non promette più quattro linee, ma otto |
-| «L'idea» | un paragrafo nuovo sui tessuti e sui primi da diciannove in su |
+| «L'idea» | un paragrafo nuovo sui tessuti e sui loro periodi |
 | «Come si usa» | i gesti valgono per due riquadri; i cursori sono dieci, i preset sedici |
 | «Come funziona» | la grafica non è più p5; una nota sul ciclo di fotogrammi unico |
 | «Limiti noti» | tolta la riga sulla rete, che non vale più |
@@ -57,9 +57,9 @@ Sotto le quattro frasi ne girano altre quattro, e non fanno la stessa cosa. Le
 gocce **accadono**: un attacco, una coda, e la nota è già passata. I tessuti
 **durano** — si aprono lentamente, restano aperti anche mezzo minuto, si
 dissolvono — e sovrapponendosi fra loro e alle gocce formano le tessiture. I
-loro periodi sono numeri primi da diciannove in su (19, 23, 29 e 31 alla
-partenza), quindi coprimi anche con quelli delle frasi: **le linee che non
-tornano mai insieme sono otto, non due gruppi da quattro.**
+loro periodi sono coprimi anche con quelli delle frasi — 9, 16, 25 e 31 alla
+partenza — e non devono essere numeri primi: basta che non condividano fattori.
+**Le linee che non tornano mai insieme sono otto, non due gruppi da quattro.**
 
 Il debito verso il *Music for Airports* di Brian Eno è dichiarato: là erano
 spezzoni di nastro di lunghezze diverse, qui sono oscillatori e uno scheduler.
@@ -70,7 +70,7 @@ I gesti sono gli stessi nei due riquadri.
 
 | Gesto | Effetto |
 |---|---|
-| Trascina un quadrante in verticale | cambia la durata di quella linea (3–30 s le frasi, 12–60 s i tessuti) |
+| Trascina un quadrante in verticale | cambia la durata di quella linea (3–30 s le frasi, 7–60 s i tessuti) |
 | Clic su un quadrante | silenzia o riattiva quella linea |
 | ↻ sopra un quadrante | genera una nuova idea musicale per quella linea |
 | Avvia / Pausa sotto un riquadro | ferma solo quella classe: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario |
@@ -192,10 +192,9 @@ nessuna licenza da rispettare oltre a questa.
 **Rada** is a generative sound instrument that runs in the browser. Four
 phrases of drops loop at different periods (7, 11, 13, 17 seconds by default),
 each concentrating its notes at the head of its cycle with silence filling the
-rest. Below them four sustained weaves turn at periods of their own — prime
-numbers from nineteen up, so coprime with the phrases as well. Because every
-period is pairwise coprime with every other, the eight lines never realign the
-same way.
+rest. Below them four sustained weaves turn at periods of their own, coprime
+with the phrases' as well. Because every period is pairwise coprime with every
+other, the eight lines never realign the same way.
 
 Drag a dial to change its length, click to mute, press ↻ for a new musical
 idea. Each of the two cards has five faders, eight presets and its own play

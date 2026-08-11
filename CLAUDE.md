@@ -13,10 +13,23 @@ due linee condividono un divisore tornano insieme presto e il collage collassa
 in un motivo riconoscibile. Vale per ogni serie in `MOODS` e in `DRONI_MOODS`.
 Verificare sempre il minimo comune multiplo prima di proporre nuove serie.
 
-Le due classi sono otto linee, non due gruppi da quattro. I periodi delle
-tenute sono **numeri primi da 19 in su**, e non per estetica: così sono
-coprimi anche con i 7·11·13·17 delle gocce, e le due classi non tornano
-insieme più di quanto non facciano le quattro frasi fra loro.
+Le due classi sono otto linee, non due gruppi da quattro: i periodi dei tessuti
+devono essere coprimi **anche con quelli delle gocce**, altrimenti le due
+classi tornano insieme più di quanto non facciano le quattro frasi fra loro.
+
+Non devono però essere numeri primi. La regola è stata «primi da 19 in su»
+finché i tessuti sono rimasti lunghi; ora le serie usano anche composti — 8, 9,
+15, 16, 25 — che con 7·11·13·17 non condividono nulla, e Lino parte da otto
+secondi. **Il vincolo da verificare è il massimo comun divisore, non la
+primalità.**
+
+C'è un limite di ferro da conoscere prima di ritoccare le serie: le otto
+configurazioni delle gocce, tutte insieme, usano i primi fino a 29. Un periodo
+coprimo con *tutte* dev'essere quindi fatto solo di primi da 31 in su — cioè
+non può essere breve. Sotto quella soglia la coprimalità si garantisce verso la
+configurazione di partenza, non verso ogni combinazione: oggi le coppie di
+preset che condividono un divisore sono 25 su 64 (erano 17 quando i tessuti
+partivano da 19). È il prezzo dei tessuti brevi, ed è stato scelto sapendolo.
 
 **Nessuna libreria, né per il suono né per il disegno.** L'audio usa la Web
 Audio API direttamente: lo scheduler a lookahead prenota le note sul clock

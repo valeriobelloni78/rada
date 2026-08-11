@@ -154,15 +154,34 @@ function rebuildPlans(now) {
    esistono.
 
    Stesso principio di sempre: quattro linee, quattro periodi coprimi a due a
-   due. Qui però i periodi sono NUMERI PRIMI DA 19 IN SU, e non per gusto:
-   così sono coprimi anche con i 7·11·13·17 delle gocce, e le due classi non
-   tornano insieme più di quanto non facciano le quattro frasi fra loro. Il
-   collage vale ora su otto linee invece che su quattro.
+   due — e coprimi anche con i 7·11·13·17 delle gocce, così il collage vale su
+   otto linee invece che su quattro.
+
+   Per un po' la regola è stata «numeri primi da 19 in su», che quella doppia
+   coprimalità la garantiva per costruzione ma teneva i tessuti lontani dai
+   tempi brevi. Ora le serie usano anche numeri COMPOSTI — 8, 9, 15, 16, 25 —
+   scelti in modo da non avere fattori in comune né fra loro né con la
+   configurazione di partenza delle gocce. Lino parte da otto secondi.
+
+   Il conto ha un limite di ferro, e conviene conoscerlo prima di ritoccare le
+   serie: le otto configurazioni delle gocce, tutte insieme, usano i primi fino
+   a 29. Un periodo coprimo con TUTTE dev'essere quindi fatto solo di primi da
+   31 in su — cioè non può essere breve. Sotto quella soglia la coprimalità si
+   garantisce verso la configurazione di partenza, non verso ogni combinazione
+   possibile: con 8, 15 e 25 in campo le coppie di preset che condividono un
+   divisore passano da 17 a 25 su 64. È il prezzo dei tessuti brevi, ed è
+   stato pagato sapendo quanto costava.
 
    Le tenute non hanno cursori propri: tutto viene dal mood. Sono uno sfondo,
    e uno sfondo non si regola mentre si ascolta.
 ============================================================================= */
-const DRONE_MIN = 12, DRONE_MAX = 60;
+/* La corsa parte da sette secondi, come quella delle gocce parte da tre: sotto
+   di lì un tessuto non farebbe più in tempo ad aprirsi e chiudersi. Non è un
+   limite arbitrario — `playTone` tiene la durata sopra i 2,5 secondi e riscala
+   affioramento e dissolvenza quando insieme sforerebbero il novanta per cento
+   della nota — ma sette è il punto in cui un tessuto suona ancora come un
+   tessuto e non come una goccia lunga.                                     */
+const DRONE_MIN = 7, DRONE_MAX = 60;
 
 /* I CINQUE COMANDI DEI TESSUTI, in unità vere e non in percentuali astratte:
    secondi, hertz, numero di sovrapposizioni. Un pannello che dice "3,0 s" è
@@ -183,14 +202,14 @@ const DRONE_MIN = 12, DRONE_MAX = 60;
    davvero: si può volere un affioramento lentissimo con un battito nervoso,
    e con un parametro solo non si poteva.                                  */
 const DRONI_MOODS = {
-  velo:    { spread: 55, apri: 3.0, chiudi: 4.3, sovr: 1.10, battito: 0.57, dens: 2, liv: 32, periods: [19, 23, 29, 31] },
-  fondale: { spread: 22, apri: 3.5, chiudi: 5.0, sovr: 0.82, battito: 0.41, dens: 1, liv: 38, periods: [29, 31, 37, 41] },
-  lino:    { spread: 38, apri: 3.2, chiudi: 4.7, sovr: 2.10, battito: 0.48, dens: 3, liv: 28, periods: [19, 23, 31, 37] },
+  velo:    { spread: 55, apri: 3.0, chiudi: 4.3, sovr: 1.10, battito: 0.57, dens: 2, liv: 32, periods: [9, 16, 25, 31] },
+  fondale: { spread: 22, apri: 3.5, chiudi: 5.0, sovr: 0.82, battito: 0.41, dens: 1, liv: 38, periods: [31, 37, 41, 43] },
+  lino:    { spread: 38, apri: 3.2, chiudi: 4.7, sovr: 2.10, battito: 0.48, dens: 3, liv: 28, periods: [8, 15, 19, 23] },
   respiro: { spread: 66, apri: 2.6, chiudi: 3.8, sovr: 0.72, battito: 0.70, dens: 2, liv: 30, periods: [23, 29, 41, 43] },
   bruma:   { spread: 70, apri: 2.9, chiudi: 4.1, sovr: 0.88, battito: 0.63, dens: 2, liv: 26, periods: [31, 37, 43, 47] },
   tenda:   { spread: 18, apri: 3.5, chiudi: 5.0, sovr: 1.76, battito: 0.39, dens: 2, liv: 42, periods: [19, 29, 37, 47] },
-  seta:    { spread: 60, apri: 2.0, chiudi: 3.0, sovr: 1.50, battito: 0.92, dens: 3, liv: 28, periods: [23, 31, 41, 53] },
-  vela:    { spread: 45, apri: 3.3, chiudi: 4.8, sovr: 0.92, battito: 0.44, dens: 1, liv: 36, periods: [29, 41, 47, 53] },
+  seta:    { spread: 60, apri: 2.0, chiudi: 3.0, sovr: 1.50, battito: 0.92, dens: 3, liv: 28, periods: [8, 9, 25, 29] },
+  vela:    { spread: 45, apri: 3.3, chiudi: 4.8, sovr: 0.92, battito: 0.44, dens: 1, liv: 36, periods: [31, 41, 47, 53] },
 };
 
 /* I cinque che l'utente muove. Gli altri due arrivano dal mood e basta. */
