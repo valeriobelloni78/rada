@@ -15,7 +15,11 @@ la pagina non cambia da sola.
 |---|---|
 | `**parola**` | risalto per colore: il grigio del testo diventa inchiostro pieno, senza inclinare |
 | `*parola*` | corsivo vero (oggi solo «coprimi») |
+| `==parola==` | arancione, l'unico accento del progetto: da usare con parsimonia |
 | riga che va a capo dentro lo stesso blocco | resta a capo anche nella pagina |
+
+La «d» di **Rada** prende l'arancione da sé, ovunque il nome compaia in un
+testo: non serve marcarla.
 
 I titoletti fra parentesi quadre — `[riquadro 1]`, `[gesto 2]` e simili — non
 vanno modificati: servono a me per rimettere ogni pezzo al suo posto. Tutto il
@@ -43,8 +47,8 @@ Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre 
 **Titolo:** Il concetto
 
 Rada sviluppa il suono mentre lo ascolti.
-Frasi composte da gocce e tessuti sonori fatti di lunghi respiri girano ciascuno col proprio periodo. Nella configurazione di partenza questi periodi sono, per le gocce, di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa. Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.
-Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.
+Frasi composte da gocce e tessuti sonori fatti di lunghi respiri girano ciascuno col proprio periodo. Ogni fase sonora concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa. Sotto le quattro frasi ne girano altre quattro, coi propri periodi: suoni tenuti, che si aprono e si dissolvono lentamente. Queste linee di suoni e le loro sovrapposizioni compongono un ambiente sonoro sempre differente.
+Questa è l'idea alla base di “Music for Airports” di ==Brian Eno== e questo progetto è un tributo al suo lavoro.
 
 ---
 
@@ -103,7 +107,7 @@ Modifica quanto si allarga il ventaglio delle altezze. A zero tutte le gocce cad
 
 **Nome:** Calore timbrico
 
-Da vetroso a morbido. Più calore significa meno armoniche acute e una coda più lunga: il decadimento passa da poco meno di due secondi a quasi cinque.
+Da vetroso a ==morbido==. Più calore significa meno armoniche acute e una coda più lunga: il decadimento passa da poco meno di due secondi a quasi cinque.
 
 ## [cursore 3]
 
@@ -142,7 +146,7 @@ Ogni stato d'animo è una configurazione completa: timbro **e** configurazione t
 **Nome:** Sereno
 **Tempo:** 4,7 ore
 
-L'equilibrio di partenza: registro medio, coda ampia, poche gocce ben distanziate.
+L'==equilibrio== di partenza: registro medio, coda ampia, poche gocce ben distanziate.
 
 ## [mood 2]
 
@@ -177,7 +181,7 @@ Isole di suono molto distanti fra loro: massimo tre gocce per idea, riverbero es
 **Nome:** Collina
 **Tempo:** 14,8 ore
 
-Caldo e raccolto, con una zona attiva ampia che dà un andamento ondulato e continuo.
+==Caldo== e raccolto, con una zona attiva ampia che dà un andamento ondulato e continuo.
 
 ## [mood 7]
 
@@ -217,7 +221,7 @@ Quanto si allarga il ventaglio delle altezze, misurato in ottave. A zero tutti i
 
 **Nome:** Affioramento
 
-I secondi che un tessuto impiega a emergere. Nulla attacca, tutto affiora: è l'inviluppo rovesciato rispetto a quello delle gocce.
+I secondi che un tessuto impiega a emergere. Nulla attacca, tutto ==affiora==: è l'inviluppo rovesciato rispetto a quello delle gocce.
 
 ## [cursore tessuti 3]
 
@@ -235,7 +239,7 @@ Quanti tessuti restano aperti insieme, in media, su ciascuna linea. Sotto uno re
 
 **Nome:** Battito
 
-Ogni tessuto è fatto di due sinusoidi appena scordate, e la loro differenza in hertz è la pulsazione che si sente: a mezzo hertz il suono si gonfia e si sgonfia una volta ogni due secondi, a due hertz trema. Senza quel battito una nota tenuta mezzo minuto sarebbe un muro immobile, e l'orecchio smetterebbe di seguirla.
+Ogni tessuto è fatto di due ==sinusoidi== appena scordate, e la loro differenza in hertz è la pulsazione che si sente: a mezzo hertz il suono si gonfia e si sgonfia una volta ogni due secondi, a due hertz trema. Senza quel battito una nota tenuta mezzo minuto sarebbe un muro immobile, e l'orecchio smetterebbe di seguirla.
 
 ---
 
@@ -252,7 +256,7 @@ Come per le frasi, ogni stato d'animo è una configurazione completa. Due cose p
 **Nome:** Velo
 **Tempo:** 1,3 giorni
 
-L'equilibrio di partenza: registro medio, sovrapposizione appena sopra l'uno.
+L'==equilibrio== di partenza: registro medio, sovrapposizione appena sopra l'uno.
 
 ## [tessuto 2]
 
@@ -321,7 +325,7 @@ Ai tessuti parla invece la stagione: l'autunno raccoglie appena il registro e al
 
 **Titolo:** La fascia temporale
 
-Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto. Puoi guardarlo come se fosse uno spartito in movimento, o un sovrapporsi di strati sonori che scorrono con viscosità differenti.
+Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto. Puoi guardarlo come se fosse uno ==spartito== in movimento, o un sovrapporsi di strati sonori che scorrono con viscosità differenti.
 
 ---
 
@@ -329,7 +333,7 @@ Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta sec
 
 **Titolo:** Un dettaglio sulla sincronia
 
-Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo rosso le unisce per un istante.
+Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo ==rosso== le unisce per un istante.
 
 ---
 

@@ -54,6 +54,20 @@
    termini — "coprimi" — dove il corsivo ha un significato preciso.         */
 .docCard i{font-style:italic;color:var(--ink)}
 
+/* Il terzo risalto, e il più raro: l'arancione. Non marca un termine tecnico
+   né una parola importante — quelli hanno già l'inchiostro pieno — ma le
+   poche parole che nella pagina fanno da eco al suono: "morbido", "affiora",
+   "spartito", il filo "rosso" fra due gocce. E la "d" di Rada, dovunque il
+   nome compaia nella prosa, che è la stessa "d" del logo.
+
+   Serve la classe sull'`em` perché `.docCard em` porta già l'inchiostro, e a
+   parità di elemento vince chi è più specifico. Vale ovunque nella pagina —
+   riquadri, introduzioni, celle, elenchi — con una regola sola.          */
+.amb, .docCard em.amb, .docList dd em.amb, .docCell p em.amb, .docIntro em.amb{
+  font-style:normal;
+  color:var(--amber);
+}
+
 /* nota di coda: più tenue del corpo, staccata da un filo */
 .docNote{
   margin-top:14px !important;
