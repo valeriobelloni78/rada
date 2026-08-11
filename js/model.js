@@ -172,6 +172,10 @@ const DRONI_MOODS = {
   fondale: { spread: 22, warmth: 90, dens: 1, len: 82, liv: 38, periods: [29, 31, 37, 41] },
   bordone: { spread: 38, warmth: 82, dens: 3, len: 70, liv: 28, periods: [19, 23, 31, 37] },
   respiro: { spread: 66, warmth: 58, dens: 2, len: 36, liv: 30, periods: [23, 29, 41, 43] },
+  bruma:   { spread: 70, warmth: 66, dens: 2, len: 44, liv: 26, periods: [31, 37, 43, 47] },
+  radice:  { spread: 18, warmth: 92, dens: 2, len: 88, liv: 42, periods: [19, 29, 37, 47] },
+  vetrata: { spread: 60, warmth: 34, dens: 3, len: 50, liv: 28, periods: [23, 31, 41, 53] },
+  marea:   { spread: 45, warmth: 86, dens: 1, len: 92, liv: 36, periods: [29, 41, 47, 53] },
 };
 
 const D = { ...DRONI_MOODS.velo };

@@ -12,7 +12,15 @@
 ============================================================================= */
 
 let ctx = null, master, wetGain, dryGain, filt;
-let running = false;
+let running = false;                 // il motore sta suonando?
+
+/* Le due classi si accendono e si spengono da sole, ciascuna col pulsante del
+   proprio riquadro. Il motore gira finché almeno una delle due è accesa:
+   spente entrambe, dopo la dissolvenza il clock si ferma e non si consuma
+   nulla. La barra spaziatrice resta il comando globale — accende o spegne
+   tutte e due insieme — perché una scorciatoia da tastiera che agisse su
+   metà dello strumento sarebbe più sorprendente che utile.               */
+let gocceOn = false, tessutiOn = false;
 
 /* Storia delle gocce suonate di recente, per la fascia temporale condivisa
    del disegno: gli ultimi TIMELINE_SEC secondi di tutte e quattro le frasi
@@ -340,15 +348,18 @@ function schedule() {
 
   while (dropHistory.length && dropHistory[0].t < now - TIMELINE_SEC) dropHistory.shift();
 
-  prenota(loops, buildPlan,      suonaGoccia, now, horizon);
-  prenota(droni, buildPlanDrone, suonaTenuta, now, horizon);
+  /* I cicli avanzano comunque, anche a classe spenta: così riaccendendola
+     riparte da dov'era invece che da capo — la stessa promessa che la pausa
+     fa già per l'intero strumento.                                       */
+  prenota(loops, buildPlan,      suonaGoccia, now, horizon, gocceOn);
+  prenota(droni, buildPlanDrone, suonaTenuta, now, horizon, tessutiOn);
 }
 
 /* Il cuore dello scheduler, uguale per le gocce e per le tenute: le due classi
    differiscono per come si costruisce il piano e per come si suona un evento,
    non per come si prenota. Tenerlo in un posto solo evita che le due copie
    divergano — ed è già successo, in questo progetto, con altre due copie.  */
-function prenota(lista, costruisciPiano, suona, now, horizon) {
+function prenota(lista, costruisciPiano, suona, now, horizon, attiva) {
   lista.forEach(L => {
     let guard = 0;
     while (guard++ < 300) {
@@ -372,7 +383,7 @@ function prenota(lista, costruisciPiano, suona, now, horizon) {
       const t = L.cycleStart + p.ph * L.period;
       if (t >= horizon) break;
 
-      if (!L.muted && t >= now - 0.25) {
+      if (attiva && !L.muted && t >= now - 0.25) {
         /* Un evento lievemente in ritardo (scatto di frame) si suona subito
            invece di perderlo. Oltre il quarto di secondo è obsoleto — per
            esempio una scheda tornata in primo piano — e va scartato,
@@ -549,27 +560,44 @@ function tickParams() {
    ricominciare da capo. È ciò che la parola "pausa" promette.             */
 let sospensione = null;
 
+/* Porta il motore in accordo con le due classi. Nessuno decide qui COSA deve
+   suonare: si limita a constatare se qualcosa deve.                       */
+async function applicaStato() {
+  const vuole = gocceOn || tessutiOn;
+  if (vuole !== running) {
+    if (vuole) {
+      clearTimeout(sospensione);
+      if (ctx.state === "suspended") { try { await ctx.resume(); } catch (e) {} }
+      running = true;
+      dichiaraSessioneDiRiproduzione();   // la categoria si riafferma alla ripresa
+      master.gain.setTargetAtTime(0.9, ctx.currentTime, 0.4);
+    } else {
+      running = false;
+      master.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
+      clearTimeout(sospensione);
+      sospensione = setTimeout(() => {
+        if (!running && ctx.state === "running") ctx.suspend();
+      }, 900);
+    }
+  }
+  onPowerChange();
+  statoMediaSession();
+}
+
+/* Il pulsante di un riquadro: governa la sua classe e nient'altro. */
+async function toggleClasse(quale) {
+  if (!ctx) buildAudio();
+  if (quale === "gocce") gocceOn = !gocceOn; else tessutiOn = !tessutiOn;
+  await applicaStato();
+}
+
+/* Il comando globale: barra spaziatrice, soglia d'ingresso, pannello di
+   sistema. Se qualcosa sta suonando spegne tutto, altrimenti accende tutto. */
 async function togglePower() {
   if (!ctx) buildAudio();
-
-  if (running) {
-    running = false;
-    onPowerChange(false);
-    statoMediaSession();
-    master.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
-    clearTimeout(sospensione);
-    sospensione = setTimeout(() => {
-      if (!running && ctx.state === "running") ctx.suspend();
-    }, 900);
-  } else {
-    clearTimeout(sospensione);
-    if (ctx.state === "suspended") { try { await ctx.resume(); } catch (e) {} }
-    running = true;
-    dichiaraSessioneDiRiproduzione();   // la categoria si riafferma alla ripresa
-    onPowerChange(true);
-    statoMediaSession();
-    master.gain.setTargetAtTime(0.9, ctx.currentTime, 0.4);
-  }
+  const acceso = gocceOn || tessutiOn;
+  gocceOn = tessutiOn = !acceso;
+  await applicaStato();
 }
 
 /* tempo audio corrente, 0 se il motore non esiste ancora */

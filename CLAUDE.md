@@ -143,6 +143,13 @@ semplicemente non esiste: le regole `:lang(ja)` in `style.css` la
 ricostruiscono con corpo e 字間, e sul canvas c'è `CANVAS.trackMul`, perché
 i glifi a piena larghezza vanno spaziati molto meno di quelli latini.
 
+**Ogni riquadro accende e spegne la propria classe.** `gocceOn` e `tessutiOn`
+in `audio.js`: il motore gira finché almeno una è accesa, e spente entrambe il
+clock si ferma davvero (`applicaStato`). I cicli però continuano ad avanzare
+anche a classe spenta, così riaccendendola riparte da dov'era — la stessa
+promessa che la pausa fa per l'intero strumento. La barra spaziatrice resta il
+comando globale: una scorciatoia che agisse su metà strumento sorprenderebbe.
+
 **Le due classi di eventi si prenotano con lo stesso codice.** `prenota` in
 `audio.js` è generica: prende la lista, la funzione che ricostruisce il piano
 e quella che suona un evento. Le gocce e le tenute differiscono per come

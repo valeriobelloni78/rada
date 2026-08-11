@@ -54,7 +54,7 @@ function refreshStatus() {
     return;
   }
   st.classList.add("live");
-  const attivi = loops.filter(L => !L.muted).length;
+  const attivi = gocceOn ? loops.filter(L => !L.muted).length : 0;
   txt.textContent = T("status.playing", { n: fmtInt(attivi), time, palette });
 }
 setInterval(refreshStatus, 15000);
@@ -67,9 +67,11 @@ addEventListener("rada:realign", () => onRealignChange());
 /* Il pulsante è un COMANDO, non un indicatore: la scritta dice che cosa
    accadrà premendolo, non che cosa sta accadendo. Lo stato è già raccontato
    dal punto che pulsa e dalla riga in alto.                                */
-function onPowerChange(on) {
-  $("power").classList.toggle("on", on);
-  $("powerLabel").textContent = on ? T("power.pause") : T("power.play");
+function onPowerChange() {
+  $("power").classList.toggle("on", gocceOn);
+  $("powerLabel").textContent = gocceOn ? T("power.pause") : T("power.play");
+  $("powerTessuti").classList.toggle("on", tessutiOn);
+  $("powerTessutiLabel").textContent = tessutiOn ? T("power.pause") : T("power.play");
   refreshStatus();
 }
 
@@ -205,7 +207,7 @@ function onLanguageChange() {
   document.querySelectorAll("#moods .mood").forEach(b => {
     b.textContent = moodName(b.dataset.mood);
   });
-  onPowerChange(running);
+  onPowerChange();
   onRealignChange();
   readouts();
   syncA11y();
@@ -216,7 +218,10 @@ function onLanguageChange() {
 }
 
 /* --- avvio ---------------------------------------------------------------- */
-$("power").addEventListener("click", togglePower);
+/* Ogni riquadro ha il suo interruttore, e governa solo la propria classe:
+   due pulsanti che facessero la stessa cosa sarebbero un pulsante di troppo. */
+$("power").addEventListener("click", () => toggleClasse("gocce"));
+$("powerTessuti").addEventListener("click", () => toggleClasse("tessuti"));
 
 // barra spaziatrice: avvia e ferma
 addEventListener("keydown", e => {
@@ -258,6 +263,7 @@ $("enter").addEventListener("keydown", e => {
 
 applyI18n();
 $("powerLabel").textContent = T("power.play");
+$("powerTessutiLabel").textContent = T("power.play");
 refreshStatus();
 onRealignChange();
 onDroniChange();

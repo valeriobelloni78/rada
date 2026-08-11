@@ -96,7 +96,8 @@ function drawQuadranteTenute(cell, now) {
   const { L, cx, cy, r } = cell;
   const g = dr2d;
   g.save();
-  g.globalAlpha = L.muted ? 0.3 : 1;
+  const spento = L.muted || !tessutiOn;
+  g.globalAlpha = spento ? 0.3 : 1;
 
   /* etichetta e comando di rigenerazione */
   g.fillStyle = COL.dust;
@@ -148,15 +149,15 @@ function drawQuadranteTenute(cell, now) {
        poi inchiostro pieno finché suona, filo tenue quando tace.          */
     g.strokeStyle = appena ? COL.amber : suona ? COL.ink : COL.ink2;
     g.lineWidth = (suona ? 3 : 1.7) / 54 * r;
-    g.globalAlpha = (L.muted ? 0.3 : 1) * (suona ? 1 : 0.5);
+    g.globalAlpha = (spento ? 0.3 : 1) * (suona ? 1 : 0.5);
     g.beginPath();
     g.arc(cx, cy, rr, a0, a1);
     g.stroke();
   }
-  g.globalAlpha = L.muted ? 0.3 : 1;
+  g.globalAlpha = spento ? 0.3 : 1;
 
   /* lancetta: fase udibile esatta, dalla coda dei cicli */
-  if (ctx && running && !L.muted && L.cycles.length) {
+  if (ctx && running && tessutiOn && !L.muted && L.cycles.length) {
     while (L.cycles.length > 1 && now >= L.cycles[0].start + L.cycles[0].period)
       L.cycles.shift();
     const c = L.cycles[0];

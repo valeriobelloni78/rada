@@ -148,7 +148,9 @@ function draw() {
 function drawDial(cell, now) {
   const { L, cx, cy, r } = cell;
   const s = r / 54;                      // fattore di scala del disegno
-  const dim = L.muted ? 0.3 : 1;
+  /* Spenta la classe, i quadranti impallidiscono come una frase silenziata:
+     il piano continua a girare, ma non si sente — e si deve vedere.      */
+  const dim = (L.muted || !gocceOn) ? 0.3 : 1;
 
   push();
   drawingContext.globalAlpha = dim;
@@ -200,7 +202,7 @@ function drawDial(cell, now) {
   /* lancetta: fase udibile esatta, presa dalla coda dei cicli. Una breve
      coda sfumata dietro alla punta suggerisce il moto anche nei giri
      lunghi, dove lo spostamento fra un fotogramma e l'altro è minimo.     */
-  if (ctx && running && !L.muted && L.cycles.length) {
+  if (ctx && running && gocceOn && !L.muted && L.cycles.length) {
     while (L.cycles.length > 1 && now >= L.cycles[0].start + L.cycles[0].period)
       L.cycles.shift();
     const c = L.cycles[0];
