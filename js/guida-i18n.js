@@ -26,6 +26,7 @@ const GUIDA = {
     "g.concept.t": "Il concetto",
     "g.concept1": "Rada sviluppa il suono mentre lo ascolti.",
     "g.concept2": "Quattro frasi girano ciascuna col proprio periodo, nella configurazione di partenza questi periodi sono di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.",
+    "g.concept2b": "Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.",
     "g.concept3": "Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.",
 
     "g.flow.t":     "Lo scorrere dei tempi",
@@ -121,6 +122,7 @@ const GUIDA = {
     "g.concept.t": "Le concept",
     "g.concept1": "Rada développe le son pendant que tu l'écoutes.",
     "g.concept2": "Quatre phrases tournent chacune avec sa propre période~; dans la configuration de départ ces périodes sont de sept, onze, treize et dix-sept secondes. Chaque phrase concentre ses notes dans un arc, puis se tait jusqu'au tour suivant. Ces silences déphasés font que les quatre arcs se rencontrent chaque fois dans une combinaison différente.",
+    "g.concept2b": "Sous les quatre phrases en tournent quatre autres, avec leurs propres périodes~: non pas des gouttes mais des sons tenus, qui s'ouvrent et se dissolvent lentement. Les lignes déphasées sont huit en tout, et la pièce est ce qui advient lorsqu'elles se superposent.",
     "g.concept3": "C'est l'idée à la base de «~Music for Airports~» de Brian Eno, et ce projet est un hommage à son travail.",
 
     "g.flow.t":     "L'écoulement des temps",
@@ -216,6 +218,7 @@ const GUIDA = {
     "g.concept.t": "The concept",
     "g.concept1": "Rada unfolds the sound while you listen to it.",
     "g.concept2": "Four phrases each turn with their own period; in the starting configuration those periods are seven, eleven, thirteen and seventeen seconds. Each phrase gathers its notes into an arc, then falls silent until the next turn. Those out-of-phase silences make the four arcs meet in a different combination every time.",
+    "g.concept2b": "Below the four phrases four more turn, each with its own period: not drops but sustained tones, which open and dissolve slowly. There are eight out-of-phase lines in all, and the piece is what happens when they overlap.",
     "g.concept3": "This is the idea behind Brian Eno's “Music for Airports”, and this project is a tribute to his work.",
 
     "g.flow.t":     "The flow of times",
@@ -311,6 +314,7 @@ const GUIDA = {
     "g.concept.t": "発想",
     "g.concept1": "Radaは、聴いているあいだに音を組み立てていきます。",
     "g.concept2": "四つのフレーズがそれぞれの周期で回ります。初期設定では、その周期は七秒、十一秒、十三秒、十七秒です。どのフレーズも音符をひとつの弧のなかに集め、次の周回まで沈黙します。位相のずれたこれらの沈黙によって、四つの弧は毎回ちがう組み合わせで出会います。",
+    "g.concept2b": "四つのフレーズの下では、さらに四つがそれぞれの周期で回っています。滴ではなく、ゆっくりと開いてゆっくりと消えていく持続音です。位相のずれた線は全部で八本あり、作品はそれらが重なるところに生まれます。",
     "g.concept3": "これはブライアン・イーノの「Music for Airports」の根底にある考えであり、この作品はその仕事への賛辞です。",
 
     "g.flow.t":     "時の流れ",

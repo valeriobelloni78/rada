@@ -48,6 +48,7 @@ Tra le gocce troverai dei silenzi che parlano; ascoltali.
 
 Rada sviluppa il suono mentre lo ascolti.
 Quattro frasi girano ciascuna col proprio periodo, nella configurazione di partenza questi periodi sono di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.
+Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.
 Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.
 
 ---
