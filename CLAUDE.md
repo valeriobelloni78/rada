@@ -8,10 +8,15 @@ testi dell'interfaccia sono in italiano.
 
 ## Regole da non violare
 
-**I periodi delle frasi devono restare coprimi a due a due.** È il cuore del
-progetto: se due frasi condividono un divisore tornano insieme presto e il
-collage collassa in un motivo riconoscibile. Vale per ogni serie in `MOODS`.
+**I periodi devono restare coprimi a due a due.** È il cuore del progetto: se
+due linee condividono un divisore tornano insieme presto e il collage collassa
+in un motivo riconoscibile. Vale per ogni serie in `MOODS` e in `DRONI_MOODS`.
 Verificare sempre il minimo comune multiplo prima di proporre nuove serie.
+
+Le due classi sono otto linee, non due gruppi da quattro. I periodi delle
+tenute sono **numeri primi da 19 in su**, e non per estetica: così sono
+coprimi anche con i 7·11·13·17 delle gocce, e le due classi non tornano
+insieme più di quanto non facciano le quattro frasi fra loro.
 
 **L'audio usa la Web Audio API, mai p5.sound.** Lo scheduler a lookahead
 prenota le note sul clock del motore audio, preciso al campione. p5.sound è
@@ -137,6 +142,24 @@ poggia su MAIUSCOLO più tracking ampio, un dispositivo che in giapponese
 semplicemente non esiste: le regole `:lang(ja)` in `style.css` la
 ricostruiscono con corpo e 字間, e sul canvas c'è `CANVAS.trackMul`, perché
 i glifi a piena larghezza vanno spaziati molto meno di quelli latini.
+
+**Le due classi di eventi si prenotano con lo stesso codice.** `prenota` in
+`audio.js` è generica: prende la lista, la funzione che ricostruisce il piano
+e quella che suona un evento. Le gocce e le tenute differiscono per come
+suonano, non per come vengono collocate nel tempo — e due copie dello
+scheduler divergerebbero al primo ritocco.
+
+**Il riquadro delle tenute ha una tela propria, disegnata senza p5.** Due
+riquadri con bordo proprio non possono condividere una tela, e p5 in modalità
+globale ne governa comunque una sola: `droni.js` usa l'API 2D nativa. Il ciclo
+di fotogrammi resta però **uno solo** — `draw` in `sketch.js` chiama
+`drawDroni` — perché due animazioni indipendenti si sfaserebbero e su un
+telefono costerebbero il doppio.
+
+**Una tenuta accesa non può restare arancione.** Una goccia lampeggia per
+meno di mezzo secondo; una tenuta resta aperta anche trenta. Tenerla accesa
+riempirebbe la pagina dell'unico accento che il progetto vuole raro: arancione
+solo nell'istante in cui si apre, poi inchiostro pieno finché suona.
 
 ## Convenzioni
 

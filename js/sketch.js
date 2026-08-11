@@ -61,6 +61,7 @@ function setup() {
   c.parent(holder);
   cvEl = c.elt;
   buildZones();
+  setupDroni();      // il riquadro delle tenute, disegnato con l'API 2D
   readPalette();
   /* La pila include i grotteschi giapponesi di sistema: per il latino non
      cambia nulla (risolve sui primi), ma evita che il giapponese finisca su
@@ -138,6 +139,10 @@ function draw() {
   for (const c of cells) drawDial(c, now);
   drawLinks(now);
   drawTimeline(s, now);
+
+  /* La seconda tela vive nello stesso ciclo di fotogrammi: due animazioni
+     indipendenti si sfaserebbero, e su un telefono costerebbero il doppio. */
+  drawDroni();
 }
 
 function drawDial(cell, now) {

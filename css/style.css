@@ -134,6 +134,16 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
    senza mettere le mani nelle viscere della libreria.                      */
 #canvas-holder canvas{display:block;touch-action:pan-y pinch-zoom !important}
 
+/* La seconda tela: stesse regole della prima. Qui il touch-action non ha
+   bisogno di !important perché non c'è p5 a scriverlo in linea.          */
+#drone-holder{width:100%;display:flex;justify-content:center;position:relative}
+.droneCanvas{display:block;touch-action:pan-y pinch-zoom}
+
+/* Il riquadro delle tenute è la stessa scatola dei quadranti, staccata da
+   quella sopra e dai suoi mood.                                          */
+.droneCard{margin-top:26px}
+.barDroni{margin-top:14px}
+
 /* Trasparenti e senza dimensioni proprie: le riceve sketch.js, che li
    ricalcola solo quando il canvas cambia misura. Coprono il quadrante e il
    suo ↻, non l'intera cella: gli spazi fra un quadrante e l'altro, e la

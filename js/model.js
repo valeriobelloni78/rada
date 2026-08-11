@@ -145,6 +145,94 @@ function rebuildPlans(now) {
   });
 }
 
+/* =============================================================================
+   LA SECONDA CLASSE: LE TENUTE
+
+   Le gocce sono istanti — attacco e coda, e la nota è già passata. Le tenute
+   invece durano: si aprono lentamente, restano, si chiudono. Sovrapponendosi
+   fra loro e alle gocce formano le tessiture, che è la ragione per cui
+   esistono.
+
+   Stesso principio di sempre: quattro linee, quattro periodi coprimi a due a
+   due. Qui però i periodi sono NUMERI PRIMI DA 19 IN SU, e non per gusto:
+   così sono coprimi anche con i 7·11·13·17 delle gocce, e le due classi non
+   tornano insieme più di quanto non facciano le quattro frasi fra loro. Il
+   collage vale ora su otto linee invece che su quattro.
+
+   Le tenute non hanno cursori propri: tutto viene dal mood. Sono uno sfondo,
+   e uno sfondo non si regola mentre si ascolta.
+============================================================================= */
+const DRONE_MIN = 12, DRONE_MAX = 60;
+
+/* spread  ampiezza del registro          dens  quante tenute per giro
+   warmth  timbro, dal vetroso al morbido len   quanto dura ciascuna, in
+   liv     livello rispetto alle gocce          frazione del giro           */
+const DRONI_MOODS = {
+  velo:    { spread: 55, warmth: 72, dens: 2, len: 55, liv: 32, periods: [19, 23, 29, 31] },
+  fondale: { spread: 22, warmth: 90, dens: 1, len: 82, liv: 38, periods: [29, 31, 37, 41] },
+  bordone: { spread: 38, warmth: 82, dens: 3, len: 70, liv: 28, periods: [19, 23, 31, 37] },
+  respiro: { spread: 66, warmth: 58, dens: 2, len: 36, liv: 30, periods: [23, 29, 41, 43] },
+};
+
+const D = { ...DRONI_MOODS.velo };
+delete D.periods;
+
+const droni = DRONI_MOODS.velo.periods.map((p, i) => ({
+  i,
+  period: p,
+  target: p,
+  cycleStart: 0,
+  idx: 0,
+  cycles: [],
+  idea: [],           // le tenute, con posizione e durata relative
+  plan: [],           // collocate sul giro, in ordine di fase
+  offset: Math.random(),
+  muted: false,
+  pan: (1.5 - i) / 1.5 * 0.5,   // stereo opposto a quello delle gocce: si allargano a vicenda
+}));
+
+/* Una tenuta.
+   t    ∈ 0..1   dove comincia, sul giro intero (non su una zona attiva:
+                 le tenute non si addensano in testa, si distribuiscono)
+   dur  frazione del periodo per cui resta aperta
+   rel  ∈ -1..1  registro relativo, poi dilatato da spread                  */
+function makeTenute() {
+  const n = Math.max(1, Math.round(D.dens));
+  const ev = [];
+  for (let k = 0; k < n; k++) {
+    ev.push({
+      t: (k + Math.random() * 0.6) / n,        // sparse ma non ammucchiate
+      dur: (D.len / 100) * (0.7 + Math.random() * 0.6),
+      rel: Math.random() * 2 - 1,
+      vel: 0.75 + Math.random() * 0.25,
+      flash: -99,                              // istante in cui si è aperta
+      fino: -99,                               // istante in cui si chiuderà
+    });
+  }
+  return ev.sort((a, b) => a.t - b.t);
+}
+
+function regeneraTenute(L) {
+  L.idea = makeTenute();
+  L.offset = Math.random();
+  buildPlanDrone(L);
+  L.idx = 0;
+}
+
+function buildPlanDrone(L) {
+  L.plan = L.idea
+    .map(ev => ({ ph: (L.offset + ev.t) % 1, ev }))
+    .sort((a, b) => a.ph - b.ph);
+}
+
+/* Riallineamento della sola seconda classe. */
+function realignDroni() {
+  const v = droni.map(L => Math.max(1, Math.round(L.target)));
+  let l = v[0];
+  for (let k = 1; k < v.length; k++) l = l * v[k] / gcd(l, v[k]);
+  return l;
+}
+
 /* Tempo di riallineamento: minimo comune multiplo dei quattro periodi. È
    quanto passa prima che la combinazione si ripeta identica — con periodi
    coprimi diventa enorme, ed è il senso stesso del collage.                */
@@ -160,3 +248,4 @@ function realignSeconds() {
 /* Il modello nasce già popolato: senza questa riga le quattro frasi
    resterebbero vuote fino al primo mood, e l'app sarebbe muta all'apertura. */
 loops.forEach(regenerate);
+droni.forEach(regeneraTenute);

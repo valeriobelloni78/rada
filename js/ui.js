@@ -101,6 +101,40 @@ Object.keys(MOODS).forEach((id, i) => {
   moodsEl.appendChild(b);
 });
 
+/* --- mood delle tenute -----------------------------------------------------
+   Nessun cursore: la seconda classe è uno sfondo, e uno sfondo non si regola
+   mentre si ascolta. Tutto viene dal preset.                              */
+const droniMoodsEl = $("droniMoods");
+Object.keys(DRONI_MOODS).forEach((id, i) => {
+  const b = document.createElement("button");
+  b.className = "mood" + (i === 0 ? " sel" : "");
+  b.dataset.droneMood = id;
+  b.textContent = droneMoodName(id);
+  b.onclick = () => {
+    document.querySelectorAll("#droniMoods .mood").forEach(x => x.classList.remove("sel"));
+    b.classList.add("sel");
+    const m = DRONI_MOODS[id];
+    ["spread", "warmth", "dens", "len", "liv"].forEach(k => { D[k] = m[k]; });
+    droni.forEach((L, k) => { L.target = L.period = m.periods[k]; L.idx = 0; });
+    restartCycles();
+    droni.forEach(regeneraTenute);
+    onDroniChange();
+  };
+  droniMoodsEl.appendChild(b);
+});
+
+/* Il riallineamento della seconda classe, con le stesse unità della prima. */
+function onDroniChange() {
+  const l = realignDroni();
+  const sep = T("unit.sep");
+  let t;
+  if (l < 3600)       t = fmtInt(Math.round(l / 60)) + sep + T("unit.min");
+  else if (l < 86400) t = fmtOne(l / 3600)           + sep + T("unit.hours");
+  else                t = fmtOne(l / 86400)          + sep + T("unit.days");
+  $("realignDroni").textContent = T("realign", { t });
+  refreshStatus();
+}
+
 /* --- comandi equivalenti da tastiera --------------------------------------
    I quadranti vivono nel canvas, che per una tastiera e per un lettore di
    schermo è una superficie muta: trascinare, silenziare e rigenerare erano
@@ -175,6 +209,10 @@ function onLanguageChange() {
   onRealignChange();
   readouts();
   syncA11y();
+  document.querySelectorAll("#droniMoods .mood").forEach(b => {
+    b.textContent = droneMoodName(b.dataset.droneMood);
+  });
+  onDroniChange();
 }
 
 /* --- avvio ---------------------------------------------------------------- */
@@ -222,6 +260,7 @@ applyI18n();
 $("powerLabel").textContent = T("power.play");
 refreshStatus();
 onRealignChange();
+onDroniChange();
 readouts();
 syncA11y();
 

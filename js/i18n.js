@@ -61,8 +61,13 @@ const STRINGS = {
     "canvas.phrase":    "FRASE",
     "canvas.seconds":   "s",
     "canvas.drops":     { one: "{n} GOCCIA", other: "{n} GOCCE" },
+    "canvas.drone":     "TENUTA",
+    "canvas.tenute":    { one: "{n} TENUTA", other: "{n} TENUTE" },
+    "drone.title":      "Le quattro tenute",
+    "drone.hint":       "trascina: durata · clic: silenzia · ↻ nuova idea",
     mood: { sereno: "Sereno", pioggia: "Pioggia", vespro: "Vespro", carillon: "Carillon",
             arcipelago: "Arcipelago", collina: "Collina", finestra: "Finestra", nuvola: "Nuvola" },
+        droneMood: { velo: "Velo", fondale: "Fondale", bordone: "Bordone", respiro: "Respiro" },
     palette: { alba: "alba", mattino: "mattino", pomeriggio: "pomeriggio",
                tramonto: "tramonto", sera: "sera", notturna: "notturna" },
   },
@@ -103,8 +108,13 @@ const STRINGS = {
     "canvas.phrase":    "PHRASE",
     "canvas.seconds":   "s",
     "canvas.drops":     { one: "{n} GOUTTE", other: "{n} GOUTTES" },
+    "canvas.drone":     "TENUE",
+    "canvas.tenute":    { one: "{n} TENUE", other: "{n} TENUES" },
+    "drone.title":      "Les quatre tenues",
+    "drone.hint":       "glisser" + NNBSP + ": durée · clic" + NNBSP + ": silence · ↻ nouvelle idée",
     mood: { sereno: "Serein", pioggia: "Pluie", vespro: "Vêpres", carillon: "Carillon",
             arcipelago: "Archipel", collina: "Colline", finestra: "Fenêtre", nuvola: "Nuage" },
+        droneMood: { velo: "Voile", fondale: "Fond", bordone: "Bourdon", respiro: "Souffle" },
     palette: { alba: "aube", mattino: "matin", pomeriggio: "après-midi",
                tramonto: "crépuscule", sera: "soir", notturna: "nuit" },
   },
@@ -145,8 +155,13 @@ const STRINGS = {
     "canvas.phrase":    "PHRASE",
     "canvas.seconds":   "s",
     "canvas.drops":     { one: "{n} DROP", other: "{n} DROPS" },
+    "canvas.drone":     "DRONE",
+    "canvas.tenute":    { one: "{n} DRONE", other: "{n} DRONES" },
+    "drone.title":      "The four drones",
+    "drone.hint":       "drag: duration · click: mute · ↻ new idea",
     mood: { sereno: "Clear", pioggia: "Rain", vespro: "Vespers", carillon: "Carillon",
             arcipelago: "Archipelago", collina: "Hillside", finestra: "Window", nuvola: "Cloud" },
+        droneMood: { velo: "Veil", fondale: "Backdrop", bordone: "Bourdon", respiro: "Breath" },
     palette: { alba: "dawn", mattino: "morning", pomeriggio: "afternoon",
                tramonto: "dusk", sera: "evening", notturna: "night" },
   },
@@ -187,8 +202,13 @@ const STRINGS = {
     "canvas.phrase":    "フレーズ",
     "canvas.seconds":   "秒",
     "canvas.drops":     { other: "{n}滴" },
+    "canvas.drone":     "持続音",
+    "canvas.tenute":    { other: "{n}音" },
+    "drone.title":      "四つの持続音",
+    "drone.hint":       "ドラッグ：長さ · クリック：消音 · ↻ 新しい楽想",
     mood: { sereno: "凪", pioggia: "雨", vespro: "晩鐘", carillon: "風鈴",
             arcipelago: "島々", collina: "稜線", finestra: "窓辺", nuvola: "霞" },
+        droneMood: { velo: "薄衣", fondale: "底", bordone: "通奏", respiro: "息" },
     palette: { alba: "暁", mattino: "朝", pomeriggio: "昼下がり",
                tramonto: "夕暮れ", sera: "宵", notturna: "夜半" },
   },
@@ -256,12 +276,13 @@ function T(key, vars) {
 }
 
 const moodName    = id => (STRINGS[lang].mood    || {})[id] || id;
+const droneMoodName = id => (STRINGS[lang].droneMood || {})[id] || id;
 const paletteName = id => (STRINGS[lang].palette || {})[id] || id;
 
 /* --- cache per il canvas --------------------------------------------------
    Le etichette dei quadranti non cambiano mai fra un fotogramma e l'altro:
    solo al cambio di lingua. Si preparano qui e `draw` le legge e basta.     */
-const CANVAS = { phrase: [], drops: [], seconds: "", trackMul: 1 };
+const CANVAS = { phrase: [], drops: [], drone: [], tenute: [], seconds: "", trackMul: 1 };
 const MAX_DROPS_CACHE = 24;
 
 function buildCanvasCache() {
@@ -275,6 +296,14 @@ function buildCanvasCache() {
     CANVAS.drops[n] = tpl.split("{n}").join(fmtInt(n));
   }
 
+  CANVAS.drone = roman.map(r => T("canvas.drone") + " " + r);
+  const forme = STRINGS[lang]["canvas.tenute"];
+  CANVAS.tenute = [];
+  for (let n = 0; n <= MAX_DROPS_CACHE; n++) {
+    const tpl = forme[pluralRules.select(n)] || forme.other;
+    CANVAS.tenute[n] = tpl.split("{n}").join(fmtInt(n));
+  }
+
   CANVAS.seconds = T("canvas.seconds");
 
   /* Il giapponese non si spazia come il latino: i glifi sono già a piena
@@ -284,6 +313,9 @@ function buildCanvasCache() {
 
 function dropsLabel(n) {
   return CANVAS.drops[n] !== undefined ? CANVAS.drops[n] : CANVAS.drops[MAX_DROPS_CACHE];
+}
+function tenuteLabel(n) {
+  return CANVAS.tenute[n] !== undefined ? CANVAS.tenute[n] : CANVAS.tenute[MAX_DROPS_CACHE];
 }
 
 /* --- il selettore di lingua ------------------------------------------------

@@ -77,6 +77,25 @@
     </button>
   </div>
 
+  <!-- ----------------------------------------------- la seconda classe
+       Stesso impianto del riquadro sopra, ma gli eventi qui durano invece di
+       accadere: tenute che si sovrappongono fra loro e alle gocce. Il canvas
+       è separato perché due riquadri con bordo proprio non possono condividere
+       la stessa tela — e p5, in modalità globale, ne governa comunque una
+       sola: questo lo disegna l'API 2D nativa (js/droni.js).            -->
+  <div class="loopCard droneCard">
+    <div class="cardHead">
+      <span class="t" data-i18n="drone.title">Le quattro tenute</span>
+      <span class="realign" id="realignDroni">—</span>
+    </div>
+    <div class="loopHint" data-i18n="drone.hint">trascina: durata · clic: silenzia · ↻ nuova idea</div>
+    <div id="drone-holder"></div>
+  </div>
+
+  <div class="bar barDroni">
+    <div class="moods" id="droniMoods"></div>
+  </div>
+
   <!-- ------------------------------------------------------------------
        I quadranti vivono nel canvas, che per una tastiera e per un lettore
        di schermo è una superficie muta: qui sotto stanno gli STESSI comandi
@@ -118,6 +137,7 @@
 <script src="js/i18n.js"></script>
 <script src="js/model.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/droni.js"></script>
 <script src="js/sketch.js"></script>
 <script src="js/ui.js"></script>
 </body>

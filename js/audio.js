@@ -271,13 +271,18 @@ function restartCycles() {
   if (!ctx) return;
   const now = ctx.currentTime;
   bookedUntil = 0;                // i vecchi cicli non esistono più
-  loops.forEach((L, i) => {
-    const firstPh = L.plan.length ? L.plan[0].ph : 0;
-    const entrata = 0.2 + i * 0.28 + Math.random() * 0.25;   // 0,2 – 1,3 s
-    L.cycleStart = now + entrata - firstPh * L.period;
-    L.idx = 0;
-    L.cycles = [{ start: L.cycleStart, period: L.period }];
-  });
+
+  loops.forEach((L, i) => avvia(L, now, 0.2 + i * 0.28 + Math.random() * 0.25));
+  /* Le tenute entrano più tardi e più distanziate: sono uno sfondo, e uno
+     sfondo che attacca insieme al primo piano non è uno sfondo.          */
+  droni.forEach((L, i) => avvia(L, now, 1.5 + i * 1.1 + Math.random() * 0.8));
+}
+
+function avvia(L, now, entrata) {
+  const firstPh = L.plan.length ? L.plan[0].ph : 0;
+  L.cycleStart = now + entrata - firstPh * L.period;
+  L.idx = 0;
+  L.cycles = [{ start: L.cycleStart, period: L.period }];
 }
 
 /* --- quando la pagina non si vede -----------------------------------------
@@ -335,7 +340,16 @@ function schedule() {
 
   while (dropHistory.length && dropHistory[0].t < now - TIMELINE_SEC) dropHistory.shift();
 
-  loops.forEach(L => {
+  prenota(loops, buildPlan,      suonaGoccia, now, horizon);
+  prenota(droni, buildPlanDrone, suonaTenuta, now, horizon);
+}
+
+/* Il cuore dello scheduler, uguale per le gocce e per le tenute: le due classi
+   differiscono per come si costruisce il piano e per come si suona un evento,
+   non per come si prenota. Tenerlo in un posto solo evita che le due copie
+   divergano — ed è già successo, in questo progetto, con altre due copie.  */
+function prenota(lista, costruisciPiano, suona, now, horizon) {
+  lista.forEach(L => {
     let guard = 0;
     while (guard++ < 300) {
 
@@ -348,7 +362,7 @@ function schedule() {
            l'informazione esatta per la lancetta.                          */
         L.cycles.push({ start: L.cycleStart, period: L.period });
         if (L.cycles.length > 8) L.cycles.shift();
-        buildPlan(L);
+        costruisciPiano(L);
         L.idx = 0;
         if (L.cycleStart > horizon) break;
         continue;
@@ -359,18 +373,27 @@ function schedule() {
       if (t >= horizon) break;
 
       if (!L.muted && t >= now - 0.25) {
-        /* Una goccia lievemente in ritardo (scatto di frame) si suona subito
-           invece di perderla. Oltre il quarto di secondo è obsoleta — per
-           esempio una scheda tornata in primo piano — e va scartata,
-           altrimenti se ne scaricherebbero decine tutte insieme.          */
-        const at = Math.max(t, now);
-        playDrop(at, p.ev, L);
-        p.ev.flash = at;
-        dropHistory.push({ t: at, loop: L.i, rel: p.ev.rel });
+        /* Un evento lievemente in ritardo (scatto di frame) si suona subito
+           invece di perderlo. Oltre il quarto di secondo è obsoleto — per
+           esempio una scheda tornata in primo piano — e va scartato,
+           altrimenti se ne scaricherebbero decine tutti insieme.          */
+        suona(Math.max(t, now), p.ev, L);
       }
       L.idx++;
     }
   });
+}
+
+function suonaGoccia(at, ev, L) {
+  playDrop(at, ev, L);
+  ev.flash = at;
+  dropHistory.push({ t: at, loop: L.i, rel: ev.rel });
+}
+
+function suonaTenuta(at, ev, L) {
+  const dur = playTone(at, ev, L);
+  ev.flash = at;
+  ev.fino  = at + dur;
 }
 
 /* --- VOCE: una goccia -----------------------------------------------------
@@ -437,6 +460,62 @@ function playDrop(when, ev, L) {
     if (par) { par.disconnect(); parGain.disconnect(); }
     env.disconnect(); pan.disconnect();
   };
+}
+
+/* --- VOCE: una tenuta -------------------------------------------------------
+   Due sinusoidi appena scordate fra loro. Il battimento che ne nasce — lento,
+   qualche ciclo al secondo — è tutta la vita che serve a un suono che deve
+   restare fermo a lungo: senza, una tenuta è un tono di prova.
+
+   L'inviluppo è l'opposto di quello delle gocce: apertura lentissima, un
+   lungo pianoro, chiusura altrettanto lenta. Nulla attacca, tutto affiora.
+
+   Passa dalla stessa catena delle gocce — filtro e riverbero — quindi eredita
+   la palette oraria e lo spazio senza nodi propri.                        */
+function playTone(when, ev, L) {
+  const spread = D.spread / 100;
+  const warmth = D.warmth / 100;
+  const half = SCALE.length / 2;
+  const freq = SCALE[clamp(Math.round(half + ev.rel * spread * half), 0, SCALE.length - 1)];
+
+  const dur = clamp(ev.dur * L.period, 2.5, 90);
+
+  /* Le due voci si scordano di pochi millesimi: meno calore, battimento più
+     rapido e suono più inquieto.                                          */
+  const scarto = 0.0012 + (1 - warmth) * 0.0035;
+  const a = ctx.createOscillator(); a.type = "sine"; a.frequency.value = freq;
+  const b = ctx.createOscillator(); b.type = "sine"; b.frequency.value = freq * (1 + scarto);
+
+  const env = ctx.createGain();
+  env.gain.value = 0;
+  const picco = 0.15 * (D.liv / 100) * ev.vel;
+
+  /* Apertura e chiusura non possono sommarsi a più della durata, altrimenti
+     la tenuta non raggiunge mai il suo livello.                           */
+  let apri = 1.2 + warmth * 2.5, chiudi = 1.8 + warmth * 3.5;
+  const eccesso = (apri + chiudi) / (dur * 0.9);
+  if (eccesso > 1) { apri /= eccesso; chiudi /= eccesso; }
+
+  env.gain.setValueAtTime(0, when);
+  env.gain.linearRampToValueAtTime(picco, when + apri);
+  env.gain.setValueAtTime(picco, when + dur - chiudi);
+  env.gain.linearRampToValueAtTime(0, when + dur);
+
+  const pan = ctx.createStereoPanner();
+  pan.pan.value = clamp(L.pan + (Math.random() * 2 - 1) * 0.12, -1, 1);
+
+  a.connect(env); b.connect(env);
+  env.connect(pan); pan.connect(filt);
+
+  const stop = when + dur + 0.05;
+  a.start(when); a.stop(stop);
+  b.start(when); b.stop(stop);
+
+  /* Come per le gocce: scollegare a mano, che il rilascio automatico dipende
+     dal thread principale (vedi CLAUDE.md).                               */
+  a.onended = () => { a.disconnect(); b.disconnect(); env.disconnect(); pan.disconnect(); };
+
+  return dur;
 }
 
 /* --- modulazione lenta ----------------------------------------------------
