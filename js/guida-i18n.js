@@ -19,19 +19,19 @@ const GUIDA = {
     "g.back":         "Ascolta Rada",
 
     "g.open1": "Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra.",
-    "g.open2": "In questo spazio puoi prenderti cura della tua attenzione, le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”.",
+    "g.open2": "In questo spazio puoi prenderti cura della tua attenzione, i tessuti sonori producono delle sensazioni tattili e le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”.",
     "g.open3": "L'ascolto è un'attività da coltivare, è un territorio che ha le sue poetiche e i suoi campi di forza.<br>Rada è un'insenatura tranquilla lungo la costa di un oceano di rumore.",
     "g.open4": "Tra le gocce troverai dei silenzi che parlano; ascoltali.",
 
     "g.concept.t": "Il concetto",
     "g.concept1": "Rada sviluppa il suono mentre lo ascolti.",
-    "g.concept2": "Quattro frasi girano ciascuna col proprio periodo, nella configurazione di partenza questi periodi sono di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.",
+    "g.concept2": "Frasi composte da gocce e tessuti sonori fatti di lunghi respiri girano ciascuno col proprio periodo. Nella configurazione di partenza questi periodi sono, per le gocce, di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.",
     "g.concept2b": "Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.",
     "g.concept3": "Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.",
 
     "g.flow.t":     "Lo scorrere dei tempi",
     "g.flow.badge": "7 · 11 · 13 · 17 → 4,7 ore",
-    "g.flow1": "Perché la combinazione resti imprevedibile, i quattro periodi devono essere <i>coprimi</i> a due a due: presi a coppie, non devono avere alcun divisore in comune.",
+    "g.flow1": "Perché la combinazione resti imprevedibile, i periodi devono essere <i>coprimi</i> a due a due: presi a coppie, non devono avere alcun divisore in comune.",
     "g.flow2": "Se due frasi durassero ad esempio sei e nove secondi condividerebbero il tre come divisore, e tornerebbero a coincidere ogni diciotto secondi. L'orecchio sentirebbe subito questa ripetizione e il collage collasserebbe in un motivo riconoscibile. Con sette, undici, tredici e diciassette — primi fra loro — la combinazione completa si ripete solo dopo 17.017 secondi, quasi cinque ore.",
 
     "g.lbl.gestures": "I gesti",
@@ -115,19 +115,19 @@ const GUIDA = {
     "g.back":         "Écouter Rada",
 
     "g.open1": "Rada est un espace sonore où l'on peut s'attarder dans ses souvenirs en regardant par la fenêtre.",
-    "g.open2": "Dans cet espace tu peux prendre soin de ton attention~: les gouttes que tu écoutes tombent dans un temps dilaté où tu peux te demander «~comment est-ce que je me sens~?~».",
+    "g.open2": "Dans cet espace tu peux prendre soin de ton attention~: les tissus sonores produisent des sensations tactiles et les gouttes que tu écoutes tombent dans un temps dilaté où tu peux te demander «~comment est-ce que je me sens~?~».",
     "g.open3": "L'écoute est une pratique à cultiver, un territoire qui a ses poétiques et ses champs de force.<br>Rada est une crique tranquille sur la côte d'un océan de bruit.",
     "g.open4": "Entre les gouttes tu trouveras des silences qui parlent~; écoute-les.",
 
     "g.concept.t": "Le concept",
     "g.concept1": "Rada développe le son pendant que tu l'écoutes.",
-    "g.concept2": "Quatre phrases tournent chacune avec sa propre période~; dans la configuration de départ ces périodes sont de sept, onze, treize et dix-sept secondes. Chaque phrase concentre ses notes dans un arc, puis se tait jusqu'au tour suivant. Ces silences déphasés font que les quatre arcs se rencontrent chaque fois dans une combinaison différente.",
+    "g.concept2": "Des phrases faites de gouttes et des tissus sonores faits de longues respirations tournent chacun avec sa propre période. Dans la configuration de départ ces périodes sont, pour les gouttes, de sept, onze, treize et dix-sept secondes. Chaque phrase concentre ses notes dans un arc, puis se tait jusqu'au tour suivant. Ces silences déphasés font que les quatre arcs se rencontrent chaque fois dans une combinaison différente.",
     "g.concept2b": "Sous les quatre phrases en tournent quatre autres, avec leurs propres périodes~: non pas des gouttes mais des sons tenus, qui s'ouvrent et se dissolvent lentement. Les lignes déphasées sont huit en tout, et la pièce est ce qui advient lorsqu'elles se superposent.",
     "g.concept3": "C'est l'idée à la base de «~Music for Airports~» de Brian Eno, et ce projet est un hommage à son travail.",
 
     "g.flow.t":     "L'écoulement des temps",
     "g.flow.badge": "7 · 11 · 13 · 17 → 4,7 heures",
-    "g.flow1": "Pour que la combinaison reste imprévisible, les quatre périodes doivent être <i>premières entre elles</i> deux à deux~: prises par paires, elles ne doivent avoir aucun diviseur commun.",
+    "g.flow1": "Pour que la combinaison reste imprévisible, les périodes doivent être <i>premières entre elles</i> deux à deux~: prises par paires, elles ne doivent avoir aucun diviseur commun.",
     "g.flow2": "Si deux phrases duraient par exemple six et neuf secondes, elles partageraient le trois comme diviseur et reviendraient à coïncider toutes les dix-huit secondes. L'oreille entendrait aussitôt cette répétition et le collage s'effondrerait en un motif reconnaissable. Avec sept, onze, treize et dix-sept — premiers entre eux — la combinaison complète ne se répète qu'après 17 017 secondes, presque cinq heures.",
 
     "g.lbl.gestures": "Les gestes",
@@ -211,19 +211,19 @@ const GUIDA = {
     "g.back":         "Listen to Rada",
 
     "g.open1": "Rada is a sound space where you can linger among your own memories while looking out of the window.",
-    "g.open2": "In this space you can take care of your attention: the drops you hear fall through a dilated time in which you can ask yourself, “how do I feel?”.",
+    "g.open2": "In this space you can take care of your attention: the sonic weaves produce tactile sensations and the drops you hear fall through a dilated time in which you can ask yourself, “how do I feel?”.",
     "g.open3": "Listening is a practice to be cultivated, a territory with its own poetics and its own force fields.<br>Rada is a quiet cove on the shore of an ocean of noise.",
     "g.open4": "Between the drops you will find silences that speak; listen to them.",
 
     "g.concept.t": "The concept",
     "g.concept1": "Rada unfolds the sound while you listen to it.",
-    "g.concept2": "Four phrases each turn with their own period; in the starting configuration those periods are seven, eleven, thirteen and seventeen seconds. Each phrase gathers its notes into an arc, then falls silent until the next turn. Those out-of-phase silences make the four arcs meet in a different combination every time.",
+    "g.concept2": "Phrases made of drops, and sonic weaves made of long breaths, each turn with their own period. In the starting configuration those periods are, for the drops, seven, eleven, thirteen and seventeen seconds. Each phrase gathers its notes into an arc, then falls silent until the next turn. Those out-of-phase silences make the four arcs meet in a different combination every time.",
     "g.concept2b": "Below the four phrases four more turn, each with its own period: not drops but sustained tones, which open and dissolve slowly. There are eight out-of-phase lines in all, and the piece is what happens when they overlap.",
     "g.concept3": "This is the idea behind Brian Eno's “Music for Airports”, and this project is a tribute to his work.",
 
     "g.flow.t":     "The flow of times",
     "g.flow.badge": "7 · 11 · 13 · 17 → 4.7 hours",
-    "g.flow1": "For the combination to stay unpredictable, the four periods must be pairwise <i>coprime</i>: taken two at a time, they must share no common divisor.",
+    "g.flow1": "For the combination to stay unpredictable, the periods must be pairwise <i>coprime</i>: taken two at a time, they must share no common divisor.",
     "g.flow2": "If two phrases lasted, say, six and nine seconds, they would share three as a divisor and would coincide again every eighteen seconds. The ear would catch that repetition at once and the collage would collapse into a recognisable pattern. With seven, eleven, thirteen and seventeen — coprime — the full combination returns only after 17,017 seconds, almost five hours.",
 
     "g.lbl.gestures": "The gestures",
@@ -307,19 +307,19 @@ const GUIDA = {
     "g.back":         "Radaを聴く",
 
     "g.open1": "Radaは、窓の外を眺めながら自分の記憶のなかに佇んでいられる音の空間です。",
-    "g.open2": "この空間では、自分の注意を手入れすることができます。聞こえてくる滴は引き伸ばされた時間のなかに落ち、そのあいだに「いま自分はどう感じているだろう」と問いかけることができます。",
+    "g.open2": "この空間では、自分の注意を手入れすることができます。織りの響きは触れるような感覚を生み、聞こえてくる滴は引き伸ばされた時間のなかに落ちて、そのあいだに「いま自分はどう感じているだろう」と問いかけることができます。",
     "g.open3": "聴くことは育てていく営みであり、それ自体の詩学と力の場を持つひとつの土地です。<br>Radaは、騒音の大洋の岸辺にある、静かな入り江です。",
     "g.open4": "滴と滴のあいだに、語る沈黙が見つかります。それに耳を澄ませてください。",
 
     "g.concept.t": "発想",
     "g.concept1": "Radaは、聴いているあいだに音を組み立てていきます。",
-    "g.concept2": "四つのフレーズがそれぞれの周期で回ります。初期設定では、その周期は七秒、十一秒、十三秒、十七秒です。どのフレーズも音符をひとつの弧のなかに集め、次の周回まで沈黙します。位相のずれたこれらの沈黙によって、四つの弧は毎回ちがう組み合わせで出会います。",
+    "g.concept2": "滴でできたフレーズと、長い呼吸でできた響きの織り——そのどれもが、それぞれの周期で回ります。初期設定では、滴の周期は七秒、十一秒、十三秒、十七秒です。どのフレーズも音符をひとつの弧のなかに集め、次の周回まで沈黙します。位相のずれたこれらの沈黙によって、四つの弧は毎回ちがう組み合わせで出会います。",
     "g.concept2b": "四つのフレーズの下では、さらに四つがそれぞれの周期で回っています。滴ではなく、ゆっくりと開いてゆっくりと消えていく持続音です。位相のずれた線は全部で八本あり、作品はそれらが重なるところに生まれます。",
     "g.concept3": "これはブライアン・イーノの「Music for Airports」の根底にある考えであり、この作品はその仕事への賛辞です。",
 
     "g.flow.t":     "時の流れ",
     "g.flow.badge": "7 · 11 · 13 · 17 → 4.7時間",
-    "g.flow1": "組み合わせが予測できないままであるためには、四つの周期がふたつずつ<i>互いに素</i>である必要があります。どの二つを取っても、共通の約数を持たないということです。",
+    "g.flow1": "組み合わせが予測できないままであるためには、周期がふたつずつ<i>互いに素</i>である必要があります。どの二つを取っても、共通の約数を持たないということです。",
     "g.flow2": "たとえば二つのフレーズが六秒と九秒だったとすると、三という約数を共有し、十八秒ごとにふたたび重なります。耳はその反復をすぐに聞き取り、コラージュは見覚えのある型へと崩れてしまいます。七、十一、十三、十七であれば——互いに素なので——完全な組み合わせが戻ってくるのは17,017秒後、ほぼ五時間後です。",
 
     "g.lbl.gestures": "操作",

@@ -35,7 +35,7 @@ Link in alto a destra: Ascolta Rada
 ## [riquadro 1 — apertura, senza titolo]
 
 Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra.
-In questo spazio puoi prenderti cura della tua attenzione, le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”.
+In questo spazio puoi prenderti cura della tua attenzione, i tessuti sonori producono delle sensazioni tattili e le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”.
 L'ascolto è un'attività da coltivare, è un territorio che ha le sue poetiche e i suoi campi di forza.
 Rada è un'insenatura tranquilla lungo la costa di un oceano di rumore.
 Tra le gocce troverai dei silenzi che parlano; ascoltali.
@@ -47,7 +47,7 @@ Tra le gocce troverai dei silenzi che parlano; ascoltali.
 **Titolo:** Il concetto
 
 Rada sviluppa il suono mentre lo ascolti.
-Quattro frasi girano ciascuna col proprio periodo, nella configurazione di partenza questi periodi sono di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.
+Frasi composte da gocce e tessuti sonori fatti di lunghi respiri girano ciascuno col proprio periodo. Nella configurazione di partenza questi periodi sono, per le gocce, di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.
 Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.
 Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.
 
@@ -59,7 +59,7 @@ Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo pro
 
 **Dicitura in arancione, in alto a destra:** 7 · 11 · 13 · 17 → 4,7 ore
 
-Perché la combinazione resti imprevedibile, i quattro periodi devono essere *coprimi* a due a due: presi a coppie, non devono avere alcun divisore in comune.
+Perché la combinazione resti imprevedibile, i periodi devono essere *coprimi* a due a due: presi a coppie, non devono avere alcun divisore in comune.
 Se due frasi durassero ad esempio sei e nove secondi condividerebbero il tre come divisore, e tornerebbero a coincidere ogni diciotto secondi. L'orecchio sentirebbe subito questa ripetizione e il collage collasserebbe in un motivo riconoscibile. Con sette, undici, tredici e diciassette — primi fra loro — la combinazione completa si ripete solo dopo 17.017 secondi, quasi cinque ore.
 
 ---
