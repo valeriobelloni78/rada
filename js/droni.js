@@ -218,7 +218,10 @@ function drawQuadranteTenute(cell, now) {
        in cui si apre — lo stesso lampo delle gocce, per lo stesso motivo —
        poi inchiostro pieno finché suona, filo tenue quando tace.          */
     g.strokeStyle = appena ? COL.amber : suona ? COL.ink : COL.ink2;
-    g.lineWidth = (suona ? 2 : 1.1) / 54 * r;
+    /* Tratto sottile: un arco è lungo — copre spesso mezzo giro — e a parità
+       di spessore pesa molto più di una goccia. Il minimo di un pixel evita
+       che su un telefono, dove il raggio si dimezza, sparisca del tutto.   */
+    g.lineWidth = Math.max(1, (suona ? 1.2 : 0.7) / 54 * r);
     g.globalAlpha = (spento ? 0.3 : 1) * (suona ? 1 : 0.5);
     g.beginPath();
     g.arc(cx, cy, rr, a0, a1);
