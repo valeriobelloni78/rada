@@ -229,17 +229,14 @@ function drawDial(cell, now) {
     drawingContext.globalAlpha = 1;
   }
 
-  /* al centro: durata e numero di gocce. Il separatore decimale segue la
+  /* al centro: la durata, e nient'altro. Il separatore decimale segue la
      lingua (7,0s in italiano, 7.0秒 in giapponese): se ne occupa il
      formattatore costruito una volta sola in i18n.js — crearne uno qui
      costerebbe più di tutto il resto del fotogramma.                      */
   noStroke();
   fill(COL.ink);
   textSize(r * 0.30);
-  text(fmtOne(L.target) + CANVAS.seconds, cx, cy - r * 0.04);
-  fill(COL.dust);
-  textSize(clamp(r * 0.085, 6.5, 8.5));
-  trackedText(dropsLabel(L.idea.length), cx, cy + r * 0.26, r * 0.022 * CANVAS.trackMul);
+  text(fmtOne(L.target) + CANVAS.seconds, cx, cy);
 
   pop();
 }

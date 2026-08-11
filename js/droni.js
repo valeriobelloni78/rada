@@ -244,13 +244,10 @@ function drawQuadranteTenute(cell, now) {
     g.stroke();
   }
 
-  /* al centro: durata e numero di tenute */
+  /* al centro: la durata, e nient'altro */
   g.fillStyle = COL.ink;
   g.font = "200 " + (r * 0.30).toFixed(1) + "px " + drFont();
-  g.fillText(fmtOne(L.target) + CANVAS.seconds, cx, cy - r * 0.04);
-  g.fillStyle = COL.dust;
-  g.font = "400 " + clamp(r * 0.085, 6.5, 8.5).toFixed(1) + "px " + drFont();
-  drTracked(tenuteLabel(L.idea.length), cx, cy + r * 0.26, r * 0.022 * CANVAS.trackMul);
+  g.fillText(fmtOne(L.target) + CANVAS.seconds, cx, cy);
 
   g.restore();
 }

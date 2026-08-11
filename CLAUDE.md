@@ -132,10 +132,10 @@ quadrante: ogni movimento del puntatore ne sveglierebbe quattro volte tanti.
 array dentro `draw`.
 
 **Le stringhe del canvas si preparano al cambio di lingua, non a ogni
-fotogramma.** `CANVAS.phrase` e `CANVAS.drops` sono costruite una volta da
+fotogramma.** `CANVAS.phrase` e `CANVAS.drone` sono costruite una volta da
 `buildCanvasCache`; `draw` le legge e basta. Vale soprattutto per i
 formattatori: costruire un `Intl.NumberFormat` dentro `draw` costa più di
-tutto il resto del disegno. Ne esistono due, creati una volta per lingua.
+tutto il resto del disegno. Ne esistono tre, creati una volta per lingua.
 
 **Il giapponese non ha maiuscolo.** La gerarchia delle etichette minute
 poggia su MAIUSCOLO più tracking ampio, un dispositivo che in giapponese

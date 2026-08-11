@@ -60,9 +60,7 @@ const STRINGS = {
     "unit.days":        "giorni",
     "canvas.phrase":    "FRASE",
     "canvas.seconds":   "s",
-    "canvas.drops":     { one: "{n} GOCCIA", other: "{n} GOCCE" },
     "canvas.drone":     "TESSUTO",
-    "canvas.tenute":    { one: "{n} TESSUTO", other: "{n} TESSUTI" },
     "drone.title":      "I quattro tessuti",
     "dctl.spread":      "Estensione",
     "dctl.apri":        "Affioramento",
@@ -116,9 +114,7 @@ const STRINGS = {
     "unit.days":        "jours",
     "canvas.phrase":    "PHRASE",
     "canvas.seconds":   "s",
-    "canvas.drops":     { one: "{n} GOUTTE", other: "{n} GOUTTES" },
     "canvas.drone":     "TISSU",
-    "canvas.tenute":    { one: "{n} TISSU", other: "{n} TISSUS" },
     "drone.title":      "Les quatre tissus",
     "dctl.spread":      "Étendue",
     "dctl.apri":        "Émergence",
@@ -172,9 +168,7 @@ const STRINGS = {
     "unit.days":        "days",
     "canvas.phrase":    "PHRASE",
     "canvas.seconds":   "s",
-    "canvas.drops":     { one: "{n} DROP", other: "{n} DROPS" },
     "canvas.drone":     "WEAVE",
-    "canvas.tenute":    { one: "{n} WEAVE", other: "{n} WEAVES" },
     "drone.title":      "The four weaves",
     "dctl.spread":      "Expanse",
     "dctl.apri":        "Surfacing",
@@ -228,9 +222,7 @@ const STRINGS = {
     "unit.days":        "日",
     "canvas.phrase":    "フレーズ",
     "canvas.seconds":   "秒",
-    "canvas.drops":     { other: "{n}滴" },
     "canvas.drone":     "織り",
-    "canvas.tenute":    { other: "{n}層" },
     "drone.title":      "四つの織り",
     "dctl.spread":      "広がり",
     "dctl.apri":        "立ち上がり",
@@ -291,7 +283,7 @@ let lang = detectLang();
 /* --- formattatori ---------------------------------------------------------
    Costruiti UNA VOLTA per lingua. Crearne uno dentro draw costerebbe più
    del disegno stesso.                                                      */
-let fmt0, fmt1, fmt2, pluralRules;
+let fmt0, fmt1, fmt2;
 
 function buildFormatters() {
   fmt0 = new Intl.NumberFormat(lang, { maximumFractionDigits: 0 });
@@ -299,7 +291,6 @@ function buildFormatters() {
   /* Due decimali: fra un intreccio di 1,10 e uno di 1,15 c'è una differenza
      che si sente, e una cifra sola la nasconderebbe.                      */
   fmt2 = new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  pluralRules = new Intl.PluralRules(lang);
 }
 
 const fmtInt = n => fmt0.format(n);
@@ -322,40 +313,17 @@ const paletteName = id => (STRINGS[lang].palette || {})[id] || id;
 /* --- cache per il canvas --------------------------------------------------
    Le etichette dei quadranti non cambiano mai fra un fotogramma e l'altro:
    solo al cambio di lingua. Si preparano qui e `draw` le legge e basta.     */
-const CANVAS = { phrase: [], drops: [], drone: [], tenute: [], seconds: "", trackMul: 1 };
-const MAX_DROPS_CACHE = 24;
+const CANVAS = { phrase: [], drone: [], seconds: "", trackMul: 1 };
 
 function buildCanvasCache() {
   const roman = ["I", "II", "III", "IV"];
   CANVAS.phrase = roman.map(r => T("canvas.phrase") + " " + r);
-
-  const forms = STRINGS[lang]["canvas.drops"];
-  CANVAS.drops = [];
-  for (let n = 0; n <= MAX_DROPS_CACHE; n++) {
-    const tpl = forms[pluralRules.select(n)] || forms.other;
-    CANVAS.drops[n] = tpl.split("{n}").join(fmtInt(n));
-  }
-
-  CANVAS.drone = roman.map(r => T("canvas.drone") + " " + r);
-  const forme = STRINGS[lang]["canvas.tenute"];
-  CANVAS.tenute = [];
-  for (let n = 0; n <= MAX_DROPS_CACHE; n++) {
-    const tpl = forme[pluralRules.select(n)] || forme.other;
-    CANVAS.tenute[n] = tpl.split("{n}").join(fmtInt(n));
-  }
-
+  CANVAS.drone  = roman.map(r => T("canvas.drone")  + " " + r);
   CANVAS.seconds = T("canvas.seconds");
 
   /* Il giapponese non si spazia come il latino: i glifi sono già a piena
      larghezza, e il tracking ampio delle etichette minute li slaccerebbe.  */
   CANVAS.trackMul = (lang === "ja") ? 0.35 : 1;
-}
-
-function dropsLabel(n) {
-  return CANVAS.drops[n] !== undefined ? CANVAS.drops[n] : CANVAS.drops[MAX_DROPS_CACHE];
-}
-function tenuteLabel(n) {
-  return CANVAS.tenute[n] !== undefined ? CANVAS.tenute[n] : CANVAS.tenute[MAX_DROPS_CACHE];
 }
 
 /* --- il selettore di lingua ------------------------------------------------
