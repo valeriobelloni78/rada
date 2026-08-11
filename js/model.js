@@ -164,19 +164,37 @@ function rebuildPlans(now) {
 ============================================================================= */
 const DRONE_MIN = 12, DRONE_MAX = 60;
 
-/* spread  ampiezza del registro          dens  quante tenute per giro
-   warmth  timbro, dal vetroso al morbido len   quanto dura ciascuna, in
-   liv     livello rispetto alle gocce          frazione del giro           */
+/* I CINQUE COMANDI DEI TESSUTI, in unità vere e non in percentuali astratte:
+   secondi, hertz, numero di sovrapposizioni. Un pannello che dice "3,0 s" è
+   più utile di uno che dice "45%", e qui le grandezze hanno un significato
+   fisico preciso.
+
+     spread   estensione del registro, in centesimi delle quattro ottave
+     apri     secondi perché un tessuto affiori
+     chiudi   secondi perché si dissolva
+     sovr     quanti tessuti restano aperti in media su ogni linea
+     battito  hertz della pulsazione fra le due voci
+
+   `dens` e `liv` restano al preset: quanti tessuti per giro e quanto stanno
+   sotto alle gocce sono il carattere del mood, non una manopola.
+
+   Prima `apri`, `chiudi` e `battito` erano un solo parametro, `warmth`, che
+   li governava tutti e tre insieme. Separarli è ciò che permette di regolarli
+   davvero: si può volere un affioramento lentissimo con un battito nervoso,
+   e con un parametro solo non si poteva.                                  */
 const DRONI_MOODS = {
-  velo:    { spread: 55, warmth: 72, dens: 2, len: 55, liv: 32, periods: [19, 23, 29, 31] },
-  fondale: { spread: 22, warmth: 90, dens: 1, len: 82, liv: 38, periods: [29, 31, 37, 41] },
-  bordone: { spread: 38, warmth: 82, dens: 3, len: 70, liv: 28, periods: [19, 23, 31, 37] },
-  respiro: { spread: 66, warmth: 58, dens: 2, len: 36, liv: 30, periods: [23, 29, 41, 43] },
-  bruma:   { spread: 70, warmth: 66, dens: 2, len: 44, liv: 26, periods: [31, 37, 43, 47] },
-  radice:  { spread: 18, warmth: 92, dens: 2, len: 88, liv: 42, periods: [19, 29, 37, 47] },
-  vetrata: { spread: 60, warmth: 34, dens: 3, len: 50, liv: 28, periods: [23, 31, 41, 53] },
-  marea:   { spread: 45, warmth: 86, dens: 1, len: 92, liv: 36, periods: [29, 41, 47, 53] },
+  velo:    { spread: 55, apri: 3.0, chiudi: 4.3, sovr: 1.10, battito: 0.57, dens: 2, liv: 32, periods: [19, 23, 29, 31] },
+  fondale: { spread: 22, apri: 3.5, chiudi: 5.0, sovr: 0.82, battito: 0.41, dens: 1, liv: 38, periods: [29, 31, 37, 41] },
+  bordone: { spread: 38, apri: 3.2, chiudi: 4.7, sovr: 2.10, battito: 0.48, dens: 3, liv: 28, periods: [19, 23, 31, 37] },
+  respiro: { spread: 66, apri: 2.6, chiudi: 3.8, sovr: 0.72, battito: 0.70, dens: 2, liv: 30, periods: [23, 29, 41, 43] },
+  bruma:   { spread: 70, apri: 2.9, chiudi: 4.1, sovr: 0.88, battito: 0.63, dens: 2, liv: 26, periods: [31, 37, 43, 47] },
+  radice:  { spread: 18, apri: 3.5, chiudi: 5.0, sovr: 1.76, battito: 0.39, dens: 2, liv: 42, periods: [19, 29, 37, 47] },
+  vetrata: { spread: 60, apri: 2.0, chiudi: 3.0, sovr: 1.50, battito: 0.92, dens: 3, liv: 28, periods: [23, 31, 41, 53] },
+  marea:   { spread: 45, apri: 3.3, chiudi: 4.8, sovr: 0.92, battito: 0.44, dens: 1, liv: 36, periods: [29, 41, 47, 53] },
 };
+
+/* I cinque che l'utente muove. Gli altri due arrivano dal mood e basta. */
+const DPARAMS = ["spread", "apri", "chiudi", "sovr", "battito"];
 
 const D = { ...DRONI_MOODS.velo };
 delete D.periods;
@@ -190,6 +208,7 @@ const droni = DRONI_MOODS.velo.periods.map((p, i) => ({
   cycles: [],
   idea: [],           // le tenute, con posizione e durata relative
   plan: [],           // collocate sul giro, in ordine di fase
+  planSovr: 1.10,     // intreccio con cui le durate sono state calcolate
   offset: Math.random(),
   muted: false,
   pan: (1.5 - i) / 1.5 * 0.5,   // stereo opposto a quello delle gocce: si allargano a vicenda
@@ -206,7 +225,11 @@ function makeTenute() {
   for (let k = 0; k < n; k++) {
     ev.push({
       t: (k + Math.random() * 0.6) / n,        // sparse ma non ammucchiate
-      dur: (D.len / 100) * (0.7 + Math.random() * 0.6),
+      /* L'intreccio è quanti tessuti restano aperti in media su questa linea:
+         diviso per quanti ce ne sono per giro, dà la durata di ciascuno come
+         frazione del periodo. Così lo slider dice una cosa che si sente —
+         "quanto si sovrappongono" — invece di una lunghezza astratta.    */
+      dur: (D.sovr / n) * (0.7 + Math.random() * 0.6),
       rel: Math.random() * 2 - 1,
       vel: 0.75 + Math.random() * 0.25,
       flash: -99,                              // istante in cui si è aperta
@@ -218,12 +241,26 @@ function makeTenute() {
 
 function regeneraTenute(L) {
   L.idea = makeTenute();
+  L.planSovr = D.sovr;        // le durate nascono con l'intreccio corrente
   L.offset = Math.random();
   buildPlanDrone(L);
   L.idx = 0;
 }
 
+/* Come `planHead` per le gocce: si ricorda con quale intreccio le durate sono
+   state calcolate, e se il cursore si è mosso le riscala tutte in proporzione.
+
+   Senza, muovere l'Intreccio non avrebbe quasi effetto: le durate vivono
+   dentro l'idea, che viene costruita una volta sola, e il nuovo valore si
+   sarebbe visto soltanto alla prossima rigenerazione. Riscalare conserva la
+   forma dell'idea — quale tessuto è più lungo di quale — e ne cambia solo la
+   misura, che è ciò che il cursore promette.                              */
 function buildPlanDrone(L) {
+  if (L.planSovr > 0 && Math.abs(D.sovr - L.planSovr) > 1e-6) {
+    const fattore = D.sovr / L.planSovr;
+    for (const ev of L.idea) ev.dur *= fattore;
+    L.planSovr = D.sovr;
+  }
   L.plan = L.idea
     .map(ev => ({ ph: (L.offset + ev.t) % 1, ev }))
     .sort((a, b) => a.ph - b.ph);

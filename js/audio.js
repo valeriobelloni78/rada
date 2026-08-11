@@ -485,17 +485,18 @@ function playDrop(when, ev, L) {
    la palette oraria e lo spazio senza nodi propri.                        */
 function playTone(when, ev, L) {
   const spread = D.spread / 100;
-  const warmth = D.warmth / 100;
   const half = SCALE.length / 2;
   const freq = SCALE[clamp(Math.round(half + ev.rel * spread * half), 0, SCALE.length - 1)];
 
   const dur = clamp(ev.dur * L.period, 2.5, 90);
 
-  /* Le due voci si scordano di pochi millesimi: meno calore, battimento più
-     rapido e suono più inquieto.                                          */
-  const scarto = 0.0012 + (1 - warmth) * 0.0035;
+  /* Lo scarto fra le due voci è ADDITIVO, non proporzionale: due sinusoidi
+     distanti d hertz battono a d hertz, qualunque sia la loro altezza. Con
+     uno scarto proporzionale — come era prima — i toni gravi avrebbero
+     battuto molto più lenti degli acuti, e uno slider chiamato "battito" non
+     avrebbe mantenuto la promessa.                                        */
   const a = ctx.createOscillator(); a.type = "sine"; a.frequency.value = freq;
-  const b = ctx.createOscillator(); b.type = "sine"; b.frequency.value = freq * (1 + scarto);
+  const b = ctx.createOscillator(); b.type = "sine"; b.frequency.value = freq + D.battito;
 
   const env = ctx.createGain();
   env.gain.value = 0;
@@ -503,7 +504,7 @@ function playTone(when, ev, L) {
 
   /* Apertura e chiusura non possono sommarsi a più della durata, altrimenti
      la tenuta non raggiunge mai il suo livello.                           */
-  let apri = 1.2 + warmth * 2.5, chiudi = 1.8 + warmth * 3.5;
+  let apri = D.apri, chiudi = D.chiudi;
   const eccesso = (apri + chiudi) / (dur * 0.9);
   if (eccesso > 1) { apri /= eccesso; chiudi /= eccesso; }
 

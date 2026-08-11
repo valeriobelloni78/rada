@@ -64,6 +64,14 @@ const STRINGS = {
     "canvas.drone":     "TESSUTO",
     "canvas.tenute":    { one: "{n} TESSUTO", other: "{n} TESSUTI" },
     "drone.title":      "I quattro tessuti",
+    "dctl.spread":      "Estensione",
+    "dctl.apri":        "Affioramento",
+    "dctl.chiudi":      "Dissolvenza",
+    "dctl.sovr":        "Intreccio",
+    "dctl.battito":     "Battito",
+    "unit.oct":         "ott.",
+    "unit.s":           "s",
+    "unit.hz":          "Hz",
     "drone.hint":       "trascina: durata · clic: silenzia · ↻ nuova idea",
     mood: { sereno: "Sereno", pioggia: "Pioggia", vespro: "Vespro", carillon: "Carillon",
             arcipelago: "Arcipelago", collina: "Collina", finestra: "Finestra", nuvola: "Nuvola" },
@@ -112,6 +120,14 @@ const STRINGS = {
     "canvas.drone":     "TISSU",
     "canvas.tenute":    { one: "{n} TISSU", other: "{n} TISSUS" },
     "drone.title":      "Les quatre tissus",
+    "dctl.spread":      "Étendue",
+    "dctl.apri":        "Émergence",
+    "dctl.chiudi":      "Fondu",
+    "dctl.sovr":        "Entrelacs",
+    "dctl.battito":     "Battement",
+    "unit.oct":         "oct.",
+    "unit.s":           "s",
+    "unit.hz":          "Hz",
     "drone.hint":       "glisser" + NNBSP + ": durée · clic" + NNBSP + ": silence · ↻ nouvelle idée",
     mood: { sereno: "Serein", pioggia: "Pluie", vespro: "Vêpres", carillon: "Carillon",
             arcipelago: "Archipel", collina: "Colline", finestra: "Fenêtre", nuvola: "Nuage" },
@@ -160,6 +176,14 @@ const STRINGS = {
     "canvas.drone":     "WEAVE",
     "canvas.tenute":    { one: "{n} WEAVE", other: "{n} WEAVES" },
     "drone.title":      "The four weaves",
+    "dctl.spread":      "Expanse",
+    "dctl.apri":        "Surfacing",
+    "dctl.chiudi":      "Fading",
+    "dctl.sovr":        "Interlacing",
+    "dctl.battito":     "Beating",
+    "unit.oct":         "oct",
+    "unit.s":           "s",
+    "unit.hz":          "Hz",
     "drone.hint":       "drag: duration · click: mute · ↻ new idea",
     mood: { sereno: "Clear", pioggia: "Rain", vespro: "Vespers", carillon: "Carillon",
             arcipelago: "Archipelago", collina: "Hillside", finestra: "Window", nuvola: "Cloud" },
@@ -208,6 +232,14 @@ const STRINGS = {
     "canvas.drone":     "織り",
     "canvas.tenute":    { other: "{n}層" },
     "drone.title":      "四つの織り",
+    "dctl.spread":      "広がり",
+    "dctl.apri":        "立ち上がり",
+    "dctl.chiudi":      "消えぎわ",
+    "dctl.sovr":        "重なり",
+    "dctl.battito":     "うなり",
+    "unit.oct":         "oct",
+    "unit.s":           "秒",
+    "unit.hz":          "Hz",
     "drone.hint":       "ドラッグ：長さ · クリック：消音 · ↻ 新しい楽想",
     mood: { sereno: "凪", pioggia: "雨", vespro: "晩鐘", carillon: "風鈴",
             arcipelago: "島々", collina: "稜線", finestra: "窓辺", nuvola: "霞" },
@@ -259,16 +291,20 @@ let lang = detectLang();
 /* --- formattatori ---------------------------------------------------------
    Costruiti UNA VOLTA per lingua. Crearne uno dentro draw costerebbe più
    del disegno stesso.                                                      */
-let fmt0, fmt1, pluralRules;
+let fmt0, fmt1, fmt2, pluralRules;
 
 function buildFormatters() {
   fmt0 = new Intl.NumberFormat(lang, { maximumFractionDigits: 0 });
   fmt1 = new Intl.NumberFormat(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  /* Due decimali: fra un intreccio di 1,10 e uno di 1,15 c'è una differenza
+     che si sente, e una cifra sola la nasconderebbe.                      */
+  fmt2 = new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   pluralRules = new Intl.PluralRules(lang);
 }
 
 const fmtInt = n => fmt0.format(n);
 const fmtOne = n => fmt1.format(n);
+const fmtTwo = n => fmt2.format(n);
 
 /* --- lettura delle stringhe ----------------------------------------------- */
 function T(key, vars) {

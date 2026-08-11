@@ -103,9 +103,45 @@ Object.keys(MOODS).forEach((id, i) => {
   moodsEl.appendChild(b);
 });
 
-/* --- mood delle tenute -----------------------------------------------------
-   Nessun cursore: la seconda classe è uno sfondo, e uno sfondo non si regola
-   mentre si ascolta. Tutto viene dal preset.                              */
+/* --- i cinque cursori dei tessuti -------------------------------------------
+   A differenza di quelli delle frasi, questi non hanno bisogno di smussatura:
+   un tessuto riceve il suo inviluppo nell'istante in cui viene prenotato, e
+   da lì non cambia più. Le modifiche valgono per i tessuti successivi — che è
+   inevitabile, e onesto: un suono lungo non si può ritoccare mentre dura.
+
+   I valori sono in unità vere, quindi ciascuno ha la sua lettura.        */
+const LETTURA_D = {
+  /* "oct" e "Hz" restano in alfabeto latino in tutte le lingue, e una sigla
+     latina attaccata a una cifra si legge male: quelle vogliono lo spazio
+     anche in giapponese. I secondi no, perché lì l'unità è 秒, un kanji che
+     si attacca al numero come vuole la sua tipografia — e infatti è
+     `unit.sep` a saperlo.                                                */
+  spread:  v => fmtOne(v / 100 * 4) + " " + T("unit.oct"),
+  apri:    v => fmtOne(v)           + T("unit.sep") + T("unit.s"),
+  chiudi:  v => fmtOne(v)           + T("unit.sep") + T("unit.s"),
+  sovr:    v => fmtTwo(v),                                     // numero puro: quante sovrapposte
+  battito: v => fmtTwo(v)           + " " + T("unit.hz"),
+};
+
+function letturaTessuti() {
+  DPARAMS.forEach(k => { $("v_" + k).textContent = LETTURA_D[k](D[k]); });
+}
+
+DPARAMS.forEach(k => {
+  $("d_" + k).addEventListener("input", e => {
+    D[k] = +e.target.value;
+    letturaTessuti();
+    /* Intreccio e densità decidono insieme quanto dura ogni tessuto: mosso
+       quello, il piano va ricostruito, altrimenti la nuova misura si vedrebbe
+       solo al giro dopo.                                                  */
+    if (k === "sovr") droni.forEach(buildPlanDrone);
+  });
+});
+
+/* --- mood dei tessuti -------------------------------------------------------
+   Il preset porta anche i due parametri senza cursore — quanti tessuti per
+   giro e quanto stanno sotto alle gocce — perché sono il carattere del mood,
+   non una manopola.                                                       */
 const droniMoodsEl = $("droniMoods");
 Object.keys(DRONI_MOODS).forEach((id, i) => {
   const b = document.createElement("button");
@@ -116,10 +152,12 @@ Object.keys(DRONI_MOODS).forEach((id, i) => {
     document.querySelectorAll("#droniMoods .mood").forEach(x => x.classList.remove("sel"));
     b.classList.add("sel");
     const m = DRONI_MOODS[id];
-    ["spread", "warmth", "dens", "len", "liv"].forEach(k => { D[k] = m[k]; });
+    DPARAMS.forEach(k => { D[k] = m[k]; $("d_" + k).value = m[k]; });
+    D.dens = m.dens; D.liv = m.liv;
     droni.forEach((L, k) => { L.target = L.period = m.periods[k]; L.idx = 0; });
     restartCycles();
     droni.forEach(regeneraTenute);
+    letturaTessuti();
     onDroniChange();
   };
   droniMoodsEl.appendChild(b);
@@ -214,6 +252,7 @@ function onLanguageChange() {
   document.querySelectorAll("#droniMoods .mood").forEach(b => {
     b.textContent = droneMoodName(b.dataset.droneMood);
   });
+  letturaTessuti();       // le unità cambiano con la lingua: "s" diventa "秒"
   onDroniChange();
 }
 
@@ -267,6 +306,8 @@ $("powerTessutiLabel").textContent = T("power.play");
 refreshStatus();
 onRealignChange();
 onDroniChange();
+DPARAMS.forEach(k => { $("d_" + k).value = D[k]; });
+letturaTessuti();
 readouts();
 syncA11y();
 

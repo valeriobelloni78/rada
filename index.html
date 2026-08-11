@@ -92,6 +92,29 @@
     <div id="drone-holder"></div>
   </div>
 
+  <div class="controls controlsTessuti">
+    <div class="ctl">
+      <label for="d_spread"><span data-i18n="dctl.spread">Estensione</span> <b id="v_spread">—</b></label>
+      <input type="range" id="d_spread" min="0" max="100" step="1" value="55">
+    </div>
+    <div class="ctl">
+      <label for="d_apri"><span data-i18n="dctl.apri">Affioramento</span> <b id="v_apri">—</b></label>
+      <input type="range" id="d_apri" min="0.3" max="12" step="0.1" value="3">
+    </div>
+    <div class="ctl">
+      <label for="d_chiudi"><span data-i18n="dctl.chiudi">Dissolvenza</span> <b id="v_chiudi">—</b></label>
+      <input type="range" id="d_chiudi" min="0.3" max="15" step="0.1" value="4.3">
+    </div>
+    <div class="ctl">
+      <label for="d_sovr"><span data-i18n="dctl.sovr">Intreccio</span> <b id="v_sovr">—</b></label>
+      <input type="range" id="d_sovr" min="0.2" max="3" step="0.01" value="1.10">
+    </div>
+    <div class="ctl">
+      <label for="d_battito"><span data-i18n="dctl.battito">Battito</span> <b id="v_battito">—</b></label>
+      <input type="range" id="d_battito" min="0.05" max="2" step="0.01" value="0.57">
+    </div>
+  </div>
+
   <div class="bar barDroni">
     <div class="moods" id="droniMoods"></div>
     <button class="power" id="powerTessuti">

@@ -143,6 +143,19 @@ semplicemente non esiste: le regole `:lang(ja)` in `style.css` la
 ricostruiscono con corpo e 字間, e sul canvas c'è `CANVAS.trackMul`, perché
 i glifi a piena larghezza vanno spaziati molto meno di quelli latini.
 
+**Nei tessuti lo scarto fra le due voci è ADDITIVO, non proporzionale.**
+Due sinusoidi distanti d hertz battono a d hertz qualunque sia la loro
+altezza; con uno scarto proporzionale i toni gravi batterebbero molto più
+lenti degli acuti, e il cursore "Battito" non manterrebbe la promessa.
+
+**L'Intreccio va riscalato, non solo ripianificato.** Le durate dei tessuti
+vivono dentro l'idea, costruita una volta sola: muovendo il cursore, senza
+riscalarle il nuovo valore si vedrebbe soltanto alla prossima rigenerazione.
+`L.planSovr` ricorda con quale intreccio sono state calcolate — stesso ruolo
+di `planHead` per le gocce — e `buildPlanDrone` le moltiplica per il rapporto.
+Verificato su quattrocento rigenerazioni per valore: la somma media delle
+durate coincide col cursore entro lo 0,4%.
+
 **Ogni riquadro accende e spegne la propria classe.** `gocceOn` e `tessutiOn`
 in `audio.js`: il motore gira finché almeno una è accesa, e spente entrambe il
 clock si ferma davvero (`applicaStato`). I cicli però continuano ad avanzare

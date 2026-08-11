@@ -143,6 +143,7 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
    quella sopra e dai suoi mood.                                          */
 .droneCard{margin-top:26px}
 .barDroni{margin-top:14px}
+.controlsTessuti{margin-top:22px}
 
 /* Trasparenti e senza dimensioni proprie: le riceve sketch.js, che li
    ricalcola solo quando il canvas cambia misura. Coprono il quadrante e il
