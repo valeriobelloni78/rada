@@ -57,11 +57,38 @@ function refreshStatus() {
   const attivi = gocceOn ? loops.filter(L => !L.muted).length : 0;
   txt.textContent = T("status.playing", { n: fmtInt(attivi), time, palette });
 }
-setInterval(refreshStatus, 15000);
+
+/* La riga della stagione, sopra il riquadro dei tessuti. Stessa forma della
+   riga in testa alla pagina — punto che pulsa, stato, quando siamo, che
+   palette è in vigore — e altra scala del tempo: là l'ora, qui il mese.
+
+   Il punto pulsa quando suonano i TESSUTI, non l'intero strumento: è la riga
+   di questo riquadro, e deve dire di questo riquadro. Chi mette in pausa i
+   tessuti e lascia le gocce vede la riga in alto viva e questa spenta.    */
+function refreshStagione() {
+  const d = new Date();
+  currentSeason = seasonPalette(d.getMonth());
+  const date = fmtGiorno(d);
+  const palette = seasonName(currentSeason.id);
+  const st = $("statusStagione"), txt = $("statusStagioneText");
+  const vivo = running && tessutiOn;
+
+  if (!vivo) {
+    st.classList.remove("live");
+    const state = ctx ? T("status.paused") : T("status.idle");
+    txt.textContent = T("sstatus.stopped", { state, date, palette });
+    return;
+  }
+  st.classList.add("live");
+  txt.textContent = T("sstatus.playing", { date, palette });
+}
+
+function refreshTutteLeRighe() { refreshStatus(); refreshStagione(); }
+setInterval(refreshTutteLeRighe, 15000);
 
 /* Annunci dal canvas: il disegno segnala che qualcosa è cambiato senza
    sapere chi lo ascolta. */
-function onLoopsChange() { refreshStatus(); syncA11y(); }
+function onLoopsChange() { refreshTutteLeRighe(); syncA11y(); }
 addEventListener("rada:loops",   onLoopsChange);
 addEventListener("rada:realign", () => onRealignChange());
 /* Il pulsante è un COMANDO, non un indicatore: la scritta dice che cosa
@@ -72,7 +99,7 @@ function onPowerChange() {
   $("powerLabel").textContent = gocceOn ? T("power.pause") : T("power.play");
   $("powerTessuti").classList.toggle("on", tessutiOn);
   $("powerTessutiLabel").textContent = tessutiOn ? T("power.pause") : T("power.play");
-  refreshStatus();
+  refreshTutteLeRighe();
 }
 
 /* --- cursori -------------------------------------------------------------- */
@@ -109,22 +136,33 @@ Object.keys(MOODS).forEach((id, i) => {
    da lì non cambia più. Le modifiche valgono per i tessuti successivi — che è
    inevitabile, e onesto: un suono lungo non si può ritoccare mentre dura.
 
-   I valori sono in unità vere, quindi ciascuno ha la sua lettura.        */
+   I valori sono in unità vere, quindi ciascuno ha la sua lettura. Numero e
+   unità stanno separati perché quando la stagione inclina un valore se ne
+   mostrano due, e l'unità va detta una volta sola: "3,0→3,5 s", come i
+   cursori del calore e dello spazio dicono "70→60%".                     */
 const LETTURA_D = {
   /* "oct" e "Hz" restano in alfabeto latino in tutte le lingue, e una sigla
      latina attaccata a una cifra si legge male: quelle vogliono lo spazio
      anche in giapponese. I secondi no, perché lì l'unità è 秒, un kanji che
      si attacca al numero come vuole la sua tipografia — e infatti è
      `unit.sep` a saperlo.                                                */
-  spread:  v => fmtOne(v / 100 * 4) + " " + T("unit.oct"),
-  apri:    v => fmtOne(v)           + T("unit.sep") + T("unit.s"),
-  chiudi:  v => fmtOne(v)           + T("unit.sep") + T("unit.s"),
-  sovr:    v => fmtTwo(v),                                     // numero puro: quante sovrapposte
-  battito: v => fmtTwo(v)           + " " + T("unit.hz"),
+  spread:  { n: v => fmtOne(v / 100 * 4), u: () => " " + T("unit.oct") },
+  apri:    { n: v => fmtOne(v),           u: () => T("unit.sep") + T("unit.s") },
+  chiudi:  { n: v => fmtOne(v),           u: () => T("unit.sep") + T("unit.s") },
+  sovr:    { n: v => fmtTwo(v),           u: () => "" },   // numero puro: quante sovrapposte
+  battito: { n: v => fmtTwo(v),           u: () => " " + T("unit.hz") },
 };
 
 function letturaTessuti() {
-  DPARAMS.forEach(k => { $("v_" + k).textContent = LETTURA_D[k](D[k]); });
+  effettiviTessuti();
+  DPARAMS.forEach(k => {
+    const L = LETTURA_D[k];
+    const scelto = L.n(D[k]);
+    /* L'Intreccio non è fra i valori che la stagione inclina, e infatti non
+       compare in effD: lì la lettura resta una sola.                      */
+    const eff = (k in effD) ? L.n(effD[k]) : scelto;
+    $("v_" + k).textContent = (eff === scelto ? scelto : scelto + "→" + eff) + L.u();
+  });
 }
 
 DPARAMS.forEach(k => {
@@ -172,7 +210,7 @@ function onDroniChange() {
   else if (l < 86400) t = fmtOne(l / 3600)           + sep + T("unit.hours");
   else                t = fmtOne(l / 86400)          + sep + T("unit.days");
   $("realignDroni").textContent = T("realign", { t });
-  refreshStatus();
+  refreshTutteLeRighe();
   syncA11y();          // il trascinamento sulla tela deve riscrivere i cursori
 }
 
@@ -213,7 +251,7 @@ function costruisciA11y(boxId, linee, min, max, chiavi, cambiata, rigenera) {
 
     const mute = document.createElement("button");
     mute.type = "button";
-    mute.addEventListener("click", () => { L.muted = !L.muted; cambiata(); refreshStatus(); });
+    mute.addEventListener("click", () => { L.muted = !L.muted; cambiata(); refreshTutteLeRighe(); });
 
     const regen = document.createElement("button");
     regen.type = "button";
@@ -323,7 +361,7 @@ $("enter").addEventListener("keydown", e => {
 applyI18n();
 $("powerLabel").textContent = T("power.play");
 $("powerTessutiLabel").textContent = T("power.play");
-refreshStatus();
+refreshTutteLeRighe();
 onRealignChange();
 onDroniChange();
 DPARAMS.forEach(k => { $("d_" + k).value = D[k]; });

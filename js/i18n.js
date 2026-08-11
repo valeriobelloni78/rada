@@ -56,6 +56,8 @@ const STRINGS = {
     "status.paused":    "in pausa",
     "status.stopped":   "{state} · {time}, palette {palette}",
     "status.playing":   "in ascolto · {n} frasi su 4 · {time}, palette {palette}",
+    "sstatus.stopped":  "{state} · {date}, palette {palette}",
+    "sstatus.playing":  "in ascolto · {date}, palette {palette}",
     "realign":          "si ripete ogni ≈ {t}",
     "unit.sep":         " ",
     "unit.min":         "min",
@@ -80,6 +82,7 @@ const STRINGS = {
                  bruma: "Bruma", tenda: "Tenda", seta: "Seta", vela: "Vela" },
     palette: { alba: "alba", mattino: "mattino", pomeriggio: "pomeriggio",
                tramonto: "tramonto", sera: "sera", notturna: "notturna" },
+    season:  { primavera: "primavera", estate: "estate", autunno: "autunno", inverno: "inverno" },
   },
 
   fr: {
@@ -113,6 +116,8 @@ const STRINGS = {
     "status.paused":    "en pause",
     "status.stopped":   "{state} · {time}, palette {palette}",
     "status.playing":   "à l'écoute · {n} phrases sur 4 · {time}, palette {palette}",
+    "sstatus.stopped":  "{state} · {date}, palette {palette}",
+    "sstatus.playing":  "à l'écoute · {date}, palette {palette}",
     "realign":          "se répète tous les ≈ {t}",
     "unit.sep":         " ",
     "unit.min":         "min",
@@ -137,6 +142,7 @@ const STRINGS = {
                  bruma: "Brume", tenda: "Rideau", seta: "Soie", vela: "Voilure" },
     palette: { alba: "aube", mattino: "matin", pomeriggio: "après-midi",
                tramonto: "crépuscule", sera: "soir", notturna: "nuit" },
+    season:  { primavera: "printemps", estate: "été", autunno: "automne", inverno: "hiver" },
   },
 
   en: {
@@ -170,6 +176,8 @@ const STRINGS = {
     "status.paused":    "paused",
     "status.stopped":   "{state} · {time}, {palette} palette",
     "status.playing":   "playing · {n} of 4 phrases · {time}, {palette} palette",
+    "sstatus.stopped":  "{state} · {date}, {palette} palette",
+    "sstatus.playing":  "playing · {date}, {palette} palette",
     "realign":          "repeats every ≈ {t}",
     "unit.sep":         " ",
     "unit.min":         "min",
@@ -194,6 +202,7 @@ const STRINGS = {
                  bruma: "Haze", tenda: "Curtain", seta: "Silk", vela: "Sail" },
     palette: { alba: "dawn", mattino: "morning", pomeriggio: "afternoon",
                tramonto: "dusk", sera: "evening", notturna: "night" },
+    season:  { primavera: "spring", estate: "summer", autunno: "autumn", inverno: "winter" },
   },
 
   ja: {
@@ -227,6 +236,8 @@ const STRINGS = {
     "status.paused":    "一時停止中",
     "status.stopped":   "{state} · {time}、{palette}のパレット",
     "status.playing":   "再生中 · 4フレーズ中{n} · {time}、{palette}のパレット",
+    "sstatus.stopped":  "{state} · {date}、{palette}のパレット",
+    "sstatus.playing":  "再生中 · {date}、{palette}のパレット",
     "realign":          "約{t}で一巡",
     "unit.sep":         "",     // il giapponese non stacca il numero dall'unità
     "unit.min":         "分",
@@ -251,6 +262,7 @@ const STRINGS = {
                  bruma: "靄", tenda: "帳", seta: "絹", vela: "帆" },
     palette: { alba: "暁", mattino: "朝", pomeriggio: "昼下がり",
                tramonto: "夕暮れ", sera: "宵", notturna: "夜半" },
+    season:  { primavera: "春", estate: "夏", autunno: "秋", inverno: "冬" },
   },
 
 };
@@ -295,7 +307,7 @@ let lang = detectLang();
 /* --- formattatori ---------------------------------------------------------
    Costruiti UNA VOLTA per lingua. Crearne uno dentro draw costerebbe più
    del disegno stesso.                                                      */
-let fmt0, fmt1, fmt2;
+let fmt0, fmt1, fmt2, fmtData;
 
 function buildFormatters() {
   fmt0 = new Intl.NumberFormat(lang, { maximumFractionDigits: 0 });
@@ -303,11 +315,16 @@ function buildFormatters() {
   /* Due decimali: fra un intreccio di 1,10 e uno di 1,15 c'è una differenza
      che si sente, e una cifra sola la nasconderebbe.                      */
   fmt2 = new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  /* Giorno e mese, nell'ordine che ogni lingua vuole: "11 agosto" in
+     italiano, "August 11" in inglese, "8月11日" in giapponese. L'inversione
+     non si scrive a mano — la sa Intl, e la sa meglio.                    */
+  fmtData = new Intl.DateTimeFormat(lang, { day: "numeric", month: "long" });
 }
 
-const fmtInt = n => fmt0.format(n);
-const fmtOne = n => fmt1.format(n);
-const fmtTwo = n => fmt2.format(n);
+const fmtInt  = n => fmt0.format(n);
+const fmtOne  = n => fmt1.format(n);
+const fmtTwo  = n => fmt2.format(n);
+const fmtGiorno = d => fmtData.format(d);
 
 /* --- lettura delle stringhe ----------------------------------------------- */
 function T(key, vars) {
@@ -321,6 +338,7 @@ function T(key, vars) {
 const moodName    = id => (STRINGS[lang].mood    || {})[id] || id;
 const droneMoodName = id => (STRINGS[lang].droneMood || {})[id] || id;
 const paletteName = id => (STRINGS[lang].palette || {})[id] || id;
+const seasonName  = id => (STRINGS[lang].season  || {})[id] || id;
 
 /* --- cache per il canvas --------------------------------------------------
    Le etichette dei quadranti non cambiano mai fra un fotogramma e l'altro:

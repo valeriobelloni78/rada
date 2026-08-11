@@ -140,8 +140,10 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
 .droneCanvas{display:block;touch-action:pan-y pinch-zoom}
 
 /* Il riquadro delle tenute è la stessa scatola dei quadranti, staccata da
-   quella sopra e dai suoi mood.                                          */
-.droneCard{margin-top:26px}
+   quella sopra e dai suoi mood. Lo stacco però lo prende la riga della
+   stagione, che gli sta appena sopra.                                    */
+.statusDroni{display:flex;justify-content:flex-end;margin:26px 8px 8px}
+.droneCard{margin-top:0}
 .barDroni{margin-top:14px}
 .controlsTessuti{margin-top:22px}
 

@@ -82,7 +82,18 @@
        accadere: tenute che si sovrappongono fra loro e alle gocce. Il canvas
        è separato perché due riquadri con bordo proprio non possono condividere
        la stessa tela; lo disegna js/droni.js, dentro lo stesso ciclo di
-       fotogrammi dell'altro.                                            -->
+       fotogrammi dell'altro.
+
+       Sopra al riquadro, la riga della stagione: gemella di quella in testa
+       alla pagina, e diversa nella scala del tempo. Là l'ora del giorno, qui
+       il mese dell'anno.                                                 -->
+  <div class="statusDroni">
+    <div class="status" id="statusStagione">
+      <span class="pulse"></span>
+      <span id="statusStagioneText">in attesa</span>
+    </div>
+  </div>
+
   <div class="loopCard droneCard">
     <div class="cardHead">
       <span class="t" data-i18n="drone.title">Le quattro tenute</span>

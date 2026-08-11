@@ -97,9 +97,12 @@ possono mostrare da soli. Sotto le frasi ogni punto è una goccia; sotto i
 tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per
 cui resta aperto.
 
-L'app legge inoltre **l'ora del sistema** e inclina di conseguenza registro,
-calore e riverbero: alle 23 suona più cupa e spaziosa che a mezzogiorno. È
-l'unica influenza esterna, e non richiede alcun permesso.
+L'app legge inoltre **l'orologio del sistema**, e ne ricava due influenze
+simmetriche: l'ora del giorno inclina le gocce — alle 23 suonano più cupe e
+spaziose che a mezzogiorno — e la stagione inclina i tessuti, raccogliendone il
+registro d'inverno e allargandolo d'estate. Ciascuna ha la sua riga di stato,
+sopra il riquadro che governa. Sono le uniche influenze esterne, e non
+richiedono alcun permesso.
 
 ## Come funziona, tecnicamente
 

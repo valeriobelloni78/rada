@@ -494,7 +494,7 @@ function playDrop(when, ev, L) {
    Passa dalla stessa catena delle gocce — filtro e riverbero — quindi eredita
    la palette oraria e lo spazio senza nodi propri.                        */
 function playTone(when, ev, L) {
-  const spread = D.spread / 100;
+  const spread = effD.spread / 100;
   const half = SCALE.length / 2;
   const freq = SCALE[clamp(Math.round(half + ev.rel * spread * half), 0, SCALE.length - 1)];
 
@@ -506,7 +506,7 @@ function playTone(when, ev, L) {
      battuto molto più lenti degli acuti, e uno slider chiamato "battito" non
      avrebbe mantenuto la promessa.                                        */
   const a = ctx.createOscillator(); a.type = "sine"; a.frequency.value = freq;
-  const b = ctx.createOscillator(); b.type = "sine"; b.frequency.value = freq + D.battito;
+  const b = ctx.createOscillator(); b.type = "sine"; b.frequency.value = freq + effD.battito;
 
   const env = ctx.createGain();
   env.gain.value = 0;
@@ -514,7 +514,7 @@ function playTone(when, ev, L) {
 
   /* Apertura e chiusura non possono sommarsi a più della durata, altrimenti
      la tenuta non raggiunge mai il suo livello.                           */
-  let apri = D.apri, chiudi = D.chiudi;
+  let apri = effD.apri, chiudi = effD.chiudi;
   const eccesso = (apri + chiudi) / (dur * 0.9);
   if (eccesso > 1) { apri /= eccesso; chiudi /= eccesso; }
 
@@ -556,6 +556,9 @@ function tickParams() {
   const pal = currentPalette;
   effWarmth = clamp(G.warmth + pal.warmBias,  0, 100) / 100;
   effRev    = clamp(G.rev    + pal.spaceBias, 0, 100) / 100;
+
+  /* e per l'altra classe, l'inclinazione della stagione */
+  effettiviTessuti();
 
   if (!ctx) return;
   const openness = clamp(45 + pal.toneBias, 0, 100);

@@ -218,6 +218,47 @@ const DPARAMS = ["spread", "apri", "chiudi", "sovr", "battito"];
 const D = { ...DRONI_MOODS.velo };
 delete D.periods;
 
+/* --- palette stagionale ---------------------------------------------------
+   Quello che l'ora del giorno fa alle gocce, la stagione lo fa ai tessuti. Le
+   due influenze esterne sono simmetriche per intenzione e diverse per scala:
+   l'una gira in un giorno, l'altra in un anno, e chi lascia Rada aperta a
+   lungo sente la prima muoversi e la seconda no. È giusto così — uno sfondo
+   che cambia col mese è uno sfondo che non si nota cambiare.
+
+   Tre inclinazioni, come per l'ora: quanto si allarga il registro, quanto è
+   lento il respiro (affioramento e dissolvenza insieme) e quanto è veloce il
+   battito. L'Intreccio no: è il numero che si legge anche nella fascia in
+   fondo al riquadro, e inclinarlo farebbe litigare il disegno col cursore.
+
+   `respiro` è un FATTORE e non una somma, perché affioramento e dissolvenza
+   vivono su scale diverse (0,3–12 s e 0,3–15 s): due secondi in più sono
+   niente per l'uno e molto per l'altro. Il battito invece si somma, come
+   ovunque nel progetto: due sinusoidi distanti d hertz battono a d hertz.
+
+   Come per i mood, qui viaggia un `id`: la parola la sceglie i18n.js.      */
+function seasonPalette(m) {
+  if (m <= 1 || m === 11) return { id: "inverno",   spreadBias: -12, respiro: 1.25, battitoBias: -0.12 };
+  if (m <= 4)             return { id: "primavera", spreadBias: +10, respiro: 0.85, battitoBias: +0.10 };
+  if (m <= 7)             return { id: "estate",    spreadBias: +16, respiro: 0.75, battitoBias: +0.20 };
+  return                         { id: "autunno",   spreadBias:  -4, respiro: 1.15, battitoBias: -0.05 };
+}
+
+let currentSeason = { id: "", spreadBias: 0, respiro: 1, battitoBias: 0 };
+
+/* Valori efficaci dei tessuti: posizione del cursore più inclinazione della
+   stagione. Li legge `playTone`, e li rilegge la riga dei valori per mostrare
+   i due numeri quando differiscono — la stessa promessa che i cursori del
+   calore e dello spazio fanno per le gocce.                               */
+const effD = { spread: 55, apri: 3.0, chiudi: 4.3, battito: 0.57 };
+
+function effettiviTessuti() {
+  const s = currentSeason;
+  effD.spread  = clamp(D.spread  + s.spreadBias,  0,    100);
+  effD.apri    = clamp(D.apri    * s.respiro,     0.3,  12);
+  effD.chiudi  = clamp(D.chiudi  * s.respiro,     0.3,  15);
+  effD.battito = clamp(D.battito + s.battitoBias, 0.05, 2);
+}
+
 const droni = DRONI_MOODS.velo.periods.map((p, i) => ({
   i,
   period: p,

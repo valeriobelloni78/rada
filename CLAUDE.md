@@ -44,6 +44,18 @@ aprirsi senza rete. Non rimetterne una.
 `css/style.css`. Anche il canvas le legge (`readPalette` in `frasi.js`).
 Non introdurre colori scritti direttamente nel JavaScript.
 
+**Una influenza esterna per classe, e sono simmetriche.** L'ora del giorno
+inclina le gocce (`timePalette`), la stagione inclina i tessuti
+(`seasonPalette`): tre parametri ciascuna, un `id` che il modello non sa
+tradurre, una riga di stato che dice quale è in vigore. La differenza è la
+scala — un giorno contro un anno — ed è voluta: uno sfondo che cambia col mese
+è uno sfondo che non si nota cambiare. Nessuna delle due chiede permessi o usa
+sensori. **Chi ne aggiunge una terza rompe la simmetria: meglio non farlo.**
+
+I valori efficaci vivono in `effWarmth`/`effRev` per le gocce e in `effD` per
+i tessuti, e sono quelli che il suono deve leggere — `playTone` usa `effD`, mai
+`D`. Dove cursore e valore efficace differiscono, la lettura mostra due numeri.
+
 **Un solo colore.** Tutta l'interfaccia è in scala di grigi caldi su fondo
 avorio; l'unico accento è l'arancione mattone `--amber`, usato con
 parsimonia: la "d" del logo, il punto che pulsa, la lancetta, le gocce che

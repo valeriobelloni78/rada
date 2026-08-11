@@ -313,6 +313,8 @@ Rada legge l'orologio del sistema e inclina di conseguenza il registro, il calor
 
 Le palette sono sei: **alba**, **mattino**, **pomeriggio**, **tramonto**, **sera** e **notturna**. La riga di stato in alto dice sempre quale è in vigore.
 
+Ai tessuti parla invece la stagione, che è la stessa idea a un'altra scala: la riga sopra il loro riquadro dice il giorno e quale delle quattro è in vigore. L'inverno raccoglie il registro e rallenta il respiro; l'estate lo allarga e accelera il battito. Un giro però dura un anno, quindi non lo vedrai muoversi.
+
 ---
 
 ## [riquadro 5 — La fascia temporale]

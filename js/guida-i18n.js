@@ -64,6 +64,7 @@ const GUIDA = {
     "g.hour.t": "L'ora del giorno",
     "g.hour1": "Rada legge l'orologio del sistema e inclina di conseguenza il registro, il calore e lo spazio: alle 23 suona più cupa e riverberata che a mezzogiorno.",
     "g.hour2": "Le palette sono sei: <em>alba</em>, <em>mattino</em>, <em>pomeriggio</em>, <em>tramonto</em>, <em>sera</em> e <em>notturna</em>. La riga di stato in alto dice sempre quale è in vigore.",
+    "g.hour3": "Ai tessuti parla invece la stagione, che è la stessa idea a un'altra scala: la riga sopra il loro riquadro dice il giorno e quale delle quattro è in vigore. L'inverno raccoglie il registro e rallenta il respiro; l'estate lo allarga e accelera il battito. Un giro però dura un anno, quindi non lo vedrai muoversi.",
 
     "g.strip.t": "La fascia temporale",
     "g.strip1": "Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto.",
@@ -156,6 +157,7 @@ const GUIDA = {
     "g.hour.t": "L'heure du jour",
     "g.hour1": "Rada lit l'horloge du système et incline en conséquence le registre, la chaleur et l'espace~: à 23~h elle sonne plus sombre et plus réverbérée qu'à midi.",
     "g.hour2": "Les palettes sont six~: <em>aube</em>, <em>matin</em>, <em>après-midi</em>, <em>crépuscule</em>, <em>soir</em> et <em>nuit</em>. La ligne d'état, en haut, indique toujours celle qui est en vigueur.",
+    "g.hour3": "Aux tissus parle la saison, la même idée à une autre échelle~: la ligne au-dessus de leur cadre dit le jour et laquelle des quatre est en vigueur. L'hiver resserre le registre et ralentit la respiration~; l'été l'élargit et accélère le battement. Un tour dure pourtant un an~: tu ne le verras pas bouger.",
 
     "g.strip.t": "La bande temporelle",
     "g.strip1": "Chaque cadre a la sienne~: de droite à gauche défilent les trente dernières secondes. Sous les phrases chaque point est une goutte~; sous les tissus chaque segment est un son qui dure, et sa longueur est le temps pendant lequel il reste ouvert.",
@@ -248,6 +250,7 @@ const GUIDA = {
     "g.hour.t": "The hour of the day",
     "g.hour1": "Rada reads the system clock and tilts register, warmth and space accordingly: at eleven at night it sounds darker and more reverberant than at noon.",
     "g.hour2": "There are six palettes: <em>dawn</em>, <em>morning</em>, <em>afternoon</em>, <em>dusk</em>, <em>evening</em> and <em>night</em>. The status line at the top always says which one is in force.",
+    "g.hour3": "The weaves listen to the season instead — the same idea at another scale: the line above their card gives the day and which of the four is in force. Winter draws the register in and slows the breathing; summer widens it and quickens the beating. One turn takes a year, though, so you will not see it move.",
 
     "g.strip.t": "The time strip",
     "g.strip1": "Each card has one: the last thirty seconds scroll from right to left. Under the phrases every dot is a drop; under the weaves every segment is a sound that lasts, and its length is how long it stays open.",
@@ -340,6 +343,7 @@ const GUIDA = {
     "g.hour.t": "時刻",
     "g.hour1": "Radaはシステムの時計を読み、それに応じて音域と温かみと空間を傾けます。夜の二十三時には、正午よりも暗く、残響の深い響きになります。",
     "g.hour2": "パレットは六つあります。<em>暁</em>、<em>朝</em>、<em>昼下がり</em>、<em>夕暮れ</em>、<em>宵</em>、<em>夜半</em>。いま効いているものは、上部の状態表示がつねに示しています。",
+    "g.hour3": "織りに語りかけるのは季節です。同じ考えを別の尺度に移したもので、枠の上の行がその日と、四つのうちどれが効いているかを告げます。冬は音域を狭め、呼吸をゆるめます。夏は音域を広げ、うなりを速めます。ただし一巡には一年かかるので、動くところは見られません。",
 
     "g.strip.t": "時間の帯",
     "g.strip1": "どちらの枠にもあります。直近三十秒が右から左へ流れ、フレーズの下では点のひとつひとつが滴、織りの下では線分のひとつひとつが持続する音で、その長さがそのまま開いている時間です。",
