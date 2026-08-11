@@ -111,6 +111,13 @@ function drawDroni() {
    un numero e si vede: quattro corsie di segmenti che si accavallano, o che
    lasciano dei vuoti.
 
+   Qui NON si disegnano le quattro guide continue che stanno sotto le gocce.
+   Là servono: un punto isolato, senza una riga che lo sostenga, galleggia.
+   Un tessuto invece è già una linea orizzontale, e la guida gli passerebbe
+   esattamente sotto — stessa forma, stessa corsia, un segno sopra l'altro.
+   Restano soltanto i suoni: dove non si suona la corsia è vuota, ed è
+   un'informazione anche quella.
+
    Legge `toneHistory`, scritta dallo scheduler: mostra ciò che è stato
    davvero suonato, non ciò che è in programma.                            */
 function drawFasciaTessuti(s, now) {
@@ -122,16 +129,11 @@ function drawFasciaTessuti(s, now) {
 
   g.save();
   g.lineCap = "butt";
-  g.strokeStyle = COL.hair;
-  g.lineWidth = 1;
-  for (let i = 0; i < droni.length; i++) {
-    const ly = top + (i + 0.5) * laneH;
-    g.beginPath(); g.moveTo(left, ly); g.lineTo(right, ly); g.stroke();
-  }
 
   /* le due barre che chiudono la fascia: a destra è adesso, a sinistra il
      fondo della memoria — identiche a quelle del riquadro sopra           */
   g.strokeStyle = COL.dust;
+  g.lineWidth = 1;
   g.beginPath();
   g.moveTo(left,  top - laneH * 0.1); g.lineTo(left,  top + h + laneH * 0.1);
   g.moveTo(right, top - laneH * 0.1); g.lineTo(right, top + h + laneH * 0.1);
@@ -140,7 +142,10 @@ function drawFasciaTessuti(s, now) {
   if (!ctx) { g.restore(); return; }
 
   const ascissa = t => right + (left - right) * ((now - t) / TIMELINE_SEC);
-  g.lineCap = "round";
+  /* Un tratto solo, sottile, per tutti: la lunghezza dice la durata e il
+     grigio dice se il suono è ancora aperto. Ingrossare quelli in corso
+     aggiungerebbe una terza variabile a un segno che ne regge due.       */
+  g.lineWidth = Math.max(1, laneH * 0.07);
   for (const ev of toneHistory) {
     if (ev.fino < now - TIMELINE_SEC) continue;
     const x0 = Math.max(left,  ascissa(ev.t));
@@ -150,12 +155,8 @@ function drawFasciaTessuti(s, now) {
     const aperto = ev.fino > now;          // sta ancora suonando: arriva fino a destra
     const spento = droni[ev.loop].muted || !tessutiOn;
     const ly = top + (ev.loop + 0.5) * laneH;
-    g.strokeStyle = aperto ? COL.ink : COL.ink2;
-    /* Più corposo dei punti delle gocce — un tessuto è suono continuo, non
-       un istante — ma non tanto da riempire la corsia: le quattro linee
-       devono restare leggibili anche quando si accavallano.              */
-    g.lineWidth   = (aperto ? 0.17 : 0.11) * laneH;
-    g.globalAlpha = (spento ? 0.3 : 1) * (aperto ? 1 : 0.5);
+    g.strokeStyle = aperto ? COL.dust : COL.hair;
+    g.globalAlpha = spento ? 0.3 : 1;
     g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
   }
   g.restore();
