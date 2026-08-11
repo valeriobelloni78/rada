@@ -19,7 +19,7 @@ non c'è, non ci sarà.
 | «L'idea» | un paragrafo nuovo sui tessuti e sui primi da diciannove in su |
 | «Come si usa» | i gesti valgono per due riquadri; i cursori sono dieci, i preset sedici |
 | «Come funziona» | la grafica non è più p5; una nota sul ciclo di fotogrammi unico |
-| «Limiti noti» | tolta la riga sulla rete; aggiunta quella sulla tastiera |
+| «Limiti noti» | tolta la riga sulla rete, che non vale più |
 | «In English» | rifatta di conseguenza |
 
 I numeri che compaiono qui sotto li ho verificati nel codice, non ricordati:
@@ -75,7 +75,7 @@ I gesti sono gli stessi nei due riquadri.
 | ↻ sopra un quadrante | genera una nuova idea musicale per quella linea |
 | Avvia / Pausa sotto un riquadro | ferma solo quella classe: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario |
 | Barra spaziatrice | avvia e ferma tutto |
-| Tasto Tab | raggiunge i comandi delle frasi in forma nativa, per chi non usa il puntatore |
+| Tasto Tab | raggiunge gli stessi comandi in forma nativa, per chi non usa il puntatore |
 
 Ogni riquadro ha **cinque cursori** e **otto preset**.
 
@@ -147,9 +147,9 @@ propria, perché due riquadri con un bordo proprio non possono condividerne una,
 ma **il ciclo di fotogrammi è uno solo**: due animazioni indipendenti si
 sfaserebbero, e su un telefono costerebbero il doppio.
 
-Tutta l'interazione dei quadranti delle frasi esiste anche come comandi HTML
-nativi, fuori campo ma raggiungibili col tasto Tab: il canvas da solo sarebbe
-muto per una tastiera e per un lettore di schermo.
+Tutta l'interazione dei quadranti — di tutti e otto — esiste anche come comandi
+HTML nativi, fuori campo ma raggiungibili col tasto Tab: il canvas da solo
+sarebbe muto per una tastiera e per un lettore di schermo.
 
 Un dettaglio che chi mette mano al codice apprezzerà: la palette è definita
 **una volta sola**, nelle variabili CSS di `style.css`. Anche il canvas le legge.
@@ -177,8 +177,6 @@ stanno in `js/i18n.js`, uno per lingua.
   blocco. Ne consegue che suona anche con l'interruttore del silenzioso
   inserito. Se il sistema congela del tutto la pagina non c'è comunque
   finestra che tenga: servirebbe spostare lo scheduler in un AudioWorklet.
-- I comandi equivalenti da tastiera coprono le quattro frasi ma non ancora i
-  quattro tessuti.
 
 ## Licenza
 

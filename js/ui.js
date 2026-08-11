@@ -173,6 +173,7 @@ function onDroniChange() {
   else                t = fmtOne(l / 86400)          + sep + T("unit.days");
   $("realignDroni").textContent = T("realign", { t });
   refreshStatus();
+  syncA11y();          // il trascinamento sulla tela deve riscrivere i cursori
 }
 
 /* --- comandi equivalenti da tastiera --------------------------------------
@@ -181,55 +182,74 @@ function onDroniChange() {
    gesti raggiungibili solo col puntatore. Qui gli stessi tre comandi
    esistono come elementi HTML nativi, fuori campo ma nel documento.
 
+   Le due classi si costruiscono con lo stesso codice, come le due tele e
+   come i due scheduler: cambiano gli estremi della durata, le parole e la
+   funzione che rigenera — non il modo in cui i comandi stanno insieme. Due
+   copie divergerebbero al primo ritocco, e la seconda sarebbe quella
+   dimenticata (i tessuti sono rimasti senza tastiera per tutta la loro
+   prima vita, appunto).
+
    La sincronia va in DUE direzioni: questi comandi cambiano il modello, e il
    trascinamento sul canvas riscrive questi comandi (vedi syncA11y, chiamata
-   da onRealignChange e onLoopsChange).                                     */
+   da onRealignChange, onLoopsChange e onDroniChange).                      */
 const ROMAN = ["I", "II", "III", "IV"];
-const a11yEls = [];
 
-(function buildA11y() {
-  const box = $("a11yLoops");
-  loops.forEach((L, i) => {
+function costruisciA11y(boxId, linee, min, max, chiavi, cambiata, rigenera) {
+  const box = $(boxId), els = [];
+  linee.forEach((L, i) => {
     const row = document.createElement("div");
     row.className = "a11yRow";
 
     const lab = document.createElement("label");
-    lab.htmlFor = "a11yDur" + i;
+    lab.htmlFor = boxId + "Dur" + i;
     const dur = document.createElement("input");
-    dur.type = "range"; dur.id = "a11yDur" + i;
-    dur.min = PERIOD_MIN; dur.max = PERIOD_MAX; dur.step = 0.5;
+    dur.type = "range"; dur.id = boxId + "Dur" + i;
+    dur.min = min; dur.max = max; dur.step = 0.5;
     dur.value = L.target;
     dur.addEventListener("input", e => {
       L.target = +e.target.value;
-      onRealignChange();
+      cambiata();
     });
 
     const mute = document.createElement("button");
     mute.type = "button";
-    mute.addEventListener("click", () => { L.muted = !L.muted; onLoopsChange(); });
+    mute.addEventListener("click", () => { L.muted = !L.muted; cambiata(); refreshStatus(); });
 
     const regen = document.createElement("button");
     regen.type = "button";
-    regen.addEventListener("click", () => regenerate(L));
+    regen.addEventListener("click", () => rigenera(L));
 
     row.append(lab, dur, mute, regen);
     box.appendChild(row);
-    a11yEls.push({ lab, dur, mute, regen });
+    els.push({ lab, dur, mute, regen, L });
   });
-})();
+  return { els, chiavi };
+}
+
+const A11Y = [
+  costruisciA11y("a11yLoops", loops, PERIOD_MIN, PERIOD_MAX,
+    { dur: "a11y.duration", mute: "a11y.mute", unmute: "a11y.unmute", regen: "a11y.regen" },
+    () => onRealignChange(), regenerate),
+  costruisciA11y("a11yDroni", droni, DRONE_MIN, DRONE_MAX,
+    { dur: "a11y.dDuration", mute: "a11y.dMute", unmute: "a11y.dUnmute", regen: "a11y.dRegen" },
+    () => onDroniChange(), regeneraTenute),
+];
 
 /* Riallinea etichette e valori: le prime cambiano con la lingua, i secondi
    col trascinamento sul canvas.                                            */
 function syncA11y() {
-  a11yEls.forEach((e, i) => {
-    const n = ROMAN[i], L = loops[i];
-    e.lab.textContent = T("a11y.duration", { n });
-    e.dur.value = L.target;
-    e.dur.setAttribute("aria-valuetext", fmtOne(L.target) + " " + T("canvas.seconds"));
-    e.mute.textContent = T(L.muted ? "a11y.unmute" : "a11y.mute", { n });
-    e.mute.setAttribute("aria-pressed", L.muted ? "true" : "false");
-    e.regen.textContent = T("a11y.regen", { n });
-  });
+  for (const gruppo of A11Y) {
+    const k = gruppo.chiavi;
+    gruppo.els.forEach((e, i) => {
+      const n = ROMAN[i], L = e.L;
+      e.lab.textContent = T(k.dur, { n });
+      e.dur.value = L.target;
+      e.dur.setAttribute("aria-valuetext", fmtOne(L.target) + " " + T("canvas.seconds"));
+      e.mute.textContent = T(L.muted ? k.unmute : k.mute, { n });
+      e.mute.setAttribute("aria-pressed", L.muted ? "true" : "false");
+      e.regen.textContent = T(k.regen, { n });
+    });
+  }
 }
 
 /* --- lingua ---------------------------------------------------------------
