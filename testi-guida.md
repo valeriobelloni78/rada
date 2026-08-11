@@ -307,13 +307,13 @@ Un tessuto solo per giro, che può durare fino a cinquanta secondi.
 
 ## [riquadro 4 — L'ora del giorno]
 
-**Titolo:** L'ora del giorno
+**Titolo:** L'ora del giorno e la stagione dell'anno
 
 Rada legge l'orologio del sistema e inclina di conseguenza il registro, il calore e lo spazio: alle 23 suona più cupa e riverberata che a mezzogiorno.
 
 Le palette sono sei: **alba**, **mattino**, **pomeriggio**, **tramonto**, **sera** e **notturna**. La riga di stato in alto dice sempre quale è in vigore.
 
-Ai tessuti parla invece la stagione, che è la stessa idea a un'altra scala: la riga sopra il loro riquadro dice il giorno e quale delle quattro è in vigore. L'inverno raccoglie il registro e rallenta il respiro; l'estate lo allarga e accelera il battito. Un giro però dura un anno, quindi non lo vedrai muoversi.
+Ai tessuti parla invece la stagione: l'autunno raccoglie appena il registro e allunga il respiro; l'inverno lo raccoglie molto di più e lo rallenta ancora; la primavera lo riapre e ravviva il battito; l'estate lo allarga più di tutte e lo fa battere più in fretta.
 
 ---
 
@@ -325,15 +325,19 @@ Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta sec
 
 ---
 
-## [riquadro 6 — Il nome]
+## [riquadro 6 — Un dettaglio sulla sincronia]
+
+**Titolo:** Un dettaglio sulla sincronia
+
+Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo rosso le unisce per un istante.
+
+---
+
+## [riquadro 6b — Il nome]
 
 **Titolo:** Il nome
 
 Una **rada** è il tratto di mare riparato dove le navi sostano al riparo dai venti e dalle onde.
-
-## [nota in fondo al riquadro Il nome]
-
-Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo rosso le unisce per un istante. 
 
 ---
 

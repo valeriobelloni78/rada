@@ -61,10 +61,10 @@ const GUIDA = {
     "g.mt.sereno": "4,7 ore",  "g.mt.pioggia": "58 minuti", "g.mt.vespro": "2,5 giorni", "g.mt.carillon": "4,3 ore",
     "g.mt.arcipelago": "1,3 giorni", "g.mt.collina": "14,8 ore", "g.mt.finestra": "20,1 ore", "g.mt.nuvola": "8,7 ore",
 
-    "g.hour.t": "L'ora del giorno",
+    "g.hour.t": "L'ora del giorno e la stagione dell'anno",
     "g.hour1": "Rada legge l'orologio del sistema e inclina di conseguenza il registro, il calore e lo spazio: alle 23 suona più cupa e riverberata che a mezzogiorno.",
     "g.hour2": "Le palette sono sei: <em>alba</em>, <em>mattino</em>, <em>pomeriggio</em>, <em>tramonto</em>, <em>sera</em> e <em>notturna</em>. La riga di stato in alto dice sempre quale è in vigore.",
-    "g.hour3": "Ai tessuti parla invece la stagione, che è la stessa idea a un'altra scala: la riga sopra il loro riquadro dice il giorno e quale delle quattro è in vigore. L'inverno raccoglie il registro e rallenta il respiro; l'estate lo allarga e accelera il battito. Un giro però dura un anno, quindi non lo vedrai muoversi.",
+    "g.hour3": "Ai tessuti parla invece la stagione: l'autunno raccoglie appena il registro e allunga il respiro; l'inverno lo raccoglie molto di più e lo rallenta ancora; la primavera lo riapre e ravviva il battito; l'estate lo allarga più di tutte e lo fa battere più in fretta.",
 
     "g.strip.t": "La fascia temporale",
     "g.strip1": "Ogni riquadro ne ha una: da destra verso sinistra scorrono gli ultimi trenta secondi. Sotto le frasi ogni punto è una goccia; sotto i tessuti ogni segmento è un suono che dura, e la sua lunghezza è il tempo per cui resta aperto.",
@@ -72,6 +72,7 @@ const GUIDA = {
 
     "g.name.t": "Il nome",
     "g.name1": "Una <em>rada</em> è il tratto di mare riparato dove le navi sostano al riparo dai venti e dalle onde.",
+    "g.sync.t": "Un dettaglio sulla sincronia",
     "g.name.note": "Un dettaglio che si nota solo guardando: quando due gocce di frasi diverse suonano a meno di due decimi di secondo l'una dall'altra, un sottile filo rosso le unisce per un istante.",
 
     "g.foot.code": "Il codice su GitHub",
@@ -154,10 +155,10 @@ const GUIDA = {
     "g.mt.sereno": "4,7 heures", "g.mt.pioggia": "58 minutes", "g.mt.vespro": "2,5 jours", "g.mt.carillon": "4,3 heures",
     "g.mt.arcipelago": "1,3 jours", "g.mt.collina": "14,8 heures", "g.mt.finestra": "20,1 heures", "g.mt.nuvola": "8,7 heures",
 
-    "g.hour.t": "L'heure du jour",
+    "g.hour.t": "L'heure du jour et la saison de l'année",
     "g.hour1": "Rada lit l'horloge du système et incline en conséquence le registre, la chaleur et l'espace~: à 23~h elle sonne plus sombre et plus réverbérée qu'à midi.",
     "g.hour2": "Les palettes sont six~: <em>aube</em>, <em>matin</em>, <em>après-midi</em>, <em>crépuscule</em>, <em>soir</em> et <em>nuit</em>. La ligne d'état, en haut, indique toujours celle qui est en vigueur.",
-    "g.hour3": "Aux tissus parle la saison, la même idée à une autre échelle~: la ligne au-dessus de leur cadre dit le jour et laquelle des quatre est en vigueur. L'hiver resserre le registre et ralentit la respiration~; l'été l'élargit et accélère le battement. Un tour dure pourtant un an~: tu ne le verras pas bouger.",
+    "g.hour3": "Aux tissus parle la saison~: l'automne resserre à peine le registre et allonge la respiration~; l'hiver le resserre bien davantage et la ralentit encore~; le printemps le rouvre et ravive le battement~; l'été l'élargit plus que toutes et le fait battre plus vite.",
 
     "g.strip.t": "La bande temporelle",
     "g.strip1": "Chaque cadre a la sienne~: de droite à gauche défilent les trente dernières secondes. Sous les phrases chaque point est une goutte~; sous les tissus chaque segment est un son qui dure, et sa longueur est le temps pendant lequel il reste ouvert.",
@@ -165,6 +166,7 @@ const GUIDA = {
 
     "g.name.t": "Le nom",
     "g.name1": "Une <em>rade</em> est cette portion de mer abritée où les navires mouillent, à l'abri des vents et des vagues.",
+    "g.sync.t": "Un détail sur la synchronie",
     "g.name.note": "Un détail qu'on ne remarque qu'en regardant~: quand deux gouttes de phrases différentes sonnent à moins de deux dixièmes de seconde l'une de l'autre, un fin fil rouge les relie un instant.",
 
     "g.foot.code": "Le code sur GitHub",
@@ -247,10 +249,10 @@ const GUIDA = {
     "g.mt.sereno": "4.7 hours", "g.mt.pioggia": "58 minutes", "g.mt.vespro": "2.5 days", "g.mt.carillon": "4.3 hours",
     "g.mt.arcipelago": "1.3 days", "g.mt.collina": "14.8 hours", "g.mt.finestra": "20.1 hours", "g.mt.nuvola": "8.7 hours",
 
-    "g.hour.t": "The hour of the day",
+    "g.hour.t": "The hour of the day, the season of the year",
     "g.hour1": "Rada reads the system clock and tilts register, warmth and space accordingly: at eleven at night it sounds darker and more reverberant than at noon.",
     "g.hour2": "There are six palettes: <em>dawn</em>, <em>morning</em>, <em>afternoon</em>, <em>dusk</em>, <em>evening</em> and <em>night</em>. The status line at the top always says which one is in force.",
-    "g.hour3": "The weaves listen to the season instead — the same idea at another scale: the line above their card gives the day and which of the four is in force. Winter draws the register in and slows the breathing; summer widens it and quickens the beating. One turn takes a year, though, so you will not see it move.",
+    "g.hour3": "The weaves listen to the season instead: autumn draws the register in a little and lengthens the breathing; winter draws it in much further and slows it more; spring opens it again and revives the beating; summer widens it most of all and makes it beat fastest.",
 
     "g.strip.t": "The time strip",
     "g.strip1": "Each card has one: the last thirty seconds scroll from right to left. Under the phrases every dot is a drop; under the weaves every segment is a sound that lasts, and its length is how long it stays open.",
@@ -258,6 +260,7 @@ const GUIDA = {
 
     "g.name.t": "The name",
     "g.name1": "A <em>roadstead</em> — <em>rada</em> in Italian — is the sheltered stretch of sea where ships lie at anchor, out of the wind and the waves.",
+    "g.sync.t": "A detail about synchrony",
     "g.name.note": "A detail you only catch by watching: when two drops from different phrases sound less than two tenths of a second apart, a thin red thread joins them for a moment.",
 
     "g.foot.code": "The code on GitHub",
@@ -340,10 +343,10 @@ const GUIDA = {
     "g.mt.sereno": "4.7時間", "g.mt.pioggia": "58分", "g.mt.vespro": "2.5日", "g.mt.carillon": "4.3時間",
     "g.mt.arcipelago": "1.3日", "g.mt.collina": "14.8時間", "g.mt.finestra": "20.1時間", "g.mt.nuvola": "8.7時間",
 
-    "g.hour.t": "時刻",
+    "g.hour.t": "時刻と季節",
     "g.hour1": "Radaはシステムの時計を読み、それに応じて音域と温かみと空間を傾けます。夜の二十三時には、正午よりも暗く、残響の深い響きになります。",
     "g.hour2": "パレットは六つあります。<em>暁</em>、<em>朝</em>、<em>昼下がり</em>、<em>夕暮れ</em>、<em>宵</em>、<em>夜半</em>。いま効いているものは、上部の状態表示がつねに示しています。",
-    "g.hour3": "織りに語りかけるのは季節です。同じ考えを別の尺度に移したもので、枠の上の行がその日と、四つのうちどれが効いているかを告げます。冬は音域を狭め、呼吸をゆるめます。夏は音域を広げ、うなりを速めます。ただし一巡には一年かかるので、動くところは見られません。",
+    "g.hour3": "織りに語りかけるのは季節です。秋は音域をわずかに狭め、呼吸を長くします。冬はさらに狭め、いっそうゆるめます。春はふたたび開き、うなりを活気づけます。夏はもっとも広く開き、もっとも速く打たせます。",
 
     "g.strip.t": "時間の帯",
     "g.strip1": "どちらの枠にもあります。直近三十秒が右から左へ流れ、フレーズの下では点のひとつひとつが滴、織りの下では線分のひとつひとつが持続する音で、その長さがそのまま開いている時間です。",
@@ -351,6 +354,7 @@ const GUIDA = {
 
     "g.name.t": "名前",
     "g.name1": "イタリア語の<em>rada</em>とは、風と波を避けて船が停泊する、囲われた海の一帯のことです。",
+    "g.sync.t": "同時性についての細部",
     "g.name.note": "見ていなければ気づかない細部があります。異なるフレーズの滴どうしが五分の一秒に満たない差で鳴るとき、細い赤い糸が一瞬だけ両者を結びます。",
 
     "g.foot.code": "GitHubのコード",

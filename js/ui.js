@@ -37,30 +37,30 @@ function onRealignChange() {
   syncA11y();          // il trascinamento sul canvas deve riscrivere i cursori
 }
 
-/* --- riga di stato -------------------------------------------------------- */
+/* --- le due righe di stato ------------------------------------------------
+   Stessa frase per tutt'e due, con una sola variabile a cambiare: `when` è
+   l'ora sopra le gocce e il giorno sopra i tessuti. Erano due coppie di voci
+   nel dizionario finché la prima contava anche le frasi attive; tolto quel
+   conteggio le due frasi coincidono, e tenerle separate avrebbe soltanto
+   raddoppiato il lavoro di chi traduce.                                    */
+function scriviRiga(idRiga, idTesto, viva, when, palette) {
+  const st = $(idRiga), txt = $(idTesto);
+  st.classList.toggle("live", viva);
+  if (viva) { txt.textContent = T("status.playing", { when, palette }); return; }
+  // "in attesa" solo alla prima apertura; dopo un ascolto è una pausa
+  const state = ctx ? T("status.paused") : T("status.idle");
+  txt.textContent = T("status.stopped", { state, when, palette });
+}
+
 function refreshStatus() {
   const d = new Date(), h = d.getHours();
   currentPalette = timePalette(h);
   const hh = String(h).padStart(2, "0"), mm = String(d.getMinutes()).padStart(2, "0");
-  const time = hh + ":" + mm;
-  const palette = paletteName(currentPalette.id);
-  const st = $("status"), txt = $("statusText");
-
-  if (!running) {
-    st.classList.remove("live");
-    // "in attesa" solo alla prima apertura; dopo un ascolto è una pausa
-    const state = ctx ? T("status.paused") : T("status.idle");
-    txt.textContent = T("status.stopped", { state, time, palette });
-    return;
-  }
-  st.classList.add("live");
-  const attivi = gocceOn ? loops.filter(L => !L.muted).length : 0;
-  txt.textContent = T("status.playing", { n: fmtInt(attivi), time, palette });
+  scriviRiga("status", "statusText", running, hh + ":" + mm, paletteName(currentPalette.id));
 }
 
-/* La riga della stagione, sopra il riquadro dei tessuti. Stessa forma della
-   riga in testa alla pagina — punto che pulsa, stato, quando siamo, che
-   palette è in vigore — e altra scala del tempo: là l'ora, qui il mese.
+/* La riga della stagione, sopra il riquadro dei tessuti: stessa forma di
+   quella in testa alla pagina, altra scala del tempo — là l'ora, qui il mese.
 
    Il punto pulsa quando suonano i TESSUTI, non l'intero strumento: è la riga
    di questo riquadro, e deve dire di questo riquadro. Chi mette in pausa i
@@ -68,19 +68,8 @@ function refreshStatus() {
 function refreshStagione() {
   const d = new Date();
   currentSeason = seasonPalette(d.getMonth());
-  const date = fmtGiorno(d);
-  const palette = seasonName(currentSeason.id);
-  const st = $("statusStagione"), txt = $("statusStagioneText");
-  const vivo = running && tessutiOn;
-
-  if (!vivo) {
-    st.classList.remove("live");
-    const state = ctx ? T("status.paused") : T("status.idle");
-    txt.textContent = T("sstatus.stopped", { state, date, palette });
-    return;
-  }
-  st.classList.add("live");
-  txt.textContent = T("sstatus.playing", { date, palette });
+  scriviRiga("statusStagione", "statusStagioneText",
+             running && tessutiOn, fmtGiorno(d), seasonName(currentSeason.id));
 }
 
 function refreshTutteLeRighe() { refreshStatus(); refreshStagione(); }
