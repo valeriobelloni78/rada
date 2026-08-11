@@ -134,10 +134,18 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
    senza mettere le mani nelle viscere della libreria.                      */
 #canvas-holder canvas{display:block;touch-action:pan-y pinch-zoom !important}
 
-/* La seconda tela: stesse regole della prima. Qui il touch-action non ha
-   bisogno di !important perché non c'è p5 a scriverlo in linea.          */
+/* La seconda tela: stesse regole della prima, `!important` compreso.
+
+   Questa tela non la crea p5 — la crea `droni.js` con l'API nativa — e per
+   un po' si è creduto che perciò lo stile in linea non la riguardasse. Non è
+   così: `setupDroni` viene chiamata da dentro `setup()` di p5, quindi quando
+   p5 stampa il suo `touch-action:none` la seconda tela esiste già e se lo
+   prende anche lei. Misurato: `pan-y pinch-zoom` sulla prima, `none` sulla
+   seconda, e il dito non scorreva la pagina in nessun punto del riquadro dei
+   tessuti. Vale la stessa regola: solo una dichiarazione importante batte lo
+   stile in linea.                                                          */
 #drone-holder{width:100%;display:flex;justify-content:center;position:relative}
-.droneCanvas{display:block;touch-action:pan-y pinch-zoom}
+.droneCanvas{display:block;touch-action:pan-y pinch-zoom !important}
 
 /* Il riquadro delle tenute è la stessa scatola dei quadranti, staccata da
    quella sopra e dai suoi mood.                                          */

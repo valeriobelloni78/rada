@@ -83,7 +83,10 @@ conseguenze che è costato fatica scoprire:
 
 - p5 scrive `touch-action:none` **nell'attributo style del canvas**. Una
   regola normale del foglio di stile perde contro lo stile in linea: serve
-  `!important`, che è l'unica dichiarazione d'autore che lo batte.
+  `!important`, che è l'unica dichiarazione d'autore che lo batte. E lo
+  scrive su **tutt'e due** le tele, anche su quella dei tessuti che p5 non
+  ha creato: `setupDroni` è chiamata da dentro `setup()`, quindi quando p5
+  stampa il suo `touch-action` la seconda tela esiste già.
 - con i pointer event lo scorrimento della pagina lo decide **solo**
   `touch-action`. `preventDefault` su `pointerdown` non lo ferma. Quindi non
   esiste modo di decidere da JavaScript, gesto per gesto, se scorrere.

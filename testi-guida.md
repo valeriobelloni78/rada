@@ -34,11 +34,7 @@ Link in alto a destra: Ascolta Rada
 
 ## [riquadro 1 — apertura, senza titolo]
 
-Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra.
-In questo spazio puoi prenderti cura della tua attenzione, i tessuti sonori producono delle sensazioni tattili e le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”.
-L'ascolto è un'attività da coltivare, è un territorio che ha le sue poetiche e i suoi campi di forza.
-Rada è un'insenatura tranquilla lungo la costa di un oceano di rumore.
-Tra le gocce troverai dei silenzi che parlano; ascoltali.
+Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra. In questo spazio puoi prenderti cura della tua attenzione, i tessuti sonori producono delle sensazioni tattili e le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”. L'ascolto è un'attività da coltivare, è un territorio che ha le sue poetiche e i suoi campi di forza. Rada è un'insenatura tranquilla lungo la costa di un oceano di rumore. Tra le gocce troverai dei silenzi che parlano; ascoltali.
 
 ---
 
@@ -47,8 +43,7 @@ Tra le gocce troverai dei silenzi che parlano; ascoltali.
 **Titolo:** Il concetto
 
 Rada sviluppa il suono mentre lo ascolti.
-Frasi composte da gocce e tessuti sonori fatti di lunghi respiri girano ciascuno col proprio periodo. Nella configurazione di partenza questi periodi sono, per le gocce, di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa.
-Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.
+Frasi composte da gocce e tessuti sonori fatti di lunghi respiri girano ciascuno col proprio periodo. Nella configurazione di partenza questi periodi sono, per le gocce, di sette, undici, tredici e diciassette secondi. Ogni frase concentra le sue note in un arco, poi tace fino al giro successivo. Quei silenzi fuori fase fanno in modo che i quattro archi si incontrino ogni volta in una combinazione diversa. Sotto le quattro frasi ne girano altre quattro, coi propri periodi: non gocce ma suoni tenuti, che si aprono e si dissolvono lentamente. Le linee fuori fase sono otto in tutto, e il pezzo è quello che accade quando si sovrappongono.
 Questa è l'idea alla base di “Music for Airports” di Brian Eno e questo progetto è un tributo al suo lavoro.
 
 ---
@@ -96,7 +91,7 @@ Avvia e ferma tutto. Ogni riquadro ha però anche il suo pulsante, che governa s
 
 ## [etichetta di sezione 2]
 
-I cinque cursori
+I cinque cursori per le frasi
 
 ## [cursore 1]
 
@@ -136,11 +131,11 @@ I cursori del calore e dello spazio mostrano due numeri quando l'ora del giorno 
 
 ## [etichetta di sezione 3]
 
-Gli otto mood
+Gli otto stati d'animo per le frasi
 
 ## [introduzione ai mood]
 
-Ogni mood è una configurazione completa: timbro **e** configurazione temporale. Cambiarlo rigenera anche le quattro idee. Il tempo indicato è quello di riallineamento.
+Ogni stato d'animo è una configurazione completa: timbro **e** configurazione temporale. Cambiarlo rigenera anche le quattro idee. Il tempo indicato è quello di riallineamento.
 
 ## [mood 1]
 
@@ -254,7 +249,7 @@ Gli otto tessuti
 
 ## [introduzione ai tessuti]
 
-Come per le frasi, ogni mood è una configurazione completa. Due cose però restano fuori dai cursori: quanti tessuti per giro e quanto stanno sotto alle gocce sono il carattere del preset, non una manopola.
+Come per le frasi, ogni stato d'animo è una configurazione completa. Due cose però restano fuori dai cursori: quanti tessuti per giro e quanto stanno sotto alle gocce sono il carattere del preset, non una manopola.
 
 ## [tessuto 1]
 
