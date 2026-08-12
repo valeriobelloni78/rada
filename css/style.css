@@ -226,6 +226,47 @@ input[type=range]::-moz-range-thumb{
 /* rimando alla guida, sotto i mood: deve esserci senza contendere l'attenzione
    ai comandi, quindi ha il corpo delle etichette minute e il grigio tenue.  */
 .foot{margin-top:15px}
+
+/* --------------------------------------------------------------- la firma
+   Un filo alto un pixel, e sotto i crediti centrati. Il filo separa senza
+   chiudere: a chiudere ci pensano i bordi dei due riquadri, e un terzo
+   rettangolo qui dentro sarebbe un riquadro che non contiene nulla.
+
+   Il testo resta in tondo minuscolo, non nel MAIUSCOLO delle etichette
+   minute: quelle nominano un comando, questa è una frase, e una frase lunga
+   in maiuscolo si legge peggio. Vale anche per l'indirizzo, come nel
+   colophon della guida.                                                   */
+.firma{
+  margin-top:26px;
+  padding-top:16px;
+  border-top:1px solid var(--hair);
+  text-align:center;
+}
+.firma p{
+  margin:0;
+  font-family:var(--sans);font-weight:400;
+  font-size:10px;letter-spacing:.1em;
+  color:var(--dust);
+}
+.firma .recapiti{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;margin-top:9px;
+}
+.firma a,
+.firma .posta{
+  font-family:var(--sans);font-weight:400;
+  font-size:10px;letter-spacing:.1em;color:var(--dust);
+  text-decoration:none;padding-bottom:2px;
+  border-bottom:1px solid transparent;
+}
+.firma a{transition:.2s}
+.firma a:hover{color:var(--ink);border-bottom-color:var(--hair)}
+.firma a:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px;border-radius:2px}
+.firma .sep{width:1px;height:10px;background:var(--hair);flex:none}
+@media (max-width:479px){
+  .firma .sep{display:none}          /* a capo, il trattino resterebbe appeso */
+  .firma .recapiti{gap:8px;flex-direction:column}
+}
 .docLink{
   font-family:var(--sans);font-weight:400;
   font-size:9px;letter-spacing:.16em;text-transform:uppercase;
