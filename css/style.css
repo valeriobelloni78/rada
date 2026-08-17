@@ -11,6 +11,7 @@
   --ink-2:#4a4b42;   /* inchiostro secondario */
   --dust:#8f9084;    /* etichette tenui */
   --hair:#c3c2b4;    /* linee inattive */
+  --scelto:#55564c;  /* fondo dei bottoni scelti: scuro, ma non inchiostro */
   --amber:#c25a2b;   /* unico accento */
   --glow:rgba(194,90,43,.18);
   --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
@@ -230,7 +231,9 @@ input[type=range]::-moz-range-thumb{
   padding:6px 8px;border-radius:999px;cursor:pointer;transition:.2s;
 }
 .mood:hover{border-color:var(--ink);color:var(--ink)}
-.mood.sel{color:var(--paper);background:var(--ink);border-color:var(--ink)}
+/* Lo stato scelto è un grigio scuro, non l'inchiostro pieno: il nero massimo
+   in pagina resta quello dei bordi dei riquadri e delle gocce che suonano.  */
+.mood.sel{color:var(--paper);background:var(--scelto);border-color:var(--scelto)}
 
 .power{
   appearance:none;
@@ -295,7 +298,7 @@ input[type=range]::-moz-range-thumb{
 .docLink:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px;border-radius:2px}
 
 .power:hover{background:rgba(32,33,28,.06)}
-.power.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.power.on{background:var(--scelto);border-color:var(--scelto);color:var(--paper)}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--dust);transition:.3s;flex:none}
 .power.on .dot{
   background:var(--amber);
