@@ -46,6 +46,12 @@ let drDaRiposizionare = true;
 /* Il bersaglio del ↻, come nei quadranti sopra: mai sotto il polpastrello. */
 const drRegenHit = r => Math.max(r * 0.22, 22);
 
+/* I due tratteggi della fascia: pieno per i suoni in corso, puntini per
+   quelli conclusi. Vivono qui e non dentro il disegno perché `setLineDash`
+   vuole un array, e nel fotogramma non se ne creano.                      */
+const DR_PIENO = [];
+const DR_PUNTI = [0, 3];   // il passo lo riscrive `drawFasciaTessuti`
+
 function drCanvasSize() {
   const avail = drHolder ? drHolder.clientWidth : 320;
   const wide  = avail >= 720;
@@ -145,10 +151,20 @@ function drawFasciaTessuti(s, now) {
   if (!ctx) { g.restore(); return; }
 
   const ascissa = t => right + (left - right) * ((now - t) / TIMELINE_SEC);
-  /* Un tratto solo, sottile, per tutti: la lunghezza dice la durata e il
-     grigio dice se il suono è ancora aperto. Ingrossare quelli in corso
-     aggiungerebbe una terza variabile a un segno che ne regge due.       */
+  /* Un tratto solo, sottile, per tutti: la lunghezza dice la durata. A dire
+     se il suono è ancora aperto ci pensano due cose, il grigio e il segno:
+     pieno e più scuro finché suona, una fila di puntini quando ha finito.
+
+     I puntini si ottengono con un trattino di lunghezza ZERO e il capo
+     tondo: un tratteggio [0, passo] disegnerebbe niente con `lineCap:butt`,
+     mentre col capo tondo ogni trattino nullo diventa un cerchietto largo
+     quanto il tratto. Il passo è tre volte lo spessore, che è la distanza
+     alla quale i punti si contano invece di leggersi come una linea.
+
+     L'array del tratteggio è uno solo, riempito qui e riusato: dentro il
+     fotogramma non si allocano array (CLAUDE.md).                        */
   g.lineWidth = Math.max(1, laneH * 0.07);
+  DR_PUNTI[1] = g.lineWidth * 3;
   for (const ev of toneHistory) {
     if (ev.fino < now - TIMELINE_SEC) continue;
     const x0 = Math.max(left,  ascissa(ev.t));
@@ -160,6 +176,8 @@ function drawFasciaTessuti(s, now) {
     const ly = top + (ev.loop + 0.5) * laneH;
     g.strokeStyle = aperto ? COL.dust : COL.hair;
     g.globalAlpha = spento ? 0.3 : 1;
+    g.lineCap = aperto ? "butt" : "round";
+    g.setLineDash(aperto ? DR_PIENO : DR_PUNTI);
     g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
   }
   g.restore();
