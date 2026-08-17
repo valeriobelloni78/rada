@@ -158,13 +158,19 @@ function drawFasciaTessuti(s, now) {
      I puntini si ottengono con un trattino di lunghezza ZERO e il capo
      tondo: un tratteggio [0, passo] disegnerebbe niente con `lineCap:butt`,
      mentre col capo tondo ogni trattino nullo diventa un cerchietto largo
-     quanto il tratto. Il passo è tre volte lo spessore, che è la distanza
-     alla quale i punti si contano invece di leggersi come una linea.
+     quanto il tratto.
 
-     L'array del tratteggio è uno solo, riempito qui e riusato: dentro il
-     fotogramma non si allocano array (CLAUDE.md).                        */
-  g.lineWidth = Math.max(1, laneH * 0.07);
-  DR_PUNTI[1] = g.lineWidth * 3;
+     Il punto è più grosso della linea piena, e non per svista: un cerchietto
+     dello stesso spessore di un tratto continuo sembra più piccolo, perché
+     di quel tratto ha la larghezza ma non la lunghezza. Il passo è cinque
+     volte il punto — sotto, la fila torna a leggersi come una linea
+     tratteggiata invece che come una sequenza di punti.
+
+     Gli array del tratteggio stanno fuori: dentro il fotogramma non se ne
+     allocano (CLAUDE.md).                                                */
+  const spessore = Math.max(1, laneH * 0.07);
+  const punto    = Math.max(1.4, spessore * 1.5);
+  DR_PUNTI[1] = punto * 5;
   for (const ev of toneHistory) {
     if (ev.fino < now - TIMELINE_SEC) continue;
     const x0 = Math.max(left,  ascissa(ev.t));
@@ -176,6 +182,7 @@ function drawFasciaTessuti(s, now) {
     const ly = top + (ev.loop + 0.5) * laneH;
     g.strokeStyle = aperto ? COL.dust : COL.hair;
     g.globalAlpha = spento ? 0.3 : 1;
+    g.lineWidth = aperto ? spessore : punto;
     g.lineCap = aperto ? "butt" : "round";
     g.setLineDash(aperto ? DR_PIENO : DR_PUNTI);
     g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
