@@ -180,8 +180,15 @@ function drawFasciaTessuti(s, now) {
     const aperto = ev.fino > now;          // sta ancora suonando: arriva fino a destra
     const spento = droni[ev.loop].muted || !tessutiOn;
     const ly = top + (ev.loop + 0.5) * laneH;
-    g.strokeStyle = aperto ? COL.dust : COL.hair;
-    g.globalAlpha = spento ? 0.3 : 1;
+    /* Gli stessi due grigi degli archi, alpha compresa: quassù un tessuto che
+       suona è inchiostro pieno e uno concluso è inchiostro secondario a metà
+       trasparenza, e la fascia dice le stesse due cose con gli stessi toni.
+       Sono due letture dello stesso stato — una in tondo, una in linea — e
+       due grigi diversi le farebbero sembrare due informazioni diverse.
+       Manca solo il lampo arancione dell'attacco: là dura meno di mezzo
+       secondo, qui resterebbe acceso finché il segno attraversa la fascia. */
+    g.strokeStyle = aperto ? COL.ink : COL.ink2;
+    g.globalAlpha = (spento ? 0.3 : 1) * (aperto ? 1 : 0.5);
     g.lineWidth = aperto ? spessore : punto;
     g.lineCap = aperto ? "butt" : "round";
     g.setLineDash(aperto ? DR_PIENO : DR_PUNTI);
