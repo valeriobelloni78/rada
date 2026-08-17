@@ -6,7 +6,7 @@
 ============================================================================= */
 
 :root{
-  --paper:#e9e7db;   /* fondo, avorio caldo */
+  --paper:#e7e7e4;   /* fondo, grigio chiarissimo appena caldo */
   --ink:#20211c;     /* inchiostro, nero morbido verdastro */
   --ink-2:#4a4b42;   /* inchiostro secondario */
   --dust:#8f9084;    /* etichette tenui */
@@ -16,10 +16,28 @@
   --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
+/* --------------------------------------------------------- la grana della carta
+   Rumore frattale generato dal browser, non un'immagine da scaricare: è un
+   SVG scritto qui dentro come data URI, quindi la pagina continua ad aprirsi
+   senza rete — che è una regola del progetto, non una comodità.
+
+   `feTurbulence` fa il grano, `feColorMatrix` gli toglie il colore (di suo
+   il rumore è a chiazze rosse, verdi e blu), e `stitchTiles` fa combaciare i
+   bordi della piastrella, altrimenti a ogni ripetizione si vedrebbe la
+   cucitura. Il rettangolo è nero a opacità 0,08: appena un velo, e su un
+   fondo chiaro basta a togliere la sensazione di superficie piatta.
+
+   Il browser lo rasterizza una volta e lo ripete: non costa un fotogramma.
+   Il `#` dell'`url(#g)` va scritto %23, o l'indirizzo si tronca lì.       */
+:root{
+  --carta:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='.08'/%3E%3C/svg%3E");
+}
+
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
-  background:var(--paper);
+  background-color:var(--paper);
+  background-image:var(--carta);
   color:var(--ink);
   font-family:var(--sans);
   font-weight:300;
@@ -289,7 +307,10 @@ input[type=range]::-moz-range-thumb{
 /* ---------------------------------------------------- soglia d'ingresso */
 .gate{
   position:fixed;inset:0;z-index:40;
-  background:var(--paper);
+  /* la stessa grana del fondo, e alla stessa origine: la soglia copre la
+     pagina senza che si veda il passaggio da una superficie all'altra */
+  background-color:var(--paper);
+  background-image:var(--carta);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   gap:24px;padding:30px;text-align:center;
