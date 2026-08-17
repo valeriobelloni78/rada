@@ -105,7 +105,7 @@ Modifica quanto si allarga il ventaglio delle altezze. A zero tutte le gocce cad
 
 ## [cursore 2]
 
-**Nome:** Calore timbrico
+**Nome:** Calore
 
 Da vetroso a ==morbido==. Più calore significa meno armoniche acute e una coda più lunga: il decadimento passa da poco meno di due secondi a quasi cinque.
 
