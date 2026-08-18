@@ -26,8 +26,14 @@
 const TICKS      = 48;
 const R_INNER    = 0.815;   // estremo interno dei trattini
 const R_ACTIVE   = 0.741;   // estremo interno dei trattini nella zona attiva
-const R_DROPS    = 0.741;   // raggio massimo delle gocce (registro più acuto)
-const R_DROPS_LO = 0.580;   // raggio minimo delle gocce (registro più grave)
+/* La fascia delle gocce non arriva ai trattini e non entra nel numero. I due
+   margini sono misurati sulla goccia ACCESA (R_DROP_HOT, la più grande):
+   0,041 del raggio verso la corona, 0,026 verso il centro. Il trattino va
+   contato con la testa tonda, che sporge di mezzo spessore oltre il proprio
+   estremo; il limite di dentro lo detta il giapponese, perché "17.0秒" è
+   largo 0,397 del raggio contro 0,343 di "17,0s".                          */
+const R_DROPS    = 0.620;   // raggio massimo delle gocce (registro più acuto)
+const R_DROPS_LO = 0.490;   // raggio minimo delle gocce (registro più grave)
 const R_HAND     = 0.704;   // lunghezza della lancetta
 const W_TICK_ON  = 1.4 / 54, W_TICK_OFF = 0.95 / 54;
 const R_DROP     = 2.1 / 54, R_DROP_HOT = 3.6 / 54;
