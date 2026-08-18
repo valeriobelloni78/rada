@@ -29,7 +29,7 @@ const R_ACTIVE   = 0.741;   // estremo interno dei trattini nella zona attiva
 const R_DROPS    = 0.741;   // raggio massimo delle gocce (registro più acuto)
 const R_DROPS_LO = 0.580;   // raggio minimo delle gocce (registro più grave)
 const R_HAND     = 0.704;   // lunghezza della lancetta
-const W_TICK_ON  = 1.8 / 54, W_TICK_OFF = 1.2 / 54;
+const W_TICK_ON  = 1.4 / 54, W_TICK_OFF = 0.95 / 54;
 const R_DROP     = 2.1 / 54, R_DROP_HOT = 3.6 / 54;
 const LINK_WINDOW = 0.18;   // scarto massimo, in secondi, fra due gocce "vicine"
 
