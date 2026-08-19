@@ -129,7 +129,7 @@ Modifica quanta parte del giro è occupata dalle note. Al 30% le gocce stanno ne
 
 ## [nota in fondo ai cursori]
 
-I cursori del calore e dello spazio mostrano due numeri quando l'ora del giorno li inclina: il primo è dove l'hai messo tu, il secondo è il valore che sta davvero suonando.
+Rada crea una palette a seconda dell'ora del giorno inclinando il calore e lo spazio / coda delle frasi.
 
 ---
 
@@ -153,7 +153,7 @@ L'==equilibrio== di partenza: registro medio, coda ampia, poche gocce ben distan
 **Nome:** Pioggia
 **Tempo:** 58 minuti
 
-Periodi brevi e densità alta: il fitto continuo, dove le quattro frasi si incrociano di continuo.
+Periodi brevi e densità alta: un suono fitto, le quattro frasi si incrociano di continuo.
 
 ## [mood 3]
 
@@ -203,7 +203,7 @@ Densità massima, riverbero quasi al limite e timbro vetroso: tante gocce dure d
 
 **Titolo:** I tessuti
 
-Sotto le quattro frasi ce ne sono altre quattro, e non fanno la stessa cosa. Le gocce accadono: un attacco, una coda, e la nota è già passata. I tessuti invece durano — si aprono lentamente, restano aperti anche mezzo minuto, si dissolvono. Sovrapponendosi fra loro e alle gocce formano le tessiture, ed è la ragione per cui esistono. Anche qui i periodi sono coprimi a due a due, e lo sono anche con quelli delle frasi: le linee che non tornano mai insieme sono otto, non due gruppi da quattro. Non devono essere numeri primi — basta che non abbiano fattori in comune — ed è per questo che si scende fino a otto secondi. Ogni riquadro ha il suo pulsante: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario. La barra spaziatrice invece vale per entrambi.
+Le gocce accadono e il loro suono ha un attacco e una coda. I tessuti invece durano, si aprono lentamente, restano aperti e lentamente si dissolvono. Sovrapponendosi fra loro e alle gocce formano le tessiture. Ogni riquadro ha il suo pulsante: si possono lasciare i tessuti e mettere in pausa le frasi, o il contrario. La barra spaziatrice invece vale per entrambi.
 
 ---
 
@@ -215,31 +215,32 @@ I cinque cursori dei tessuti
 
 **Nome:** Estensione
 
-Quanto si allarga il ventaglio delle altezze, misurato in ottave. A zero tutti i tessuti cadono sulla stessa nota; al massimo si distendono sulle quattro ottave della scala.
+Quanto si allarga il ventaglio delle altezze, misurato in ottave. A zero tutti i tessuti cadono sulla stessa nota; al massimo si distendono su quattro ottave.
 
 ## [cursore tessuti 2]
 
 **Nome:** Affioramento
 
-I secondi che un tessuto impiega a emergere. Nulla attacca, tutto ==affiora==: è l'inviluppo rovesciato rispetto a quello delle gocce.
+I secondi che un tessuto impiega a emergere. Nulla attacca, tutto ==affiora==.
 
 ## [cursore tessuti 3]
 
 **Nome:** Dissolvenza
 
-I secondi che impiega a sparire. Insieme all'affioramento decide quanta parte del tessuto è movimento e quanta è stasi.
+I secondi che impiega il tono a sparire. Insieme all'affioramento decide quanta parte del tessuto è movimento e quanta è stasi.
 
 ## [cursore tessuti 4]
 
 **Nome:** Intreccio
 
-Quanti tessuti restano aperti insieme, in media, su ciascuna linea. Sotto uno restano dei silenzi; sopra due la trama non si interrompe mai. È il numero che si vede nella fascia in fondo al riquadro.
+Quanti tessuti restano aperti insieme, in media, su ciascuna linea. Sotto uno restano dei silenzi; sopra due la trama non si interrompe mai.
+
 
 ## [cursore tessuti 5]
 
 **Nome:** Battito
 
-Ogni tessuto è fatto di due ==sinusoidi== appena scordate, e la loro differenza in hertz è la pulsazione che si sente: a mezzo hertz il suono si gonfia e si sgonfia una volta ogni due secondi, a due hertz trema. Senza quel battito una nota tenuta mezzo minuto sarebbe un muro immobile, e l'orecchio smetterebbe di seguirla.
+Ogni tessuto è fatto di due ==sinusoidi== leggermente scordate, e la loro differenza in hertz è la pulsazione che si sente: a mezzo hertz il suono si gonfia e si sgonfia una volta ogni due secondi, a due hertz il suono sembra tremare.
 
 ---
 
@@ -249,7 +250,7 @@ Gli otto tessuti
 
 ## [introduzione ai tessuti]
 
-Come per le frasi, ogni stato d'animo è una configurazione completa. Due cose però restano fuori dai cursori: quanti tessuti per giro e quanto stanno sotto alle gocce sono il carattere del preset, non una manopola.
+Come per le frasi, ogni stato d'animo è una configurazione completa.
 
 ## [tessuto 1]
 
@@ -291,7 +292,7 @@ Il più acuto e il più tenue, quasi tre ottave di estensione.
 **Nome:** Tenda
 **Tempo:** 11,1 giorni
 
-Meno di un'ottava, tutta in basso, e il livello più alto degli otto.
+Meno di un'ottava, è il livello più alto degli otto.
 
 ## [tessuto 7]
 
