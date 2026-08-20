@@ -46,11 +46,15 @@ let drDaRiposizionare = true;
 /* Il bersaglio del ↻, come nei quadranti sopra: mai sotto il polpastrello. */
 const drRegenHit = r => Math.max(r * 0.22, 22);
 
-/* I due tratteggi della fascia: pieno per i suoni in corso, puntini per
-   quelli conclusi. Vivono qui e non dentro il disegno perché `setLineDash`
-   vuole un array, e nel fotogramma non se ne creano.                      */
+/* I due tratteggi della fascia: pieno per le barre di chiusura, puntini per
+   le corsie. Vivono qui e non dentro il disegno perché `setLineDash` vuole un
+   array, e nel fotogramma non se ne creano.                                */
 const DR_PIENO = [];
 const DR_PUNTI = [0, 3];   // il passo lo riscrive `drawFasciaTessuti`
+
+/* Il tono più recente di ciascuna corsia, l'unico che va in arancione.
+   Ricalcolato a ogni fotogramma dentro l'array che c'è già.               */
+const DR_ULTIMO = droni.map(() => null);
 
 function drCanvasSize() {
   const avail = drHolder ? drHolder.clientWidth : 320;
@@ -120,12 +124,16 @@ function drawDroni() {
    un numero e si vede: quattro corsie di segmenti che si accavallano, o che
    lasciano dei vuoti.
 
-   Qui NON si disegnano le quattro guide continue che stanno sotto le gocce.
-   Là servono: un punto isolato, senza una riga che lo sostenga, galleggia.
-   Un tessuto invece è già una linea orizzontale, e la guida gli passerebbe
-   esattamente sotto — stessa forma, stessa corsia, un segno sopra l'altro.
-   Restano soltanto i suoni: dove non si suona la corsia è vuota, ed è
-   un'informazione anche quella.
+   Le corsie sono quattro file di pallini tenui, ferme: il tempo non le muove.
+   A muoversi è l'accensione — i pallini coperti da un tessuto diventano
+   inchiostro pieno, e siccome il segno scorre verso sinistra, la fila si
+   accende e si spegne al suo passaggio. La griglia è FISSA in pixel, non in
+   secondi: se scorresse anche lei, l'accensione non si vedrebbe passare da un
+   pallino all'altro, e il gesto sparirebbe.
+
+   Le guide continue che stanno sotto le gocce qui non servivano, e non
+   servono adesso: quei pallini sono già la guida, e dicono in più dove il
+   tessuto ha suonato.
 
    Legge `toneHistory`, scritta dallo scheduler: mostra ciò che è stato
    davvero suonato, non ciò che è in programma.                            */
@@ -138,6 +146,7 @@ function drawFasciaTessuti(s, now) {
 
   g.save();
   g.lineCap = "butt";
+  g.setLineDash(DR_PIENO);
 
   /* le due barre che chiudono la fascia: a destra è adesso, a sinistra il
      fondo della memoria — identiche a quelle del riquadro sopra           */
@@ -148,50 +157,63 @@ function drawFasciaTessuti(s, now) {
   g.moveTo(right, top - laneH * 0.1); g.lineTo(right, top + h + laneH * 0.1);
   g.stroke();
 
+  /* I pallini si ottengono con un trattino di lunghezza ZERO e il capo tondo:
+     un tratteggio [0, passo] non disegnerebbe niente con `lineCap:butt`,
+     mentre col capo tondo ogni trattino nullo diventa un cerchietto largo
+     quanto il tratto. Il passo è cinque volte il pallino: sotto, la fila
+     torna a leggersi come una linea tratteggiata invece che come una
+     sequenza di punti.
+
+     Gli array del tratteggio stanno fuori: dentro il fotogramma non se ne
+     allocano (CLAUDE.md).                                                  */
+  const punto = Math.max(1.4, laneH * 0.105);
+  const passo = punto * 5;
+  DR_PUNTI[1] = passo;
+  g.lineCap = "round";
+  g.lineWidth = punto;
+  g.setLineDash(DR_PUNTI);
+  g.lineDashOffset = 0;
+  g.strokeStyle = COL.hair;
+  g.beginPath();
+  for (let i = 0; i < droni.length; i++) {
+    const ly = top + (i + 0.5) * laneH;
+    g.moveTo(left, ly); g.lineTo(right, ly);
+  }
+  g.stroke();
+
   if (!ctx) { g.restore(); return; }
 
   const ascissa = t => right + (left - right) * ((now - t) / TIMELINE_SEC);
-  /* Un tratto solo, sottile, per tutti: la lunghezza dice la durata. A dire
-     se il suono è ancora aperto ci pensano due cose, il grigio e il segno:
-     pieno e più scuro finché suona, una fila di puntini quando ha finito.
 
-     I puntini si ottengono con un trattino di lunghezza ZERO e il capo
-     tondo: un tratteggio [0, passo] disegnerebbe niente con `lineCap:butt`,
-     mentre col capo tondo ogni trattino nullo diventa un cerchietto largo
-     quanto il tratto.
+  /* Chi va in arancione: l'ultimo tono COMINCIATO di ogni corsia. Il filtro
+     su `now` non è pignoleria — `toneHistory` è scritta al momento della
+     prenotazione, e contiene toni che cominceranno anche dodici secondi nel
+     futuro (LOOKAHEAD): senza, l'arancione starebbe su un suono che ancora
+     non si sente. Dentro ogni corsia la lista è in ordine di tempo, quindi
+     l'ultimo che passa il filtro è quello giusto.                          */
+  for (let i = 0; i < DR_ULTIMO.length; i++) DR_ULTIMO[i] = null;
+  for (const ev of toneHistory) if (ev.t <= now) DR_ULTIMO[ev.loop] = ev;
 
-     Il punto è più grosso della linea piena, e non per svista: un cerchietto
-     dello stesso spessore di un tratto continuo sembra più piccolo, perché
-     di quel tratto ha la larghezza ma non la lunghezza. Il passo è cinque
-     volte il punto — sotto, la fila torna a leggersi come una linea
-     tratteggiata invece che come una sequenza di punti.
-
-     Gli array del tratteggio stanno fuori: dentro il fotogramma non se ne
-     allocano (CLAUDE.md).                                                */
-  const spessore = Math.max(1, laneH * 0.07);
-  const punto    = Math.max(1.4, spessore * 1.5);
-  DR_PUNTI[1] = punto * 5;
   for (const ev of toneHistory) {
     if (ev.fino < now - TIMELINE_SEC) continue;
     const x0 = Math.max(left,  ascissa(ev.t));
     const x1 = Math.min(right, ascissa(Math.min(ev.fino, now)));
     if (x1 <= x0) continue;
 
-    const aperto = ev.fino > now;          // sta ancora suonando: arriva fino a destra
     const spento = droni[ev.loop].muted || !tessutiOn;
     const ly = top + (ev.loop + 0.5) * laneH;
-    /* Gli stessi due grigi degli archi, alpha compresa: quassù un tessuto che
-       suona è inchiostro pieno e uno concluso è inchiostro secondario a metà
-       trasparenza, e la fascia dice le stesse due cose con gli stessi toni.
-       Sono due letture dello stesso stato — una in tondo, una in linea — e
-       due grigi diversi le farebbero sembrare due informazioni diverse.
-       Manca solo il lampo arancione dell'attacco: là dura meno di mezzo
-       secondo, qui resterebbe acceso finché il segno attraversa la fascia. */
-    g.strokeStyle = aperto ? COL.ink : COL.ink2;
-    g.globalAlpha = (spento ? 0.3 : 1) * (aperto ? 1 : 0.5);
-    g.lineWidth = aperto ? spessore : punto;
-    g.lineCap = aperto ? "butt" : "round";
-    g.setLineDash(aperto ? DR_PIENO : DR_PUNTI);
+    /* L'accensione è lo stesso inchiostro degli archi che suonano, e il
+       fondo lo stesso `--hair` delle corsie sotto le gocce: la fascia e i
+       quadranti dicono la stessa cosa con gli stessi toni.
+
+       L'allineamento alla griglia è tutto qui: il tratteggio riparte da capo
+       a ogni tratto, quindi da solo si accenderebbero pallini in mezzo a
+       quelli di fondo. Portando la fase indietro della distanza fra il
+       tratto e il bordo sinistro, i due tratteggi tornano in registro e
+       l'accensione cade esattamente sopra i pallini che c'erano.           */
+    g.strokeStyle = (ev === DR_ULTIMO[ev.loop]) ? COL.amber : COL.ink;
+    g.globalAlpha = spento ? 0.3 : 1;
+    g.lineDashOffset = (x0 - left) % passo;
     g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
   }
   g.restore();
