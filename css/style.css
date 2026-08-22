@@ -125,7 +125,10 @@ h1 em{font-style:normal;font-weight:600;color:var(--amber)}
 }
 
 /* ------------------------------------------------------------ i quadranti */
-.loopCard{border:1.5px solid var(--ink);border-radius:24px;padding:16px 14px 18px}
+/* Il bordo è lo stesso grigio del fondo dei bottoni scelti: i due riquadri e
+   il bottone che li governa sono la stessa cornice, e il nero pieno resta ai
+   segni che contano — le gocce che suonano e i trattini della zona attiva. */
+.loopCard{border:1.5px solid var(--scelto);border-radius:24px;padding:16px 14px 18px}
 .cardHead{
   display:flex;
   justify-content:space-between;
@@ -340,8 +343,8 @@ input[type=range]::-moz-range-thumb{
   background:transparent;color:var(--ink);
   font-family:var(--sans);
   border:1.5px solid var(--ink);border-radius:999px;
-  padding:13px 34px;
-  font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+  padding:11px 27px;
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;
   font-weight:400;transition:.25s;cursor:pointer;
 }
 .gate:hover .enter,
