@@ -25,9 +25,12 @@
 }
 .backLink:hover{color:var(--ink)}
 
-/* --------------------------------------------------- rettangoli portanti */
+/* --------------------------------------------------- rettangoli portanti
+   Stesso bordo dei due riquadri dello strumento (`.loopCard` in style.css):
+   le due pagine si aprono una di fila all'altra, e un bordo più scuro qui
+   le farebbe sembrare due progetti.                                       */
 .docCard{
-  border:1.5px solid var(--ink);
+  border:1.5px solid var(--scelto);
   border-radius:24px;
   padding:22px 26px 24px;
   margin-bottom:14px;
