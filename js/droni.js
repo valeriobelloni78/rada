@@ -168,6 +168,18 @@ function drawFasciaTessuti(s, now) {
      allocano (CLAUDE.md).                                                  */
   const punto = Math.max(1.4, laneH * 0.105);
   const passo = punto * 5;
+  /* Il pallino ACCESO ha la misura di quello della fascia delle gocce: là il
+     raggio è 0,10 di corsia (`drawTimeline` in frasi.js), qui si dà un
+     diametro, quindi 0,20. Le due fasce sono la stessa lettura del tempo,
+     una sopra l'altra, e due misure diverse le farebbero sembrare due unità
+     diverse. Resta più grande di quello di fondo, che è l'impalcatura e non
+     un suono: adesso l'accensione si vede anche di coda dell'occhio, prima
+     era un cambio di grigio e basta.
+
+     Non si prende invece la misura del lampo delle gocce (0,17 di raggio):
+     là dura meno di mezzo secondo su un punto solo, qui l'arancione è una
+     scia lunga, e ingrossarla la farebbe pesare quanto tutto il resto.    */
+  const acceso = Math.max(1.4, laneH * 0.20);
   DR_PUNTI[1] = passo;
   g.lineCap = "round";
   g.lineWidth = punto;
@@ -213,6 +225,7 @@ function drawFasciaTessuti(s, now) {
        l'accensione cade esattamente sopra i pallini che c'erano.           */
     g.strokeStyle = (ev === DR_ULTIMO[ev.loop]) ? COL.amber : COL.ink;
     g.globalAlpha = spento ? 0.3 : 1;
+    g.lineWidth = acceso;
     g.lineDashOffset = (x0 - left) % passo;
     g.beginPath(); g.moveTo(x0, ly); g.lineTo(x1, ly); g.stroke();
   }
