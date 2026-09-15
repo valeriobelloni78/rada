@@ -42,6 +42,15 @@ Rada è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre 
 
 ---
 
+## [riquadro 1b — L'intenzione]
+
+**Titolo:** L'intenzione
+
+Ho ideato questo sistema sonoro pensando a come poter intessere un dialogo profondo con gli spazi del nostro quotidiano, ho cercato di immaginare un insieme sonoro capace di aggiungere qualcosa all'esperienza uditiva di ciascuno.
+Rada è un sistema che permette di rendere più morbidi gli spazi acustici in cui viviamo. Il suo ascolto funziona se aiuta a ripensare le strutture intorno a noi come a delle partiture aperte, che vanno attraversate ponendo cura ai silenzi inaspettati e ai momenti lenti nei quali possiamo riprendere il controllo sulla nostra attenzione.
+
+---
+
 ## [riquadro 2 — Il concetto]
 
 **Titolo:** Il concetto

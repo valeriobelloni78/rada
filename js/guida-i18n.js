@@ -19,6 +19,9 @@ const GUIDA = {
     "g.back":         "Ascolta Rada",
 
     "g.open1": "Ra<em class=\"amb\">d</em>a è uno spazio sonoro nel quale si può indugiare nei propri ricordi mentre si guarda fuori dalla finestra. In questo spazio puoi prenderti cura della tua attenzione, i tessuti sonori producono delle sensazioni tattili e le gocce che ascolti cadono in un tempo dilatato nel quale puoi chiederti “come mi sento?”. L'ascolto è un'attività da coltivare, è un territorio che ha le sue poetiche e i suoi campi di forza. Ra<em class=\"amb\">d</em>a è un'insenatura tranquilla lungo la costa di un oceano di rumore. Tra le gocce troverai dei silenzi che parlano; ascoltali.",
+    "g.intent.t": "L'intenzione",
+    "g.intent1": "Ho ideato questo sistema sonoro pensando a come poter intessere un dialogo profondo con gli spazi del nostro quotidiano, ho cercato di immaginare un insieme sonoro capace di aggiungere qualcosa all'esperienza uditiva di ciascuno.",
+    "g.intent2": "Ra<em class=\"amb\">d</em>a è un sistema che permette di rendere più morbidi gli spazi acustici in cui viviamo. Il suo ascolto funziona se aiuta a ripensare le strutture intorno a noi come a delle partiture aperte, che vanno attraversate ponendo cura ai silenzi inaspettati e ai momenti lenti nei quali possiamo riprendere il controllo sulla nostra attenzione.",
 
     "g.concept.t": "Il concetto",
     "g.concept1": "Ra<em class=\"amb\">d</em>a sviluppa il suono mentre lo ascolti.",
@@ -112,6 +115,9 @@ const GUIDA = {
     "g.back":         "Écouter Rada",
 
     "g.open1": "Ra<em class=\"amb\">d</em>a est un espace sonore où l'on peut s'attarder dans ses souvenirs en regardant par la fenêtre. Dans cet espace tu peux prendre soin de ton attention~: les tissus sonores produisent des sensations tactiles et les gouttes que tu écoutes tombent dans un temps dilaté où tu peux te demander «~comment est-ce que je me sens~?~». L'écoute est une pratique à cultiver, un territoire qui a ses poétiques et ses champs de force. Ra<em class=\"amb\">d</em>a est une crique tranquille sur la côte d'un océan de bruit. Entre les gouttes tu trouveras des silences qui parlent~; écoute-les.",
+    "g.intent.t": "L'intention",
+    "g.intent1": "J'ai conçu ce système sonore en cherchant comment tisser un dialogue profond avec les espaces de notre quotidien~; j'ai essayé d'imaginer un ensemble sonore capable d'ajouter quelque chose à l'expérience auditive de chacun.",
+    "g.intent2": "Ra<em class=\"amb\">d</em>a est un système qui permet d'adoucir les espaces acoustiques où nous vivons. Son écoute fonctionne si elle aide à repenser les structures qui nous entourent comme des partitions ouvertes, à traverser en accordant du soin aux silences inattendus et aux moments lents où nous pouvons reprendre la maîtrise de notre attention.",
 
     "g.concept.t": "Le concept",
     "g.concept1": "Ra<em class=\"amb\">d</em>a développe le son pendant que tu l'écoutes.",
@@ -205,6 +211,9 @@ const GUIDA = {
     "g.back":         "Listen to Rada",
 
     "g.open1": "Ra<em class=\"amb\">d</em>a is a sound space where you can linger among your own memories while looking out of the window. In this space you can take care of your attention: the sonic weaves produce tactile sensations and the drops you hear fall through a dilated time in which you can ask yourself, “how do I feel?”. Listening is a practice to be cultivated, a territory with its own poetics and its own force fields. Ra<em class=\"amb\">d</em>a is a quiet cove on the shore of an ocean of noise. Between the drops you will find silences that speak; listen to them.",
+    "g.intent.t": "The intention",
+    "g.intent1": "I devised this sound system while thinking about how to weave a deep dialogue with the spaces of our everyday life; I tried to imagine an ensemble of sounds able to add something to each person's experience of listening.",
+    "g.intent2": "Ra<em class=\"amb\">d</em>a is a system for making the acoustic spaces we live in a little softer. Listening to it works if it helps us rethink the structures around us as open scores — scores to be crossed with care for the unexpected silences, and for the slow moments in which we can take back control of our attention.",
 
     "g.concept.t": "The concept",
     "g.concept1": "Ra<em class=\"amb\">d</em>a unfolds the sound while you listen to it.",
@@ -298,6 +307,9 @@ const GUIDA = {
     "g.back":         "Radaを聴く",
 
     "g.open1": "Ra<em class=\"amb\">d</em>aは、窓の外を眺めながら自分の記憶のなかに佇んでいられる音の空間です。この空間では、自分の注意を手入れすることができます。織りの響きは触れるような感覚を生み、聞こえてくる滴は引き伸ばされた時間のなかに落ちて、そのあいだに「いま自分はどう感じているだろう」と問いかけることができます。聴くことは育てていく営みであり、それ自体の詩学と力の場を持つひとつの土地です。Ra<em class=\"amb\">d</em>aは、騒音の大洋の岸辺にある、静かな入り江です。滴と滴のあいだに、語る沈黙が見つかります。それに耳を澄ませてください。",
+    "g.intent.t": "意図",
+    "g.intent1": "日々の暮らしの空間とどうすれば深い対話を織りなせるか——そう考えながら、この音のシステムを構想しました。ひとりひとりの聴く経験に何かを加えうる音の集まりを、想像してみようとしたのです。",
+    "g.intent2": "Ra<em class=\"amb\">d</em>aは、わたしたちが暮らす音響空間をいくらか柔らかくするためのシステムです。それを聴くことが働くのは、まわりにある構造を「開かれた楽譜」として捉えなおす助けになるときです。その楽譜は、思いがけない沈黙と、自分の注意をふたたび手もとに取り戻せるゆっくりとした時間に心を配りながら、通り抜けていくものです。",
 
     "g.concept.t": "発想",
     "g.concept1": "Ra<em class=\"amb\">d</em>aは、聴いているあいだに音を組み立てていきます。",
